@@ -97,7 +97,11 @@ public class Product implements Serializable {
     public LocalDate getExpirationDate() { return expirationDate; }
 	
 	
-	
+	// Setters(only fields that may need updating and changing
+    public void setPrice(double price) {this.price=price;}
+    public void setStock(double stock) {this.stock=stock;}
+    public void setDiscountPercent(double discountPercent ) {this.discountPercent=discountPercent;}
+    
 	
 
 	
