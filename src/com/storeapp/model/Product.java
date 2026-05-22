@@ -80,6 +80,23 @@ public class Product implements Serializable {
 
 	}
 	
+	// Getters (the fields is private)
+
+    public String getCode() { return code; }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public double getStock() { return stock; }
+    public UnitType getUnitType() { return unitType; }
+    public String getManufacturer() { return manufacturer; }
+    public String getColor() { return color; }
+    public Double getWeight() { return weight; }
+    public Double getVolume() { return volume; }
+    public String getDescription() { return description; }
+    public double getDiscountPercent() { return discountPercent; }
+    public LocalDate getProductionDate() { return productionDate; }
+    public LocalDate getExpirationDate() { return expirationDate; }
+	
+	
 	
 	
 
