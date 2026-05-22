@@ -102,8 +102,57 @@ public class Product implements Serializable {
     public void setStock(double stock) {this.stock=stock;}
     public void setDiscountPercent(double discountPercent ) {this.discountPercent=discountPercent;}
     
-	
-
+	// price after applying the Discount
+    public double getDiscountPrice() {
+    	return price*(1-(discountPercent/100));
+    }
+    
+    // Total value 
+    public double getTotalValue() {
+    	return price*stock;
+    }
+    
+    // Reduce Stock by the given amount
+    public boolean reduceStock(double amount) {
+    	if (amount>0 && amount<=stock) {
+    		stock-=amount;
+    		return true;
+    	}
+    	return false;
+    }
+    
+    // Increase Stock
+    public void increaseStock(double amount) {
+    	if(amount>0)
+    		stock+=amount;
+    }
+    
+    // check if enough exists
+    public boolean hasEnoughStock(double amount) {
+    	return amount>0 && amount<=stock;
+    }
+    
+    // check if the product has expired
+    public boolean isExpired() {
+    	if (expirationDate!=null) {
+    		return LocalDate.now().isAfter(expirationDate);
+    	}
+    	return false;
+    }
+    
+    // A product is sell able or not
+    public boolean isSellable() {
+    	return stock>0 && isExpired();
+    }
+    
+    
+    // for showing the object 
+    @Override
+    public String toString() {
+        return String.format("%s (%s) - Price: %,.0f Tomans - Stock: %.2f %s",
+                name, code, price, stock, unitType);
+    }
+    
 	
 	
 	
