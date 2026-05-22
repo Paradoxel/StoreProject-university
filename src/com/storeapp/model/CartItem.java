@@ -26,4 +26,11 @@ public class CartItem implements Serializable{
 	    this.quantity = quantity;
 	}
 	
+	
+	// Get Total Price
+	public double getTotalPrice() {
+		return product.getDiscountedPrice() * quantity;
+
+	}
+	
 }

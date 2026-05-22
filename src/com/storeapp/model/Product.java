@@ -103,7 +103,7 @@ public class Product implements Serializable {
     public void setDiscountPercent(double discountPercent ) {this.discountPercent=discountPercent;}
     
 	// price after applying the Discount
-    public double getDiscountPrice() {
+    public double getDiscountedPrice() {
     	return price*(1-(discountPercent/100));
     }
     
