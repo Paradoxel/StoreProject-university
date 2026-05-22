@@ -13,6 +13,20 @@ public class Customer implements Serializable {
 		this.phone=phone;
 	}
 	
+
+	// Getters
+	public String getName() {return name;}
+	public String getPhone() {return phone;}
+	
+	// Setters
+	public void setName(String name) {this.name=name;}
+	public void setPhone(String phone) {this.phone=phone;}
+	
+	// Regular  customers cannot buy on credit
+	public boolean canBuyOnCredit() {return false;}
+	
+	// Regular customers cannot return items
+	public boolean canReturnItem() {return false;}
 	
 	
 }
