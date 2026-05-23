@@ -82,6 +82,19 @@ public class Cart implements Serializable {
 	}
 	
 	
+	public Invoice checkout(PaymentMethod paymentmethod) {
+		if(status==CartStatus.CLOSED)
+			throw new IllegalStateException("سبد خرید بسته است.");
+		if (items.isEmpty())
+			throw new IllegalStateException ("هیچ محصولی وجود ندارد .");
+		
+		
+		this.status=CartStatus.CLOSED;
+		return new Invoice(this, paymentmethod);
+		
+	}
+	
+	
 	
 	
 	
