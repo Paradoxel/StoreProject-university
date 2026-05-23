@@ -96,6 +96,17 @@ public class Cart implements Serializable {
 	
 	
 	
+	// Calculates the total price of all items in the cart
+	public double getTotalAmount() {
+	    double total = 0;
+	    for (CartItem item : items) {
+	        total += item.getTotalPrice();
+	    }
+	    return total;
+	}
+	
+	
+	
 	
 	
 	
