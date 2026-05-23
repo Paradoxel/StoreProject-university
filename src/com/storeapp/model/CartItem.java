@@ -1,7 +1,7 @@
 package com.storeapp.model;
 
 import java.io.Serializable;
-
+import java.util.Objects;
 public class CartItem implements Serializable{
 	
 	// fields
@@ -14,7 +14,7 @@ public class CartItem implements Serializable{
 		this.quantity=quantity;
 	}
 	
-	// Getters
+	// Gettersُ
 	public Product getProduct() {return product;}
 	public double getQuantity() {return quantity;}
 	
@@ -32,5 +32,15 @@ public class CartItem implements Serializable{
 		return product.getDiscountedPrice() * quantity;
 
 	}
+	
+	// override equals
+	@Override
+	public boolean equals(Object obj) {
+		if(this==obj) return true;
+		if(obj==null || obj instanceof  CartItem)return false;
+		CartItem obj_open=(CartItem) obj;
+		return this.product.getCode().equals(obj_open.product.getCode());
+	}
+
 	
 }
