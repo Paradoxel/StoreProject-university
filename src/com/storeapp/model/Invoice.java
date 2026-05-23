@@ -49,4 +49,50 @@ public class Invoice implements Serializable {
 		return paymentMethod;
 	}
 	
+	
+	
+	
+	// showing the object 
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    
+	    sb.append("═══════════════════════════════════\n");
+	    sb.append("🧾 فاکتور رسمی فروشگاه\n");
+	    sb.append("═══════════════════════════════════\n");
+	    sb.append("🔢 شماره فاکتور : ").append(id).append("\n");
+	    sb.append("📅 تاریخ        : ").append(dateTime).append("\n");
+	    sb.append("👤 مشتری        : ").append(customer.getName()).append("\n");
+	    sb.append("📞 تلفن         : ").append(customer.getPhone()).append("\n");
+	    
+	    if (customer instanceof LoyalCustomer) {
+	        LoyalCustomer loyal = (LoyalCustomer) customer;
+	        sb.append("⭐ کد عضویت     : ").append(loyal.getMembershipCode()).append("\n");
+	    }
+	    
+	    sb.append("───────────────────────────────────\n");
+	    sb.append("🛒 اقلام خریداری‌شده :\n");
+	    
+	    for (CartItem item : items) {
+	        sb.append("  ◻ ")
+	          .append(item.getProduct().getName())
+	          .append(" (")
+	          .append(item.getQuantity())
+	          .append(" ")
+	          .append(item.getProduct().getUnitType())
+	          .append(") = ")
+	          .append(item.getTotalPrice())
+	          .append(" ریال\n");
+	    }
+	    
+	    sb.append("───────────────────────────────────\n");
+	    sb.append("💰 مبلغ کل       : ").append(finalAmount).append(" ریال\n");
+	    sb.append("💳 نحوه پرداخت   : ")
+	      .append(paymentMethod == PaymentMethod.CASH ? "نقدی" : "اعتباری")
+	      .append("\n");
+	    sb.append("═══════════════════════════════════\n");
+	    
+	    return sb.toString();
+	}
+	
 }
