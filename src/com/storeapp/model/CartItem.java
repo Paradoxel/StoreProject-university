@@ -41,6 +41,13 @@ public class CartItem implements Serializable{
 		CartItem obj_open=(CartItem) obj;
 		return this.product.getCode().equals(obj_open.product.getCode());
 	}
+	
+	// override hash code
+	@Override
+	public int hashCode() {
+	    return Objects.hash(product.getCode());
+	}
+	
 
 	
 }
