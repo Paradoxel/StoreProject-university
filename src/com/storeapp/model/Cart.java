@@ -44,4 +44,34 @@ public class Cart implements Serializable {
 		return status;
 	}
 	
+	
+	
+	// important method
+	public void addItem(Product product,double quantity) {
+		// check status of cart
+		if(status==CartStatus.CLOSED)
+			throw new IllegalStateException ("سفید خرید بسته است نمیتوانید محصولی اضافه یا کم کنید .");
+		
+		// check value of quantity
+		if (quantity<=0) {
+			throw new IllegalArgumentException("تعداد محصول باید مقداری مثبت باشد.");
+		}
+
+		for(CartItem item : items) {
+				if(item.getProduct().getCode().equals(product.getCode())) {
+					
+					item.setQuantity(item.getQuantity()+quantity);
+					return ; // exit from method
+				}	
+		}
+		
+		
+		CartItem cartitem=new CartItem(product,quantity);
+		items.add(cartitem);
+	}
+	
+	
+	
+	
+	
 }
