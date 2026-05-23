@@ -3,6 +3,7 @@ package com.storeapp.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 // Represents a invoice 
 import java.util.List;
 public class Invoice implements Serializable {
@@ -22,6 +23,30 @@ public class Invoice implements Serializable {
 		dateTime=LocalDateTime.now();
 		finalAmount=cart.getTotalAmount();	
 
+	}
+	
+	
+	
+	
+	
+	
+	// Getters
+	public String getId() {return id;}
+	public List<CartItem> getItems(){
+		return Collections.unmodifiableList(items);
+	}
+	public Customer getCustomer() {
+		return customer;
+	}
+	public LocalDateTime getDateTime() {
+		return dateTime;
+	}
+	
+	public double getFinalAmount() {
+		return finalAmount;
+	}
+	public PaymentMethod getPaymentMethod() {
+		return paymentMethod;
 	}
 	
 }
