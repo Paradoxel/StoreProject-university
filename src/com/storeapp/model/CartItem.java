@@ -48,6 +48,13 @@ public class CartItem implements Serializable{
 	    return Objects.hash(product.getCode());
 	}
 	
+	
+	// show the Object
+	@Override
+	public String toString() {
+	    return product.getName() + " x " + quantity + " = " + getTotalPrice() + " Tomans";
+	}
+	
 
 	
 }
