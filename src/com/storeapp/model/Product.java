@@ -142,7 +142,7 @@ public class Product implements Serializable {
     
     // A product is sell able or not
     public boolean isSellable() {
-    	return stock>0 && isExpired();
+    	return stock>0 && !isExpired();
     }
     
     
