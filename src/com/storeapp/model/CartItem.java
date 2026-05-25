@@ -37,7 +37,7 @@ public class CartItem implements Serializable{
 	@Override
 	public boolean equals(Object obj) {
 		if(this==obj) return true;
-		if(obj==null || obj instanceof  CartItem)return false;
+		if(obj==null || !(obj instanceof  CartItem))return false;
 		CartItem obj_open=(CartItem) obj;
 		return this.product.getCode().equals(obj_open.product.getCode());
 	}
