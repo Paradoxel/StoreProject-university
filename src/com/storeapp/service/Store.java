@@ -36,4 +36,33 @@ public class Store implements Serializable {
 	}
 	
 	
+	
+	public void addProduct(Product product) {
+		products.add(product);
+	}
+	
+	
+	
+	public Product findItemByCode(String code) {
+		for(Product p:products) {
+			if (p.getCode().equals(code))
+				return p;
+		}
+		return null;	
+	}
+	
+	
+	public List<Product> searchItems(String keyword){
+		keyword=keyword.toLowerCase();
+		List<Product> result=new ArrayList<>();
+		for(Product p:products) {
+			if(p.getName().toLowerCase().contains(keyword) || p.getCode().toLowerCase().contains(keyword))
+				result.add(p);
+		}
+		return result;
+	
+	}
+	
+	
+	
 }
