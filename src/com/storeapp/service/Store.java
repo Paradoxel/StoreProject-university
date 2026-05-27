@@ -36,12 +36,10 @@ public class Store implements Serializable {
 	}
 	
 	
-	
+	// Product management
 	public void addProduct(Product product) {
 		products.add(product);
 	}
-	
-	
 	
 	public Product findItemByCode(String code) {
 		for(Product p:products) {
@@ -51,7 +49,6 @@ public class Store implements Serializable {
 		return null;	
 	}
 	
-	
 	public List<Product> searchItems(String keyword){
 		keyword=keyword.toLowerCase();
 		List<Product> result=new ArrayList<>();
@@ -60,10 +57,10 @@ public class Store implements Serializable {
 				result.add(p);
 		}
 		return result;
-	
 	}
 	
 	
+	// Customer management
 	public void addCustomer(Customer customer) {
 		customers.add(customer);
 	}
@@ -74,6 +71,36 @@ public class Store implements Serializable {
 				return c;
 		}
 		return null;
+	}
+	
+	
+	// Cart management
+	public Cart createCart(Customer customer) {
+		return new Cart(customer);
+	}
+	
+	public Invoice checkoutCart(Cart cart,PaymentMethod paymentmethod) {
+		if(cart.getStatus()==CartStatus.CLOSED)
+			throw new IllegalStateException("سبد خرید بسته است.");
+		if(cart.getItems().isEmpty())
+			throw new IllegalStateException("سبد خرید خالی است.");
+			
+		Invoice invoice = cart.checkout(paymentmethod);
+		
+		for(CartItem item:invoice.getItems()) {
+			Product product=item.getProduct();
+			product.reduceStock(item.getQuantity());
+		}
+		
+		if(paymentmethod==PaymentMethod.CREDIT && invoice.getCustomer() instanceof LoyalCustomer) {
+			LoyalCustomer loyal=(LoyalCustomer) invoice.getCustomer();
+			loyal.addDebt(invoice.getFinalAmount());
+		}
+			
+		
+		
+		invoices.add(invoice);
+		return invoice;
 	}
 	
 	
