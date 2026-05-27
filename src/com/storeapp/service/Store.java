@@ -103,13 +103,20 @@ public class Store implements Serializable {
 	}
 	
 	
-	// method for saving ...
+	// method for write or read 
 	public void saveToFile(String filePath) throws IOException {
 		FileOutputStream fileOut = new FileOutputStream(filePath);
 		ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
 		objectOut.writeObject(this);
 		objectOut.close();
 	    fileOut.close();
+	}
+	
+	public static Store loadFromFile(String filePath) throws IOException, ClassNotFoundException {
+	    try (FileInputStream fileIn = new FileInputStream(filePath);
+	         ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+	        return (Store) objectIn.readObject();
+	    }
 	}
 	
 	
