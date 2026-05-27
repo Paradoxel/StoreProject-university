@@ -66,7 +66,7 @@ public class Store implements Serializable {
 	
 	public Customer findCustomerByPhone(String phone) {
 		for(Customer c:customers) {
-			if(c.getPhone().equals(c))
+			if(c.getPhone().equals(phone))
 				return c;
 		}
 		return null;
