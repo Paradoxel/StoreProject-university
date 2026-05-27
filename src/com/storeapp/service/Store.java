@@ -103,6 +103,16 @@ public class Store implements Serializable {
 	}
 	
 	
+	// method for saving ...
+	public void saveToFile(String filePath) throws IOException {
+		FileOutputStream fileOut = new FileOutputStream(filePath);
+		ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+		objectOut.writeObject(this);
+		objectOut.close();
+	    fileOut.close();
+	}
+	
+	
 
 	
 	
