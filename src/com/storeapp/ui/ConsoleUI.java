@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import com.storeapp.service.Store;
+import com.storeapp.util.InputValidator;
 
 public class ConsoleUI {
     private static final String ADMIN_CODE = "admin123";
     private static final String STORE_FILE = "store.dat";
+    
+    
     private Store store;
-    private Scanner scanner;
+    private InputValidator validator;
 
-    public ConsoleUI() {
-        this.scanner = new Scanner(System.in);
+    public ConsoleUI(Scanner scanner) {
+    	validator=new InputValidator(scanner);
         try {
             this.store = Store.loadFromFile(STORE_FILE);
         } catch (ClassNotFoundException | IOException e) {
@@ -24,16 +27,19 @@ public class ConsoleUI {
         System.out.println("🎉 Welcome to the Store Management System!");
         while (true) {
             System.out.println("\n===== Login =====");
-            System.out.print("Please enter your phone number (or 'exit' to quit): ");
-            String userCode = scanner.nextLine().trim();
-
+            String userCode = validator.readNonEmptyString("Please enter your phone number (or 'exit' to quit): ");
             if (userCode.equalsIgnoreCase("exit")) {
                 System.out.println("👋 Goodbye!");
-                scanner.close();
                 return;
             }
 
-            System.out.println("Entered code: " + userCode);
+            if (userCode.equals(ADMIN_CODE)) {
+                System.out.println("🔑 Admin login successful. Welcome to the Admin Panel!");
+
+            } else {
+                System.out.println("🛒 Customer login. Phone number: " + userCode);
+
+            }
         }
     }
 }
