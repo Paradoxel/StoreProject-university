@@ -1,10 +1,12 @@
 package com.storeapp.ui;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 import com.storeapp.model.*;
 import com.storeapp.service.*;
+import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class AdminPanel {
@@ -64,7 +66,53 @@ public class AdminPanel {
 
 
     private void addProduct() {
-        System.out.println("Add product - coming soon...");
+    	System.out.println("\n--- Add New Product ---");
+    	
+    	// Mandatory fields
+    	String code=validator.readNonEmptyString("Code: ");
+    	String name=validator.readNonEmptyString("Name: ");
+    	System.out.print("Price: ");
+    	double price=validator.readPositiveDouble();
+    	System.out.print("Stock: ");
+    	double stock=validator.readPositiveDouble();
+    	UnitType unitType=validator.readUnitType();
+    	
+    	Product.Builder builder = new Product.Builder(code, name, price, stock, unitType);
+ 
+    	if(validator.yesOrNo("Do you want to add optional details?")){
+    		
+    		System.out.println("\n--- Optional Fields ---");
+    		System.out.println("Preese enter to skip");
+    		String man=validator.readOptionalString("Manufacturer: ");
+    		if (man!=null) builder.manufacturer(man);
+    		
+    		String col = validator.readOptionalString("Color: ");
+            if (col != null) builder.color(col);
+
+            System.out.print("Weight (kg, 0 to skip): ");
+            double weight = validator.readPositiveDouble();
+            if (weight > 0) builder.weight(weight);
+
+            System.out.print("Volume (L, 0 to skip): ");
+            double volume = validator.readPositiveDouble();
+            if (volume > 0) builder.volume(volume);
+
+            String desc = validator.readOptionalString("Description: ");
+            if (desc != null) builder.description(desc);
+
+            System.out.print("Discount Percent (0-100): ");
+            double discount = validator.readDiscountPercent();
+            builder.discountPercent(discount);
+    	}
+    	
+    	Product product=builder.build();
+    	store.addProduct(product);
+    	try {
+			store.saveToFile(Constants.STORE_FILE);
+		} catch (IOException e) {
+			System.out.print("Error...\nTry again" );
+		}
+    	System.out.println("✅ Product '" + product.getName() + "' added successfully!");
     }
 
     private void searchProduct() {

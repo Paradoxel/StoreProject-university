@@ -29,7 +29,7 @@ public class ConsoleUI {
         }
     }
 
-    // --- Public Interface ---
+
 
     /**
      * Starts the main application loop.
@@ -53,9 +53,9 @@ public class ConsoleUI {
                     signUp();
                     break;
                 case 3:
-                    saveStore();
                     System.out.println("👋 Goodbye!");
-                    return; // End the program
+                    return;
+               
             }
         }
     }
@@ -102,19 +102,14 @@ public class ConsoleUI {
         String name = validator.readNonEmptyString("Enter your name: ");
         Customer newCustomer = new Customer(name, phone);
         store.addCustomer(newCustomer);
+        try {
+            store.saveToFile(Constants.STORE_FILE);
+        } catch (IOException e) {
+            System.out.println("Error saving customer.");
+        }
         System.out.println("✅ Account created successfully! Welcome, " + name + "!");
     }
 
 
-    /**
-     * Saves the current state of the store to a file.
-     */
-    private void saveStore() {
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("💾 Store data saved successfully.");
-        } catch (IOException e) {
-            System.out.println("❌ Could not save store data: " + e.getMessage());
-        }
-    }
+
 }

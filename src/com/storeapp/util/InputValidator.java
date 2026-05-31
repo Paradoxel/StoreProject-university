@@ -2,6 +2,8 @@ package com.storeapp.util;
 
 import java.util.Scanner;
 
+import com.storeapp.model.UnitType;
+
 /**
   A helper class to read input from the user safely.
   It asks again and again until the user gives a valid answer.
@@ -19,18 +21,20 @@ public class InputValidator {
     
     public int readIntRange(int min, int max) {
         while (true) {
-            System.out.print("Please enter a number between " + min + " and " + max + ": ");
-            if (scanner.hasNextInt()) {
-                int value = scanner.nextInt();
-                clearBuffer(); // remove the extra line after the number
-                if (value >= min && value <= max) {
-                    clearScreen(); // clean the screen after good input
+            try {
+                String input = scanner.nextLine().trim();
+                int value = Integer.parseInt(input);
+
+                if (value >= min && value <= max)
                     return value;
-                }
-            } else {
-                System.out.print("Invalid input. Please enter a number: ");
-                discardInvalidInput(); // throw away the wrong input
+
+            } catch (NumberFormatException e) {
             }
+
+            System.out.printf(
+                "Please enter a number between %d and %d: ",
+                min, max
+            );
         }
     }
 
@@ -50,25 +54,101 @@ public class InputValidator {
     }
 
    
-    // Prints 50 blank lines to make the screen look clean.
-    public void clearScreen() {
-        for (int i = 0; i < 50; i++) {
-            System.out.println();
+
+
+    
+    
+    
+    
+    // reads a positive decimal number
+    public double readPositiveDouble() {
+        while (true) {
+            try {
+                String input = scanner.nextLine().trim();
+                if(input.isEmpty()) return 0;
+                double value = Double.parseDouble(input);
+
+                if (value >0)
+                    return value;
+
+
+                System.out.print("Value must be positive: ");
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Please enter a number: ");
+            }
         }
     }
-
-    /**
-      Removes the rest of the line after reading a number.
-      This stops the next read from getting the wrong data.
-     */
-    private void clearBuffer() {
-        scanner.nextLine();
+    
+    
+    
+    // read unit type
+    public UnitType readUnitType() {
+    	System.out.print("Unit Type(COUNT, WEIGHT, VOLUME): ");
+    	while(true) {
+    		String unittype=scanner.nextLine().trim();
+    	try {
+    		UnitType unit=UnitType.valueOf(unittype.toUpperCase());
+    		return unit;
+    	}
+    	catch (IllegalArgumentException e) {
+    		System.out.print("Invalid unit. Please enter COUNT, WEIGHT, or VOLUME: ");
+		}	
+    	}
     }
+    
+    
+    
+    // ask yes or no 
+    public boolean yesOrNo(String prompt) {
+    	System.out.print(prompt+" y/n: ");
+    	while(true) {
+    		String answer = scanner.nextLine().trim().toLowerCase().toLowerCase();
+    		if(answer.equals("y") || answer.equals("yes")) {
 
-    /**
-     * Reads and throws away the wrong input when the user did not type a number.
-     */
-    private void discardInvalidInput() {
-        scanner.next();
+    			return true;
+    		}
+    		else if (answer.equals("n") || answer.equals("no")) {
+    			
+    			return false;
+    		}
+    		System.out.print("Please answer y or n: ");
+    	}
     }
+    
+    
+    
+    // read optional string 
+    public String readOptionalString(String prompt) {
+    	System.out.print(prompt);
+    	String inputString=scanner.nextLine().trim();
+    	if(inputString.isEmpty())
+    		return null;
+    	return inputString;
+
+    }
+    
+    
+    public double readDiscountPercent() {
+        while (true) {
+        	String value = readOptionalString("");
+
+            if (value==null)
+                return 0;
+
+            try {
+                double discount = Double.parseDouble(value);
+
+                if (discount >= 0 && discount <= 100)
+                    return discount;
+
+                System.out.println("Must be between 0 and 100. Try again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+    
+    
+    
+    
 }
