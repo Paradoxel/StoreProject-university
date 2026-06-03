@@ -78,6 +78,7 @@ public class AdminPanel {
     		System.out.println("❌ This code already exists. Please enter a different code.");
     	}
     	
+    	
     	String name=validator.readNonEmptyString("Name: ");
     	System.out.print("Price: ");
     	double price=validator.readPositiveDouble();
@@ -142,7 +143,14 @@ public class AdminPanel {
     private void addLoyalCustomer() {
     	System.out.println("\n--- Add Loyal Customer ---");
     	String name=validator.readNonEmptyString("Name: ");
-    	String phone=validator.readNonEmptyString("phone: ");
+    	String phone;
+    	while (true) {
+    	    phone = validator.readNonEmptyString("Phone: ");
+    	    if (store.findCustomerByPhone(phone) == null) {
+    	        break; 
+    	    }
+    	    System.out.println("❌ This phone number is already registered. Please enter a different one.");
+    	}
     	String membershipCode = validator.readNonEmptyString("Membership Code: ");
     	LocalDate joinDate=LocalDate.now();
     	System.out.println("Join Date (today): " + joinDate);

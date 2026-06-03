@@ -80,8 +80,6 @@ public class ConsoleUI {
         Customer customer = store.findCustomerByPhone(userCode);
         if (customer != null) {
             System.out.println("✅ Welcome back, " + customer.getName() + "!");
-            // Here we would normally start the customer purchase flow
-            // customerPanel.startPurchase(customer);
         } else {
             System.out.println("❌ No account found with this phone number. Please sign up first.");
         }
@@ -104,10 +102,11 @@ public class ConsoleUI {
         store.addCustomer(newCustomer);
         try {
             store.saveToFile(Constants.STORE_FILE);
+            System.out.println("✅ Account created successfully! Welcome, " + name + "!");
         } catch (IOException e) {
             System.out.println("Error saving customer.");
         }
-        System.out.println("✅ Account created successfully! Welcome, " + name + "!");
+        
     }
 
 
