@@ -75,6 +75,12 @@ public class ConsoleUI {
             adminPanel.showMenu();
             return;
         }
+        // check loyal
+        Customer loyalCustomer = store.findLoyalCustomerByCode(userCode);
+        if (loyalCustomer != null) {
+            System.out.println("✅ Welcome back, " + loyalCustomer.getName() + " (Loyal Customer)!");
+            return;
+        }
 
         // Check for existing customer
         Customer customer = store.findCustomerByPhone(userCode);

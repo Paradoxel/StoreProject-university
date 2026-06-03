@@ -72,6 +72,16 @@ public class Store implements Serializable {
 		return null;
 	}
 	
+	public Customer findLoyalCustomerByCode (String code) {
+		for(Customer c:customers) {
+			if(c instanceof LoyalCustomer) {
+				if(((LoyalCustomer) c).getMembershipCode().equals(code))
+					return c;
+			}
+		}
+		return null;
+	}
+	
 	
 	// Cart management
 	public Cart createCart(Customer customer) {

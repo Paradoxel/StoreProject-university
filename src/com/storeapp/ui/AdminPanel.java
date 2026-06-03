@@ -151,7 +151,9 @@ public class AdminPanel {
     	    }
     	    System.out.println("❌ This phone number is already registered. Please enter a different one.");
     	}
-    	String membershipCode = validator.readNonEmptyString("Membership Code: ");
+    	String membershipCode = store.generateMembershipCode(name);
+    	System.out.println("Membership Code (auto-generated): " + membershipCode);
+    	System.out.println("⚠️ Please save this code securely – the customer will need it to log in.");
     	LocalDate joinDate=LocalDate.now();
     	System.out.println("Join Date (today): " + joinDate);
     	LoyalCustomer loyalCustomer = new LoyalCustomer(name, phone, membershipCode, joinDate);
