@@ -3,6 +3,7 @@ package com.storeapp.ui;
 import java.io.IOException;
 import java.util.Scanner;
 import com.storeapp.model.Customer;
+import com.storeapp.model.LoyalCustomer;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
@@ -85,6 +86,11 @@ public class ConsoleUI {
         // Check for existing customer
         Customer customer = store.findCustomerByPhone(userCode);
         if (customer != null) {
+        	if(customer instanceof LoyalCustomer) {
+        		// A loyal customer tried to log in with phone number
+                System.out.println("❌ Loyal customers must use their membership code. Please try again.");
+                return;
+        	}
             System.out.println("✅ Welcome back, " + customer.getName() + "!");
         } else {
             System.out.println("❌ No account found with this phone number. Please sign up first.");
