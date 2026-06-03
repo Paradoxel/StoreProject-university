@@ -24,28 +24,32 @@ public class AdminPanel {
 			System.out.println("\n--- Admin Panel ---");
 			System.out.println("1. Show all products");
 			System.out.println("2. Add product");
-			System.out.println("3. Search product");
-			System.out.println("4. Add loyal customer");
-			System.out.println("5. Back to main menu");
+			System.out.println("3. Delete product");
+			System.out.println("4. Search product");
+			System.out.println("5. Add loyal customer");
+			System.out.println("6. Back to main menu");
 			
-			int choice = validator.readIntRange(1, 5);
+			int choice = validator.readIntRange(1, 6);
 			switch (choice) {
-	        case 1:
-	            showAllProducts();
-	            break;
-	        case 2:
-	            addProduct();
-	            break;
-	        case 3:
-	            searchProduct();
-	            break;
-	        case 4:
-	            addLoyalCustomer();
-	            break;
-	        case 5:
-	            return; 
-	        default:
-	            System.out.println("Invalid option. Try again.");
+			    case 1:
+			        showAllProducts();
+			        break;
+			    case 2:
+			        addProduct();
+			        break;
+			    case 3:
+			        deleteProduct();
+			        break;
+			    case 4:
+			        searchProduct();
+			        break;
+			    case 5:
+			        addLoyalCustomer();
+			        break;
+			    case 6:
+			        return;
+			    default:
+			        System.out.println("Invalid option. Try again.");
 			}
 		}
 		
@@ -165,6 +169,29 @@ public class AdminPanel {
             System.out.println("❌ Error saving customer. Please try again.");
         }
     	
+    }
+    
+    
+    private void deleteProduct() {
+        System.out.println("\n--- Delete Product ---");
+        String code = validator.readNonEmptyString("Enter the product code to delete: ");
+        
+        Product product = store.findItemByCode(code);
+        if (product == null) {
+            System.out.println("❌ No product found with code '" + code + "'.");
+            return;
+        }
+        
+        // Remove from the list
+        store.removeProduct(product);
+        
+        // Save changes to file
+        try {
+            store.saveToFile(Constants.STORE_FILE);
+            System.out.println("✅ Product '" + product.getName() + "' deleted successfully!");
+        } catch (IOException e) {
+            System.out.println("❌ Product deleted in memory, but could not save to file.");
+        }
     }
 	
 	

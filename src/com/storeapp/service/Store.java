@@ -172,6 +172,11 @@ public class Store implements Serializable {
 	}
 	
 	
+	public void removeProduct(Product product) {
+	    products.remove(product);
+	}
+	
+	
 	
 
 	
