@@ -116,7 +116,17 @@ public class AdminPanel {
     }
 
     private void searchProduct() {
-        System.out.println("Search product - coming soon...");
+    	System.out.println("\n--- Search Product ---");
+    	String keyword = validator.readNonEmptyString("Enter keyword to search (name or code): ");
+    	List<Product> results = store.searchItems(keyword);
+    	if (results.isEmpty()) {
+            System.out.println("No products found matching '" + keyword + "'.");
+            return;
+        }
+    	System.out.println("\n--- Search Results for '" + keyword + "' ---");
+        for (Product p : results) {
+            System.out.println(p.toString());
+        }
     }
 
 
