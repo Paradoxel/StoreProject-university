@@ -149,6 +149,20 @@ public class InputValidator {
     }
     
     
+    public Double readOptionalDouble() {
+        String input = scanner.nextLine().trim();
+        if (input.isEmpty()) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.print("Invalid number. Please try again: ");
+            return readOptionalDouble(); 
+        }
+    }
+    
+    
     
     
 }
