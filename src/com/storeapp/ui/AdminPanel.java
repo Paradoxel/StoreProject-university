@@ -70,7 +70,14 @@ public class AdminPanel {
     	System.out.println("\n--- Add New Product ---");
     	
     	// Mandatory fields
-    	String code=validator.readNonEmptyString("Code: ");
+    	String code;
+    	while(true) {
+    		code=validator.readNonEmptyString("Code: ");
+    		if(store.findItemByCode(code)==null)
+    			break;
+    		System.out.println("❌ This code already exists. Please enter a different code.");
+    	}
+    	
     	String name=validator.readNonEmptyString("Name: ");
     	System.out.print("Price: ");
     	double price=validator.readPositiveDouble();
@@ -110,10 +117,11 @@ public class AdminPanel {
     	store.addProduct(product);
     	try {
 			store.saveToFile(Constants.STORE_FILE);
+			System.out.println("✅ Product '" + product.getName() + "' added successfully!");
 		} catch (IOException e) {
 			System.out.print("Error...\nTry again" );
 		}
-    	System.out.println("✅ Product '" + product.getName() + "' added successfully!");
+    	
     }
 
     private void searchProduct() {
