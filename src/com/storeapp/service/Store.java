@@ -1,10 +1,10 @@
 package com.storeapp.service;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import com.storeapp.model.*;
 public class Store implements Serializable {
@@ -119,6 +119,48 @@ public class Store implements Serializable {
 	        return (Store) objectIn.readObject();
 	    }
 	}
+	
+	
+	public boolean isMembershipCodeTaken(String code) {
+		for(Customer c: customers) {
+			if(c instanceof LoyalCustomer) {
+				if(((LoyalCustomer) c).getMembershipCode().equals(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	public String generateMembershipCode(String name) {
+		// Step 1: Create a numeric hash from the customer's name.
+		long nameHash=0;
+		for(int i=0;i<name.length();i++) {
+			nameHash+=(long)name.charAt(i)*(i+1);
+		}
+		// Step 2: Get the current system time in milliseconds
+		long timestamp=System.currentTimeMillis();
+		// Step 3: A well-known magic number used in hash functions (decimal 2654435769).
+		long magic=0x9E3779B9L;
+		// to produce a hard-to-guess, unique numeric seed.
+		nameHash = nameHash & magic;   // step A: AND with magic number
+		nameHash = nameHash ^ timestamp;   // step B: XOR with current timestamp
+		Random random = new Random();
+		nameHash = nameHash | (random.nextInt(256) << 16);   // step C: OR with random bits
+		nameHash = nameHash ^ (magic >>> 16);   // step D: XOR with magic right-shifted
+		nameHash= Math.abs(nameHash) & 0xFFFFFFFFL;// Step E: ensure a positive 32‑bit number
+		// Step 4: ensure uniqueness – keep trying next numbers if the code is already taken
+		String code;
+		do {
+		    code = String.format("%08X", nameHash);
+		    nameHash = (nameHash + 1) & 0xFFFFFFFFL;
+		} while (isMembershipCodeTaken(code));
+
+		return code;
+
+	}
+	
 	
 	
 
