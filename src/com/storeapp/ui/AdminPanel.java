@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -131,7 +132,21 @@ public class AdminPanel {
 
 
     private void addLoyalCustomer() {
-        System.out.println("Add loyal customer - coming soon...");
+    	System.out.println("\n--- Add Loyal Customer ---");
+    	String name=validator.readNonEmptyString("Name: ");
+    	String phone=validator.readNonEmptyString("phone: ");
+    	String membershipCode = validator.readNonEmptyString("Membership Code: ");
+    	LocalDate joinDate=LocalDate.now();
+    	System.out.println("Join Date (today): " + joinDate);
+    	LoyalCustomer loyalCustomer = new LoyalCustomer(name, phone, membershipCode, joinDate);
+    	store.addCustomer(loyalCustomer);
+    	try {
+            store.saveToFile(Constants.STORE_FILE);
+            System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
+        } catch (IOException e) {
+            System.out.println("❌ Error saving customer. Please try again.");
+        }
+    	
     }
 	
 	
