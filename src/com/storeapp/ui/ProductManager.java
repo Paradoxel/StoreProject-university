@@ -153,6 +153,11 @@ public class ProductManager {
             System.out.println("❌ No product found with code '" + code + "'.");
             return;
         }
+     // Ask for confirmation before deleting
+        if (!validator.yesOrNo("Are you sure you want to delete '" + product.getName() + "'?")) {
+            System.out.println("❌ Deletion cancelled.");
+            return;
+        }
         
         // Remove from the list
         store.removeProduct(product);
