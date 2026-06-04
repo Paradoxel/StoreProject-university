@@ -22,13 +22,14 @@ public class CustomerManager {
         String[] options = {
             "1. Show all customers",
             "2. Add Loyal Customer",
-            "3. Back to Admin Menu"
+            "3. View Customer Details",   
+            "4. Back to Admin Menu"
         };
 
         while (true) {
             validator.printBox("CUSTOMER MANAGEMENT", options);
 
-            int choice = validator.readIntRange(1, 3);
+            int choice = validator.readIntRange(1, 4);
 
             switch (choice) {
                 case 1:
@@ -38,6 +39,9 @@ public class CustomerManager {
                     addLoyalCustomer();
                     break;
                 case 3:
+                    viewCustomerDetails();   
+                    break;
+                case 4:
                     return;
             }
         }
@@ -112,5 +116,47 @@ public class CustomerManager {
         // Footer line
         System.out.println("---- -------------------- --------------- ---------- ---------- ---------- ----------");
     }
+    
+    
+    private void viewCustomerDetails() {
+        System.out.println("\n--- View Customer Details ---");
+        String input = validator.readNonEmptyString("Enter phone number or membership code: ");
+        
+        // Try to find the customer – first as loyal by code, then by phone
+        Customer c = store.findLoyalCustomerByCode(input);
+        if (c == null) {
+            c = store.findCustomerByPhone(input);
+        }
+        
+        if (c == null) {
+            System.out.println("❌ No customer found with this phone number or membership code.");
+            return;
+        }
+
+        // Basic info
+        System.out.println("\n📋 Customer Details:");
+        System.out.println("Name  : " + c.getName());
+        System.out.println("Phone : " + c.getPhone());
+        System.out.println("Type  : " + (c instanceof LoyalCustomer ? "Loyal" : "Regular"));
+
+        // Loyal customer extra details
+        if (c instanceof LoyalCustomer) {
+        	LoyalCustomer lc = (LoyalCustomer) c; 
+            System.out.println("Member Code : " + lc.getMembershipCode());
+            System.out.println("Join Date   : " + lc.getJoinDate());
+            System.out.println("Debt (owed) : " + String.format("%.2f Tomans", lc.getDebt()));
+            System.out.println("Credit      : " + String.format("%.2f Tomans", lc.getCredit()));
+        }
+        System.out.println("─────────────────────────────");
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
