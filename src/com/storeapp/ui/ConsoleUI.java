@@ -57,7 +57,7 @@ public class ConsoleUI {
                     signUp();
                     break;
                 case 3:
-                    System.out.println("👋 Goodbye!");
+                	validator.printTitle("👋 Goodbye!");
                     return;
             }
         }

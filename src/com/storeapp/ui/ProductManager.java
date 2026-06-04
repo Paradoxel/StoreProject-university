@@ -20,25 +20,27 @@ public class ProductManager {
     public void showMenu() {
         String[] options = {
             "1. Show all products",
-            "2. Add product",
-            "3. Edit product",
-            "4. Delete product",
-            "5. Search product",
-            "6. Back to admin menu"
+            "2. View product details",  
+            "3. Add product",
+            "4. Edit product",
+            "5. Delete product",
+            "6. Search product",
+            "7. Back to admin menu"
         };
 
         while (true) {
             validator.printBox("PRODUCT MANAGEMENT", options);
 
-            int choice = validator.readIntRange(1, 6);
+            int choice = validator.readIntRange(1, 7);  
 
             switch (choice) {
                 case 1: showAllProducts(); break;
-                case 2: addProduct(); break;
-                case 3: editProduct(); break;
-                case 4: deleteProduct(); break;
-                case 5: searchProduct(); break;
-                case 6: return;
+                case 2: viewProductDetails(); break;   
+                case 3: addProduct(); break;
+                case 4: editProduct(); break;
+                case 5: deleteProduct(); break;
+                case 6: searchProduct(); break;
+                case 7: return;
             }
         }
     }
@@ -229,6 +231,34 @@ public class ProductManager {
         } catch (IOException e) {
             System.out.println("❌ Product updated in memory, but could not save to file.");
         }
+    }
+    
+    
+    
+    private void viewProductDetails() {
+        System.out.println("\n--- View Product Details ---");
+        String code = validator.readNonEmptyString("Product code: ");
+        Product p = store.findItemByCode(code);
+        if (p == null) {
+            System.out.println("❌ No product found.");
+            return;
+        }
+
+        System.out.println("Code     : " + p.getCode());
+        System.out.println("Name     : " + p.getName());
+        System.out.println("Price    : " + p.getPrice() + " Rials");
+        System.out.println("Stock    : " + p.getStock());
+        System.out.println("Unit     : " + p.getUnitType());
+        System.out.println("Discounted: " + p.getDiscountedPrice() + " Tomans");
+        if (p.getManufacturer() != null) System.out.println("Made by  : " + p.getManufacturer());
+        if (p.getColor() != null)        System.out.println("Color    : " + p.getColor());
+        if (p.getWeight() != null)       System.out.println("Weight   : " + p.getWeight() + " kg");
+        if (p.getVolume() != null)       System.out.println("Volume   : " + p.getVolume() + " L");
+        if (p.getDescription() != null)  System.out.println("Desc     : " + p.getDescription());
+        if (p.getDiscountPercent() > 0)  System.out.println("Discount : " + p.getDiscountPercent() + "%");
+        if (p.getProductionDate() != null) System.out.println("Prod.Date: " + p.getProductionDate());
+        if (p.getExpirationDate() != null) System.out.println("Exp.Date : " + p.getExpirationDate());
+        System.out.println("─────────────────────────────");
     }
     
     
