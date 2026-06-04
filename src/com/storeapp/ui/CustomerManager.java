@@ -6,6 +6,7 @@ import com.storeapp.util.InputValidator;
 import com.storeapp.util.Constants;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class CustomerManager {
 
@@ -19,20 +20,24 @@ public class CustomerManager {
 
     public void showMenu() {
         String[] options = {
-            "1. Add Loyal Customer",
-            "2. Back to Admin Menu"
+            "1. Show all customers",
+            "2. Add Loyal Customer",
+            "3. Back to Admin Menu"
         };
 
         while (true) {
             validator.printBox("CUSTOMER MANAGEMENT", options);
 
-            int choice = validator.readIntRange(1, 2);
+            int choice = validator.readIntRange(1, 3);
 
             switch (choice) {
                 case 1:
-                    addLoyalCustomer();
+                    showAllCustomers();
                     break;
                 case 2:
+                    addLoyalCustomer();
+                    break;
+                case 3:
                     return;
             }
         }
@@ -63,4 +68,49 @@ public class CustomerManager {
             System.out.println("❌ Error saving customer. Please try again.");
         }
     }
+    
+    
+    private void showAllCustomers() {
+        List<Customer> customers = store.getCustomers();
+        if (customers.isEmpty()) {
+            System.out.println("\n⚠️ No customers registered.");
+            return;
+        }
+
+        // Print table header
+        System.out.println("\n--- Customer List ---");
+        System.out.printf("%-4s %-20s %-15s %-10s %-10s %-10s %-10s%n",
+                          "#", "Name", "Phone", "Type", "Code", "Debt", "Credit");
+        System.out.println("---- -------------------- --------------- ---------- ---------- ---------- ----------");
+
+        int index = 1;
+        for (Customer c : customers) {
+            // Determine customer type and optional fields
+            String type = (c instanceof LoyalCustomer) ? "Loyal" : "Regular";
+            String memberCode = "";
+            double debt = 0.0;
+            double credit = 0.0;
+
+            // If loyal, get extra details
+            if (c instanceof LoyalCustomer lc) {
+                memberCode = lc.getMembershipCode();
+                debt = lc.getDebt();
+                credit = lc.getCredit();
+            }
+
+            // Print one row
+            System.out.printf("%-4d %-20s %-15s %-10s %-10s %10.2f %10.2f%n",
+                    index,
+                    c.getName(),
+                    c.getPhone(),
+                    type,
+                    memberCode,
+                    debt,
+                    credit);
+            index++;
+        }
+        // Footer line
+        System.out.println("---- -------------------- --------------- ---------- ---------- ---------- ----------");
+    }
+    
 }
