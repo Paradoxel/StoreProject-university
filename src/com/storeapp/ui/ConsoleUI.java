@@ -77,6 +77,7 @@ public class ConsoleUI {
         if (userCode.equals(Constants.ADMIN_CODE)) {
         	
             AdminPanel adminPanel = new AdminPanel(store, validator);
+            adminPanel.showDashboard();
             adminPanel.showMenu();
             return;
         }

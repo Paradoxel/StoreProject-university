@@ -21,7 +21,6 @@ public class AdminPanel {
 	public void showMenu() {
 	    ProductManager productManager = new ProductManager(store, validator);
 	    CustomerManager customerManager = new CustomerManager(store, validator);
-
 	    String[] options = {
 	        "1. Product Management",
 	        "2. Customer Management",
@@ -44,6 +43,38 @@ public class AdminPanel {
 	                return;
 	        }
 	    }
+	}
+	
+	
+	
+	
+	
+	public void showDashboard() {
+	    int totalProducts = store.getProducts().size();
+	    int totalCustomers = store.getCustomers().size();
+	    int totalInvoices = store.getInvoices().size();
+	    
+	    double totalSales = 0;
+	    for (Invoice inv : store.getInvoices()) {
+	        totalSales += inv.getFinalAmount();
+	    }
+	    
+	    double totalDebt = 0;
+	    for (Customer c : store.getCustomers()) {
+	        if (c instanceof LoyalCustomer lc) {
+	            totalDebt += lc.getDebt();
+	        }
+	    }
+
+	    // Print a nice dashboard box
+	    String[] stats = {
+	        "Total Products  : " + totalProducts,
+	        "Total Customers : " + totalCustomers,
+	        "Total Invoices  : " + totalInvoices,
+	        "Total Sales     : " + String.format("%.2f Tomans", totalSales),
+	        "Outstanding Debt: " + String.format("%.2f Tomans", totalDebt)
+	    };
+	    validator.printBox("STORE DASHBOARD", stats);
 	}
 	
 }
