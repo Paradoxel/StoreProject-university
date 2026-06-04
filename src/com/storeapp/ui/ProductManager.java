@@ -18,14 +18,17 @@ public class ProductManager {
     }
     
     public void showMenu() {
+        String[] options = {
+            "1. Show all products",
+            "2. Add product",
+            "3. Edit product",
+            "4. Delete product",
+            "5. Search product",
+            "6. Back to admin menu"
+        };
+
         while (true) {
-            System.out.println("\n--- Product Management ---");
-            System.out.println("1. Show all products");
-            System.out.println("2. Add product");
-            System.out.println("3. Edit product");
-            System.out.println("4. Delete product");
-            System.out.println("5. Search product");
-            System.out.println("6. Back to admin menu");
+            validator.printBox("PRODUCT MANAGEMENT", options);
 
             int choice = validator.readIntRange(1, 6);
 
@@ -132,15 +135,28 @@ public class ProductManager {
     private void searchProduct() {
     	System.out.println("\n--- Search Product ---");
     	String keyword = validator.readNonEmptyString("Enter keyword to search (name or code): ");
+    	
     	List<Product> results = store.searchItems(keyword);
     	if (results.isEmpty()) {
             System.out.println("No products found matching '" + keyword + "'.");
             return;
         }
     	System.out.println("\n--- Search Results for '" + keyword + "' ---");
+    	System.out.printf("%-4s %-15s %-10s %12s %8s %-8s%n",
+                "#", "Name", "Code", "Price", "Stock", "Unit");
+    	System.out.println("---- --------------- ------------ ---------- -------- --------");
+    	int index = 1;
         for (Product p : results) {
-            System.out.println(p.toString());
+            System.out.printf("%-4d %-15s %-10s %12.2f %8.2f %-8s%n",
+                    index,
+                    p.getName(),
+                    p.getCode(),
+                    p.getPrice(),
+                    p.getStock(),
+                    p.getUnitType());
+            index++;
         }
+        System.out.println("---- --------------- ------------ ---------- -------- --------");
     }
     
     

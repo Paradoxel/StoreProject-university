@@ -21,20 +21,17 @@ public class InputValidator {
     
     public int readIntRange(int min, int max) {
         while (true) {
-            try {
-                String input = scanner.nextLine().trim();
-                int value = Integer.parseInt(input);
-
-                if (value >= min && value <= max)
+            System.out.print("Please choose an option between " + min + " and " + max + ": ");
+            if (scanner.hasNextInt()) {
+                int value = scanner.nextInt();
+                scanner.nextLine(); // clear buffer
+                if (value >= min && value <= max) {
                     return value;
-
-            } catch (NumberFormatException e) {
+                }
+            } else {
+                System.out.print("Invalid input. Please enter a number: ");
+                scanner.next(); // discard wrong input
             }
-
-            System.out.printf(
-                "Please enter a number between %d and %d: ",
-                min, max
-            );
         }
     }
 
@@ -160,6 +157,40 @@ public class InputValidator {
             System.out.print("Invalid number. Please try again: ");
             return readOptionalDouble(); 
         }
+    }
+    
+    
+    public void printBox(String title, String[] options) {
+        int width = 36;
+
+        // Top border
+        System.out.println("┌" + "─".repeat(width) + "┐");
+
+        // Centered title
+        int padding = (width - title.length()) / 2;
+        System.out.println("│" + " ".repeat(padding) + title + " ".repeat(width - padding - title.length()) + "│");
+
+        // Separator
+        System.out.println("├" + "─".repeat(width) + "┤");
+
+        // Options
+        for (String opt : options) {
+            System.out.println("│ " + opt + " ".repeat(width - opt.length() - 1) + "│");
+        }
+
+        // Bottom border
+        System.out.println("└" + "─".repeat(width) + "┘");
+    }
+    
+    //Prints a simple title inside the box 
+    public void printTitle(String title) {
+        int width = 36;
+        String line = "─".repeat(width);
+        int padding = (width - title.length()) / 2;
+        
+        System.out.println("┌" + line + "┐");
+        System.out.println("│" + " ".repeat(padding) + title + " ".repeat(width - padding - title.length()) + "│");
+        System.out.println("└" + line + "┘");
     }
     
     

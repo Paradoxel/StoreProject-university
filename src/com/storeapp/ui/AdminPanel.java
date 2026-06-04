@@ -22,11 +22,14 @@ public class AdminPanel {
 	    ProductManager productManager = new ProductManager(store, validator);
 	    CustomerManager customerManager = new CustomerManager(store, validator);
 
+	    String[] options = {
+	        "1. Product Management",
+	        "2. Customer Management",
+	        "3. Back to main menu"
+	    };
+
 	    while (true) {
-	        System.out.println("\n--- Admin Panel ---");
-	        System.out.println("1. Product Management");
-	        System.out.println("2. Customer Management");
-	        System.out.println("3. Back to main menu");
+	        validator.printBox("ADMIN PANEL", options);
 
 	        int choice = validator.readIntRange(1, 3);
 

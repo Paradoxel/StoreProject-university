@@ -18,10 +18,13 @@ public class CustomerManager {
     }
 
     public void showMenu() {
+        String[] options = {
+            "1. Add Loyal Customer",
+            "2. Back to Admin Menu"
+        };
+
         while (true) {
-            System.out.println("\n--- Customer Management ---");
-            System.out.println("1. Add Loyal Customer");
-            System.out.println("2. Back to Admin Menu");
+            validator.printBox("CUSTOMER MANAGEMENT", options);
 
             int choice = validator.readIntRange(1, 2);
 

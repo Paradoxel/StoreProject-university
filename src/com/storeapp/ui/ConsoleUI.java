@@ -38,11 +38,14 @@ public class ConsoleUI {
     public void start() {
         System.out.println("🎉 Welcome to the Store Management System!");
 
+        String[] options = {
+            "1. Login",
+            "2. Sign Up",
+            "3. Exit"
+        };
+
         while (true) {
-            System.out.println("\n===== Main Menu =====");
-            System.out.println("1. Login");
-            System.out.println("2. Sign Up");
-            System.out.println("3. Exit");
+            validator.printBox("MAIN MENU", options);
 
             int choice = validator.readIntRange(1, 3);
 
@@ -56,7 +59,6 @@ public class ConsoleUI {
                 case 3:
                     System.out.println("👋 Goodbye!");
                     return;
-               
             }
         }
     }
@@ -67,11 +69,13 @@ public class ConsoleUI {
      * Handles login for both admin and regular customers.
      */
     public void login() {
+    	validator.printTitle("LOGIN");
         String userCode = validator.readNonEmptyString("Please enter your code or phone number: ");
 
         // Check for admin login
+        
         if (userCode.equals(Constants.ADMIN_CODE)) {
-            System.out.println("🔑 Admin login successful. Welcome to the Admin Panel!");
+        	
             AdminPanel adminPanel = new AdminPanel(store, validator);
             adminPanel.showMenu();
             return;
