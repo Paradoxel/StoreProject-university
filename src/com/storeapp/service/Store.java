@@ -177,6 +177,18 @@ public class Store implements Serializable {
 	}
 	
 	
+	// Generate a unique code for a product like PRD-1
+	public String generateProductCode() {
+		int nextNumber = products.size() + 1;
+		String code;
+		do {
+			code="PRD-"+(nextNumber);
+			nextNumber++;
+		}while(findItemByCode(code)!=null);
+		return code;
+	}
+	
+	
 	
 
 	
