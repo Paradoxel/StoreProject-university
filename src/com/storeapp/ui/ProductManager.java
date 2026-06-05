@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import com.storeapp.model.*;
+import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
 import com.storeapp.util.InputValidator;
 import com.storeapp.util.Constants;
@@ -18,20 +19,21 @@ public class ProductManager {
     }
     
     public void showMenu() {
-        String[] options = {
-            "1. Show all products",
-            "2. View product details",  
-            "3. Add product",
-            "4. Edit product",
-            "5. Delete product",
-            "6. Search product",
-            "7. Back to admin menu"
-        };
+    	String[] options = {
+    		    "1. Show all products",
+    		    "2. View product details",
+    		    "3. Add product",
+    		    "4. Edit product",
+    		    "5. Delete product",
+    		    "6. Search product",
+    		    "7. Generate Sample Products",  
+    		    "8. Back to admin menu"
+    		};
 
         while (true) {
             validator.printBox("PRODUCT MANAGEMENT", options);
 
-            int choice = validator.readIntRange(1, 7);  
+            int choice = validator.readIntRange(1, 8);  
 
             switch (choice) {
                 case 1: showAllProducts(); break;
@@ -40,7 +42,9 @@ public class ProductManager {
                 case 4: editProduct(); break;
                 case 5: deleteProduct(); break;
                 case 6: searchProduct(); break;
-                case 7: return;
+                case 7: generateSampleProducts(); break;
+                case 8:
+                    return;
             }
         }
     }
@@ -259,6 +263,21 @@ public class ProductManager {
         if (p.getProductionDate() != null) System.out.println("Prod.Date: " + p.getProductionDate());
         if (p.getExpirationDate() != null) System.out.println("Exp.Date : " + p.getExpirationDate());
         System.out.println("─────────────────────────────");
+    }
+    
+    
+    
+    private void generateSampleProducts() {
+        System.out.print("How many random products? (1-10)\n");
+        int count = validator.readIntRange(1, 10);
+        RandomDataGenerator gen = new RandomDataGenerator(store);
+        gen.generateProducts(count);
+        try {
+            store.saveToFile(Constants.STORE_FILE);
+            System.out.println("✅ " + count + " sample products generated and saved!");
+        } catch (IOException e) {
+            System.out.println("❌ Products generated but could not save.");
+        }
     }
     
     

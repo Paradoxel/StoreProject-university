@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import com.storeapp.model.*;
+import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
 import com.storeapp.util.InputValidator;
 import com.storeapp.util.Constants;
@@ -19,29 +20,25 @@ public class CustomerManager {
     }
 
     public void showMenu() {
-        String[] options = {
-            "1. Show all customers",
-            "2. Add Loyal Customer",
-            "3. View Customer Details",   
-            "4. Back to Admin Menu"
-        };
+    	String[] options = {
+    		    "1. Show all customers",
+    		    "2. Add Loyal Customer",
+    		    "3. View Customer Details",
+    		    "4. Generate Sample Customers",   
+    		    "5. Back to Admin Menu"
+    		};
 
         while (true) {
             validator.printBox("CUSTOMER MANAGEMENT", options);
 
-            int choice = validator.readIntRange(1, 4);
+            int choice = validator.readIntRange(1, 5);
 
             switch (choice) {
-                case 1:
-                    showAllCustomers();
-                    break;
-                case 2:
-                    addLoyalCustomer();
-                    break;
-                case 3:
-                    viewCustomerDetails();   
-                    break;
-                case 4:
+                case 1: showAllCustomers(); break;
+                case 2: addLoyalCustomer(); break;
+                case 3: viewCustomerDetails(); break;
+                case 4: generateSampleCustomers(); break;
+                case 5:
                     return;
             }
         }
@@ -148,6 +145,20 @@ public class CustomerManager {
             System.out.println("Credit      : " + String.format("%.2f Tomans", lc.getCredit()));
         }
         System.out.println("─────────────────────────────");
+    }
+    
+    
+    private void generateSampleCustomers() {
+        System.out.print("How many random customers? (1-10)\n");
+        int count = validator.readIntRange(1, 10);
+        RandomDataGenerator gen = new RandomDataGenerator(store);
+        gen.generateCustomers(count);
+        try {
+            store.saveToFile(Constants.STORE_FILE);
+            System.out.println("✅ " + count + " sample customers generated and saved!");
+        } catch (IOException e) {
+            System.out.println("❌ Customers generated but could not save.");
+        }
     }
     
     
