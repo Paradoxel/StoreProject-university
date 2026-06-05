@@ -78,4 +78,28 @@ public class RandomDataGenerator {
 	}
 	
 	
+	
+	// Generate a random customer (regular  or Loyal)
+	private Customer generateRandomCustomer() {
+		// random name from existing list (reuse manufacturer names)
+		String name=Constants.MANUFACTURERS[random.nextInt(Constants.MANUFACTURERS.length)];
+		// random phone number
+		String phone="09"+(100000000 + random.nextInt(900000000));
+		// randomly decide if Loyal (50% chance)
+		if(random.nextBoolean()) {
+			String memberCode=store.generateMembershipCode(name);
+			return new LoyalCustomer(name,phone,memberCode,LocalDate.now());
+		}
+		return new Customer(name, phone);
+	}
+	
+	public void generateCustomers(int count) {
+		for(int i=0;i<count;i++) {
+			store.addCustomer(generateRandomCustomer());
+			System.out.println("Customer " + (i + 1) + " generated successfully.");
+		}
+		System.out.println("Successfully generated " + count + " random customers.");
+	}
+	
+	
 }
