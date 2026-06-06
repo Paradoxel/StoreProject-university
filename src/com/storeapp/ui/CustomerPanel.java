@@ -148,6 +148,20 @@ public class CustomerPanel {
 		        }
 		        continue;
 		    }
+		    // check if user wants to see current Cart
+		    if (input.equalsIgnoreCase("cart")) {
+		        if (cart.getItems().isEmpty()) {
+		            System.out.println("🛒 Your cart is empty.");
+		        } else {
+		            System.out.println("\n--- Your Cart ---");
+		            for (CartItem ci : cart.getItems()) {
+		                System.out.println(" - " + ci.getProduct().getName() + " x" + ci.getQuantity() + " = " + ci.getTotalPrice() + " Rials");
+		            }
+		            System.out.println("Total: " + cart.getTotalAmount() + " Rials");
+		            System.out.println("─────────────────────────────");
+		        }
+		        continue;
+		    }
 		    
 		    // Find the product
 		    Product product = store.findItemByCode(input);
