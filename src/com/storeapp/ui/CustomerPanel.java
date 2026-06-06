@@ -127,6 +127,27 @@ public class CustomerPanel {
 		    if (input.equalsIgnoreCase("done")) {
 		        break;
 		    }
+		    // check if user wants to remove an item from cart 
+		    if (input.equalsIgnoreCase("remove")) {
+		        String removeCode = validator.readNonEmptyString("Enter product code to remove: ");
+		        
+		        // Check if the product exists in the cart
+		        boolean found = false;
+		        for (CartItem item : cart.getItems()) {
+		            if (item.getProduct().getCode().equals(removeCode)) {
+		                found = true;
+		                break;
+		            }
+		        }
+		        
+		        if (found) {
+		            cart.removeItem(removeCode);
+		            System.out.println("✅ Removed from cart.");
+		        } else {
+		            System.out.println("❌ This product is not in your cart.");
+		        }
+		        continue;
+		    }
 		    
 		    // Find the product
 		    Product product = store.findItemByCode(input);
