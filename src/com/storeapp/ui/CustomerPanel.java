@@ -61,6 +61,44 @@ public class CustomerPanel {
 		}
 	}
 	
+	// show the account info for regular customer
+	private void myAccount(Customer customer) {
+	    String[] options = { "1. Edit Info", "2. Purchase History", "3. Back" };
+	    while (true) {
+	        validator.printBox("MY ACCOUNT", options);
+	        int choice = validator.readIntRange(1, 3);
+	        switch (choice) {
+	            case 1: editCustomerInfo(customer); break;
+	            case 2: showCustomerInvoices(customer); break;
+	            case 3: return;
+	        }
+	    }
+	}
+	
+	// show the account info for loyal customer
+	private void loyalAccountMenu(LoyalCustomer lc) {
+	    String[] options = {
+	        "1. Edit Info",
+	        "2. Purchase History",
+	        "3. Financial Status",
+	        "4. Pay Debt",
+	        "5. Renew Membership Code",
+	        "6. Back"
+	    };
+	    while (true) {
+	        validator.printBox("LOYAL ACCOUNT", options);
+	        int choice = validator.readIntRange(1, 6);
+	        switch (choice) {
+	            case 1: editCustomerInfo(lc); break;
+	            case 2: showCustomerInvoices(lc); break;
+	            case 3: viewFinancialStatus(lc); break;
+	            case 4: payDebt(lc); break;
+	            case 5: renewMembershipCode(lc); break;
+	            case 6: return;
+	        }
+	    }
+	}
+	
 
 
 }
