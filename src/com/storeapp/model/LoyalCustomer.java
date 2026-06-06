@@ -51,6 +51,13 @@ public class LoyalCustomer extends Customer implements Serializable {
 		}
 	}
 	
+	// pay debt
+	public void payDebt(double amount) {
+		if(amount>0 && amount<=debt) {
+			debt-=amount;
+		}
+	}
+	
 	
 	
 	

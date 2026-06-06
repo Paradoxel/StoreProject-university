@@ -322,6 +322,37 @@ public class CustomerPanel {
 		System.out.println("─────────────────────────────");
 	}
 	
+	// pay debt for loyal customer
+	public void payDebt(LoyalCustomer lc) {
+		System.out.println("\n--- Pay Debt ---");
+		System.out.println("Current debt: "+String.format("%.2f Tomans", lc.getDebt()));
+		if(lc.getDebt()==0) {
+			System.out.println("✅ No debt to pay.");
+			return;
+		}
+		// ask from user
+		if (!validator.yesOrNo("Do you want to pay off your debt?")) {
+			System.out.println("❌ Payment cancelled. Press Enter to continue...");
+			return;
+		}
+		System.out.print("Amount to pay (or press Enter to skip): ");
+		double amount = validator.readPositiveDouble();
+		if(amount==0) {
+			return;
+		}
+		if(amount>lc.getDebt()) {
+			System.out.println("❌ Cannot pay more than your debt.");
+			return;
+		}
+		lc.payDebt(amount);
+		try {
+	        store.saveToFile(Constants.STORE_FILE);
+	        System.out.println("✅ Paid " + String.format("%.2f Tomans", amount) + ". Remaining debt: " + String.format("%.2f Tomans", lc.getDebt()));
+	    } catch (IOException e) {
+	        System.out.println("❌ Could not save changes.");
+	    }
+	}
+	
 
 
 }
