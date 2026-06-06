@@ -85,6 +85,8 @@ public class ConsoleUI {
         Customer loyalCustomer = store.findLoyalCustomerByCode(userCode);
         if (loyalCustomer != null) {
             System.out.println("✅ Welcome back, " + loyalCustomer.getName() + " (Loyal Customer)!");
+            CustomerPanel customerPanel = new CustomerPanel(store, validator);
+            customerPanel.startPurchase(loyalCustomer);
             return;
         }
 
@@ -97,6 +99,8 @@ public class ConsoleUI {
                 return;
         	}
             System.out.println("✅ Welcome back, " + customer.getName() + "!");
+            CustomerPanel customerPanel = new CustomerPanel(store, validator);
+            customerPanel.startPurchase(customer);
         } else {
             System.out.println("❌ No account found with this phone number. Please sign up first.");
         }
