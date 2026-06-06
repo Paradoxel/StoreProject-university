@@ -58,6 +58,11 @@ public class LoyalCustomer extends Customer implements Serializable {
 		}
 	}
 	
+	// update the member ship code (e.g , after new code)
+	public void setMembershipCode(String membershipCode) {
+		this.membershipCode=membershipCode;
+	}
+	
 	
 	
 	

@@ -353,6 +353,36 @@ public class CustomerPanel {
 	    }
 	}
 	
+	
+	
+	// new member ship(for expiration code)
+	private void renewMembershipCode(LoyalCustomer lc) {
+		System.out.println("\n--- Renew Membership Code ---");
+		System.out.println("Current code: " + lc.getMembershipCode());
+		// ask for confirmation
+		if(!validator.yesOrNo("Generate a new membership code?")) {
+			System.out.println("❌ Renewal cancelled.");
+			return;
+		}
+		// Generate new code
+		String newCode=store.generateMembershipCode(lc.getName());
+		// keep current code 
+		String oldCode = lc.getMembershipCode();
+		// set the code
+		lc.setMembershipCode(newCode);
+		try {
+	        store.saveToFile(Constants.STORE_FILE);
+	        System.out.println("✅ New membership code: " + newCode);
+	        System.out.println("⚠️ Please save this code – you will need it to log in.");
+
+	    } catch (IOException e) {
+	    	 lc.setMembershipCode(oldCode);
+	        System.out.println("❌ Could not save the new code.");
+	    }
+	}
+	
+	
+	
 
 
 }
