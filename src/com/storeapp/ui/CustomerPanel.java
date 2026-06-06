@@ -5,6 +5,7 @@ import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.storeapp.model.*;
@@ -286,6 +287,31 @@ public class CustomerPanel {
 	    }
 	}
 	
+	// show customer invoice
+	public void showCustomerInvoices(Customer customer) {
+		List<Invoice> allInvoices =store.getInvoices();
+		List<Invoice> customerInvoices =new ArrayList<Invoice>();
+		for(Invoice inv : allInvoices) {
+			if(inv.getCustomer().equals(customer)) {
+				customerInvoices.add(inv);
+			}
+		}
+		if(customerInvoices!=null) {
+			System.out.println("\n📭 No invoices found.");
+	        return;
+		}
+		System.out.println("\n--- Your Invoices ---");
+	    System.out.printf("%-20s %-20s %-10s %-10s%n", "Invoice #", "Date", "Amount", "Payment");
+	    System.out.println("-------------------- -------------------- ---------- ----------");
+	    for (Invoice inv : customerInvoices) {
+	        System.out.printf("%-20s %-20s %10.2f %-10s%n",
+	                inv.getId(),
+	                inv.getDateTime().toString(),
+	                inv.getFinalAmount(),
+	                inv.getPaymentMethod());
+	    }
+	    System.out.println("-------------------- -------------------- ---------- ----------");
+	}
 	
 
 
