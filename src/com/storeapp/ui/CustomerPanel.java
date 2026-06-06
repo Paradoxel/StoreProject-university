@@ -313,6 +313,15 @@ public class CustomerPanel {
 	    System.out.println("-------------------- -------------------- ---------- ----------");
 	}
 	
+	// show status of loyal custoemr
+	public void viewFinancialStatus(LoyalCustomer lc) {
+		System.out.println("\n--- Financial Status ---");
+		System.out.println("Total Debt   : " + String.format("%.2f Tomans", lc.getDebt()));
+		System.out.println("Total Credit : " + String.format("%.2f Tomans", lc.getCredit()));
+		System.out.println("Can Buy on Credit? : " + (lc.canBuyOnCredit() ? "Yes" : "No (limit reached)"));
+		System.out.println("─────────────────────────────");
+	}
+	
 
 
 }
