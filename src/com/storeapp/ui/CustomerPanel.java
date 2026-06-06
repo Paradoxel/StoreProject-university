@@ -2,6 +2,9 @@ package com.storeapp.ui;
 
 import com.storeapp.service.Store;
 import com.storeapp.util.InputValidator;
+
+import java.util.List;
+
 import com.storeapp.model.*;
 public class CustomerPanel {
 	private Store store;
@@ -129,6 +132,32 @@ public class CustomerPanel {
 		}
 
 	}
+	
+	public void showProducts() {
+		List<Product> products=store.getProducts();
+		if(products.isEmpty()) {
+			System.out.println("\n⚠️ No products available.");
+			return ;
+		}
+		// simple table header
+		System.out.println("\n--- Available Products ---");
+		System.out.printf("%-10s %-20s %10s %8s %-8s%n",
+                "Code", "Name", "Price", "Stock", "Unit");
+		System.out.println("---------- -------------------- ---------- -------- --------");
+		for (Product p : products) {
+	        if (p.isSellable()) {  // only show sellable products
+	            System.out.printf("%-10s %-20s %10.2f %8.2f %-8s%n",
+	                    p.getCode(),
+	                    p.getName(),
+	                    p.getPrice(),
+	                    p.getStock(),
+	                    p.getUnitType());
+	        }
+	    }
+		System.out.println("---------- -------------------- ---------- -------- --------");
+		
+	}
+	
 	
 
 
