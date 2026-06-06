@@ -4,6 +4,7 @@ import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.storeapp.model.*;
@@ -262,6 +263,26 @@ public class CustomerPanel {
 	        store.saveToFile(Constants.STORE_FILE);
 	    } catch (Exception e) {
 	        System.out.println("❌ " + e.getMessage());
+	    }
+	}
+	
+	// edit info user
+	private void editCustomerInfo(Customer customer) {
+		System.out.println("\n--- Edit Info ---");
+		System.out.println("(Press Enter to keep the current value)");
+		String newName=validator.readOptionalString("New name (current: " + customer.getName()+" ");
+		if(newName!=null && !newName.isEmpty()) {
+			customer.setName(newName);
+		}
+		String newPhone = validator.readOptionalString("New phone (current: " + customer.getPhone() + "): ");
+		if (newPhone != null && !newPhone.isEmpty()) {
+	        customer.setPhone(newPhone);
+	    }
+		try {
+	        store.saveToFile(Constants.STORE_FILE);
+	        System.out.println("✅ Info updated.");
+	    } catch (IOException e) {
+	        System.out.println("❌ Could not save changes.");
 	    }
 	}
 	
