@@ -192,7 +192,9 @@ public class CustomerPanel {
 		PaymentMethod method=getPaymentMethod(customer);
 		// Execute checkout for invoice
 		Invoice invoice =store.checkoutCart(cart, method);
-		
+		// Show final invoice
+		System.out.println("\n" + invoice.toString());
+		System.out.println("✅ Purchase completed. Thank you!");
 	}
 	
 	public void showProducts() {
@@ -271,7 +273,7 @@ public class CustomerPanel {
 	private void editCustomerInfo(Customer customer) {
 		System.out.println("\n--- Edit Info ---");
 		System.out.println("(Press Enter to keep the current value)");
-		String newName=validator.readOptionalString("New name (current: " + customer.getName()+" ");
+		String newName = validator.readOptionalString("New name (current: " + customer.getName() + "): ");
 		if(newName!=null && !newName.isEmpty()) {
 			customer.setName(newName);
 		}
@@ -296,7 +298,7 @@ public class CustomerPanel {
 				customerInvoices.add(inv);
 			}
 		}
-		if(customerInvoices!=null) {
+		if(customerInvoices.isEmpty()) {
 			System.out.println("\n📭 No invoices found.");
 	        return;
 		}
