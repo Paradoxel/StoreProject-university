@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import com.storeapp.service.Store;
+import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 import java.util.List;
@@ -233,6 +234,34 @@ public class CustomerPanel {
 	    } else {
 	        System.out.println("ℹ️ Regular customers can only pay cash.");
 	        return PaymentMethod.CASH;
+	    }
+	}
+	
+	// return an item for loyal customer
+	private void returnItem(LoyalCustomer lc) {
+		System.out.println("\n--- Return an Item ---");
+		String invoiceId = validator.readNonEmptyString("Enter invoice ID: ");
+		Invoice inv = store.findInvoiceById(invoiceId);
+		if (inv == null) {
+	        System.out.println("❌ Invoice not found.");
+	        return;
+	    }
+		if (!inv.getCustomer().equals(lc)) {
+	        System.out.println("❌ This invoice does not belong to you.");
+	        return;
+	    }
+		System.out.println("\nItems in this invoice:");
+		for (CartItem ci : inv.getItems()) {
+	        System.out.println(" - " + ci.getProduct().getCode() + " (" + ci.getProduct().getName() + ") x" + ci.getQuantity());
+	    }
+	    String code = validator.readNonEmptyString("Product code to return: ");
+	    double qty = validator.readPositiveDouble();
+	    try {
+	        store.processReturn(lc, inv, code, qty);
+	        System.out.println("✅ Returned " + qty + " of " + code + ". Credit: " + lc.getCredit() + " Tomans.");
+	        store.saveToFile(Constants.STORE_FILE);
+	    } catch (Exception e) {
+	        System.out.println("❌ " + e.getMessage());
 	    }
 	}
 	

@@ -188,6 +188,39 @@ public class Store implements Serializable {
 		return code;
 	}
 	
+	// find an invoice by its unique  id
+	public Invoice findInvoiceById(String id) {
+		for(Invoice inv : invoices) {
+			if (inv.getId().equals(id)) {
+				return inv;
+			}
+		}
+		return null;
+	}
+	
+	// Processes a return an item for a loyal customer
+	public void processReturn(LoyalCustomer lc,Invoice inv,String productCode,double quantity) {
+		CartItem target = null;
+	    for (CartItem ci : inv.getItems()) {
+	        if (ci.getProduct().getCode().equals(productCode)) {
+	            target = ci;
+	            break;
+	        }
+	    }
+	    if (target == null) {
+	        throw new IllegalArgumentException("Product not in this invoice.");
+	    }
+	    if (quantity <= 0 || quantity > target.getQuantity()) {
+	        throw new IllegalArgumentException("Invalid quantity.");
+	    }
+	 // 1. Increase stock 
+	    target.getProduct().increaseStock(quantity);
+	    double refund = target.getProduct().getDiscountedPrice() * quantity;
+	    lc.addCredit(refund);
+	}
+	
+	
+	
 	
 	
 
