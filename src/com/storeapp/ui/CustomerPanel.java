@@ -99,6 +99,37 @@ public class CustomerPanel {
 	    }
 	}
 	
+	
+	
+	public void shop(Customer customer) {
+		// create a new shoping cart
+		Cart cart=store.createCart(customer);
+		System.out.println("🛒 Shopping cart ready.");
+		// Shopping guide
+		String[] guide = {
+		    "Enter product CODE to add it to your cart.",
+		    "Enter 'done'  to finish and checkout.",
+		    "Enter 'cart'  to view your cart.",
+		    "Enter 'remove' to delete an item."
+		};
+		validator.printBox("SHOPPING GUIDE", guide);
+		while (true) {
+		    // 1. show available products
+		    showProducts();
+		    
+		    // 2. ask for command
+		    String input = validator.readNonEmptyString("Enter product code (or 'done' to finish): ");
+		    
+		    // 3. check if user wants to finish
+		    if (input.equalsIgnoreCase("done")) {
+		        break;
+		    }
+		    
+		    // 4handle adding product (next steps)
+		}
+
+	}
+	
 
 
 }
