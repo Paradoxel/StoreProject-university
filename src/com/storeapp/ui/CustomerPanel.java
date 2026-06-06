@@ -128,7 +128,23 @@ public class CustomerPanel {
 		        break;
 		    }
 		    
-		    // 4handle adding product (next steps)
+		    // Find the product
+		    Product product = store.findItemByCode(input);
+		    if (product == null) {
+		        System.out.println("❌ Product not found.");
+		        continue;
+		    }
+		    // Get quantity
+		    System.out.print("Quantity: ");
+		    double quantity = validator.readPositiveDouble();
+		    // Check stock
+		    if (!product.hasEnoughStock(quantity)) {
+		        System.out.println("❌ Not enough stock. Available: " + product.getStock());
+		        continue;
+		    }
+		    // Add to cart (magic of equals in cart class)
+		    cart.addItem(product, quantity);
+		    System.out.println("✅ " + product.getName() + " (x" + quantity + ") added to cart.");
 		}
 
 	}
