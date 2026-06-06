@@ -10,5 +10,15 @@ public class CustomerPanel {
 		this.store=store;
 		this.validator=validator;
 	}
+	
+	// show the menu based the customer type
+	public void startPurchase(Customer customer) {
+		if(customer instanceof LoyalCustomer lc) {
+			loyalCustomerMenu(lc);
+		}
+		else {
+			regularCustomerMenu(customer);
+		}
+	}
 
 }
