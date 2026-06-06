@@ -167,7 +167,15 @@ public class CustomerPanel {
 		    cart.addItem(product, quantity);
 		    System.out.println("✅ " + product.getName() + " (x" + quantity + ") added to cart.");
 		}
-
+		if(cart.getItems().isEmpty()) {
+			System.out.println("❌ Your cart is empty. Nothing to checkout.");
+			return ;
+		}
+		// Choose payment method
+		PaymentMethod method=getPaymentMethod(customer);
+		// Execute checkout for invoice
+		Invoice invoice =store.checkoutCart(cart, method);
+		
 	}
 	
 	public void showProducts() {
@@ -193,6 +201,25 @@ public class CustomerPanel {
 	    }
 		System.out.println("---------- -------------------- ---------- -------- --------");
 		
+	}
+	
+	private PaymentMethod getPaymentMethod(Customer customer) {
+	    if (customer instanceof LoyalCustomer) {
+	        while (true) {
+	            String choice = validator.readNonEmptyString("Payment method (cash/credit): ")
+	                                       .trim().toLowerCase();
+	            if (choice.equals("credit")) {
+	                return PaymentMethod.CREDIT;
+	            } else if (choice.equals("cash")) {
+	                return PaymentMethod.CASH;
+	            } else {
+	                System.out.println("❌ Invalid choice. Please type 'cash' or 'credit'.");
+	            }
+	        }
+	    } else {
+	        System.out.println("ℹ️ Regular customers can only pay cash.");
+	        return PaymentMethod.CASH;
+	    }
 	}
 	
 	
