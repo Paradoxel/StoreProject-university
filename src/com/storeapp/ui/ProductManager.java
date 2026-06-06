@@ -250,10 +250,10 @@ public class ProductManager {
 
         System.out.println("Code     : " + p.getCode());
         System.out.println("Name     : " + p.getName());
-        System.out.println("Price    : " + p.getPrice() + " Rials");
+        System.out.println("Price    : " + p.getPrice() + " Tomans");
         System.out.println("Stock    : " + p.getStock());
         System.out.println("Unit     : " + p.getUnitType());
-        System.out.println("Discounted: " + p.getDiscountedPrice() + " Tomans");
+        System.out.println("Discounted: " + p.getDiscountedPrice() + "Tomans");
         if (p.getManufacturer() != null) System.out.println("Made by  : " + p.getManufacturer());
         if (p.getColor() != null)        System.out.println("Color    : " + p.getColor());
         if (p.getWeight() != null)       System.out.println("Weight   : " + p.getWeight() + " kg");
