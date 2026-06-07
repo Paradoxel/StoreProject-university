@@ -184,7 +184,7 @@ public class InputValidator {
     
     //Prints a simple title inside the box 
     public void printTitle(String title) {
-        int width = 36;
+        int width = 50;
         String line = "─".repeat(width);
         int padding = (width - title.length()) / 2;
         
