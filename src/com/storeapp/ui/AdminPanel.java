@@ -2,6 +2,7 @@ package com.storeapp.ui;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -75,8 +76,8 @@ public class AdminPanel {
 	        "Total Products  : " + totalProducts,
 	        "Total Customers : " + totalCustomers,
 	        "Total Invoices  : " + totalInvoices,
-	        "Total Sales     : " + String.format("%.2f Tomans", totalSales),
-	        "Outstanding Debt: " + String.format("%.2f Tomans", totalDebt)
+	        "Total Sales     : " + String.format("%,d Tomans", (long) totalSales),
+	        "Outstanding Debt: " + String.format("%,d Tomans", (long) totalDebt)
 	    };
 	    validator.printBox("STORE DASHBOARD", stats);
 	}
@@ -94,15 +95,15 @@ public class AdminPanel {
 	    System.out.printf("%-20s %-15s %-20s %-10s %-10s%n",
 	                      "Invoice #", "Customer", "Date", "Amount", "Payment");
 	    System.out.println("-------------------- --------------- -------------------- ---------- ----------");
-
+	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	    // Table rows
 	    for (Invoice inv : invoices) {
-	        System.out.printf("%-20s %-15s %-20s %10.2f %-10s%n",
-	                inv.getId(),
-	                inv.getCustomer().getName(),
-	                inv.getDateTime().toString(),
-	                inv.getFinalAmount(),
-	                inv.getPaymentMethod());
+	    	System.out.printf("%-20s %-15s %-20s %,10d %-10s%n",
+	    	        inv.getId(),
+	    	        inv.getCustomer().getName(),
+	    	        inv.getDateTime().format(fmt),   
+	    	        (long) inv.getFinalAmount(),    
+	    	        inv.getPaymentMethod());
 	    }
 	    // Footer
 	    System.out.println("-------------------- --------------- -------------------- ---------- ----------");

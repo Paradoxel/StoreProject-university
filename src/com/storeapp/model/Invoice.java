@@ -74,16 +74,16 @@ public class Invoice implements Serializable {
 
 	    for (CartItem item : items) {
 	        Product p = item.getProduct();
-	        sb.append(String.format(" %-24s %-6.1f %-8s %-12.2f %-14.2f%n",
+	        sb.append(String.format(" %-24s %-6.1f %-8s %,12d %,14d%n",
 	                p.getName(),
 	                item.getQuantity(),
 	                p.getUnitType(),
-	                p.getDiscountedPrice(),
-	                item.getTotalPrice()));
+	                (long) p.getDiscountedPrice(),    
+	                (long) item.getTotalPrice()));    
 	    }
 
 	    sb.append(" ------------------------ ------ -------- ------------ --------------\n");
-	    sb.append(String.format(" TOTAL AMOUNT : %.2f Tomans%n", finalAmount));
+	    sb.append(String.format(" TOTAL AMOUNT : %,d Tomans%n", (long) finalAmount));
 	    sb.append(" PAYMENT      : ").append(paymentMethod == PaymentMethod.CASH ? "Cash" : "Credit").append("\n");
 	    sb.append("══════════════════════════════════════════════════════\n");
 

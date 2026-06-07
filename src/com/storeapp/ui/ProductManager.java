@@ -71,7 +71,7 @@ public class ProductManager {
                     index,
                     p.getName(),
                     p.getCode(),
-                    (long) p.getPrice(),   // بدون اعشار
+                    (long) p.getPrice(), 
                     p.getStock(),
                     p.getUnitType());
             index++;

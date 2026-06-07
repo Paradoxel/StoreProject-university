@@ -5,6 +5,7 @@ import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,15 +162,15 @@ public class CustomerPanel {
 		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
 		    	    for (CartItem ci : cart.getItems()) {
 		    	        Product p = ci.getProduct();
-		    	        System.out.printf(" %-24s %-6.1f %-8s %-12.2f %-14.2f%n",
+		    	        System.out.printf(" %-24s %-6.1f %-8s %,12d %,14d%n",
 		    	                p.getName(),
 		    	                ci.getQuantity(),
 		    	                p.getUnitType(),
-		    	                p.getDiscountedPrice(),
-		    	                ci.getTotalPrice());
+		    	                (long) p.getDiscountedPrice(),   
+		    	                (long) ci.getTotalPrice()); 
 		    	    }
 		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
-		    	    System.out.printf(" Total: %.2f Tomans%n", cart.getTotalAmount());
+		    	    System.out.printf(" Total: %,d Tomans%n", (long) cart.getTotalAmount());
 		    	}
 		        continue;
 		    }
@@ -213,20 +214,20 @@ public class CustomerPanel {
 		}
 		// simple table header
 		System.out.println("\n--- Available Products ---");
-		System.out.printf("%-10s %-20s %10s %8s %-8s%n",
+		System.out.printf("%-10s %-20s %11s %8s %-8s%n",
                 "Code", "Name", "Price", "Stock", "Unit");
 		System.out.println("---------- -------------------- ---------- -------- --------");
 		for (Product p : products) {
 	        if (p.isSellable()) {  // only show sellable products
-	            System.out.printf("%-10s %-20s %10.2f %8.2f %-8s%n",
-	                    p.getCode(),
-	                    p.getName(),
-	                    p.getPrice(),
-	                    p.getStock(),
-	                    p.getUnitType());
+	        	System.out.printf("%-10s %-20s %,11d %8.1f %-8s%n",
+	        	        p.getCode(),
+	        	        p.getName(),
+	        	        (long) p.getPrice(),   
+	        	        p.getStock(),          
+	        	        p.getUnitType());
 	        }
 	    }
-		System.out.println("---------- -------------------- ---------- -------- --------");
+		System.out.println("---------- -------------------- ----------- -------- --------");
 		
 	}
 	
@@ -278,7 +279,7 @@ public class CustomerPanel {
 	    double qty = validator.readPositiveDouble();
 	    try {
 	        store.processReturn(lc, inv, code, qty);
-	        System.out.println("✅ Returned " + qty + " of " + code + ". Credit: " + lc.getCredit() + " Tomans.");
+	        System.out.println("✅ Returned " + (long) qty + " of " + code + ". Credit: " + (long) lc.getCredit() + " Tomans.");
 	        store.saveToFile(Constants.STORE_FILE);
 	    } catch (Exception e) {
 	        System.out.println("❌ " + e.getMessage());
@@ -319,14 +320,15 @@ public class CustomerPanel {
 	        return;
 		}
 		System.out.println("\n--- Your Invoices ---");
-	    System.out.printf("%-20s %-20s %-10s %-10s%n", "Invoice #", "Date", "Amount", "Payment");
-	    System.out.println("-------------------- -------------------- ---------- ----------");
+		System.out.printf("%-20s %-20s %11s %-10s%n", "Invoice #", "Date", "Amount", "Payment");
+		System.out.println("-------------------- -------------------- ----------- ----------");
+	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	    for (Invoice inv : customerInvoices) {
-	        System.out.printf("%-20s %-20s %10.2f %-10s%n",
-	                inv.getId(),
-	                inv.getDateTime().toString(),
-	                inv.getFinalAmount(),
-	                inv.getPaymentMethod());
+	    	System.out.printf("%-20s %-20s %,10d %-10s%n",
+	    	        inv.getId(),
+	    	        inv.getDateTime().format(fmt),
+	    	        (long) inv.getFinalAmount(),
+	    	        inv.getPaymentMethod());
 	    }
 	    System.out.println("-------------------- -------------------- ---------- ----------");
 	}
@@ -334,8 +336,8 @@ public class CustomerPanel {
 	// show status of loyal custoemr
 	public void viewFinancialStatus(LoyalCustomer lc) {
 		System.out.println("\n--- Financial Status ---");
-		System.out.println("Total Debt   : " + String.format("%.2f Tomans", lc.getDebt()));
-		System.out.println("Total Credit : " + String.format("%.2f Tomans", lc.getCredit()));
+		System.out.println("Total Debt   : " + String.format("%,d Tomans", (long) lc.getDebt()));
+		System.out.println("Total Credit : " + String.format("%,d Tomans", (long) lc.getCredit()));
 		System.out.println("Can Buy on Credit? : " + (lc.canBuyOnCredit() ? "Yes" : "No (limit reached)"));
 		System.out.println("─────────────────────────────");
 	}
@@ -343,7 +345,7 @@ public class CustomerPanel {
 	// pay debt for loyal customer
 	public void payDebt(LoyalCustomer lc) {
 		System.out.println("\n--- Pay Debt ---");
-		System.out.println("Current debt: "+String.format("%.2f Tomans", lc.getDebt()));
+		System.out.println("Current debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
 		if(lc.getDebt()==0) {
 			System.out.println("✅ No debt to pay.");
 			return;
@@ -365,7 +367,7 @@ public class CustomerPanel {
 		lc.payDebt(amount);
 		try {
 	        store.saveToFile(Constants.STORE_FILE);
-	        System.out.println("✅ Paid " + String.format("%.2f Tomans", amount) + ". Remaining debt: " + String.format("%.2f Tomans", lc.getDebt()));
+	        System.out.println("✅ Paid " + String.format("%,d Tomans", (long) amount) + ". Remaining debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
 	    } catch (IOException e) {
 	        System.out.println("❌ Could not save changes.");
 	    }
