@@ -161,7 +161,7 @@ public class InputValidator {
     
     
     public void printBox(String title, String[] options) {
-        int width = 36;
+        int width = 50;
 
         // Top border
         System.out.println("┌" + "─".repeat(width) + "┐");
