@@ -57,25 +57,26 @@ public class ProductManager {
             System.out.println("\nNo products in the store.");
             return;
         }
-     // simple table header
+
+        // table header
         System.out.println("\n--- Product List ---");
         System.out.printf("%-4s %-15s %-10s %12s %8s %-8s%n",
                           "#", "Name", "Code", "Price", "Stock", "Unit");
-        System.out.println("---- --------------- ------------ ---------- -------- --------");
+        System.out.println("---- --------------- ---------- ------------ -------- --------");
 
         int index = 1;
         for (Product p : products) {
-            System.out.printf("%-4d %-15s %-10s %12.2f %8.2f %-8s%n",
+            // Price as integer, stock with one decimal digit
+            System.out.printf("%-4d %-15s %-10s %,12d %8.1f %-8s%n",
                     index,
                     p.getName(),
                     p.getCode(),
-                    p.getPrice(),
+                    (long) p.getPrice(),   // بدون اعشار
                     p.getStock(),
                     p.getUnitType());
             index++;
         }
-        System.out.println("---- --------------- ------------ ---------- -------- --------");
-    
+        System.out.println("---- --------------- ---------- ------------ -------- --------");
     }
 
 
