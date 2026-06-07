@@ -232,7 +232,14 @@ public class CustomerPanel {
 	
 	private PaymentMethod getPaymentMethod(Customer customer) {
 	    if (customer instanceof LoyalCustomer) {
+        	// cast for code clean
+        	LoyalCustomer lc=(LoyalCustomer)customer;
 	        while (true) {
+	        	// check if loyal customer can on buy credit(debt<100000)
+	        	if(!lc.canBuyOnCredit()) {
+	        		System.out.println("ℹ️ Your debt exceeds the credit limit. Only cash payment is available.");
+	        		return PaymentMethod.CASH;
+	        	}
 	            String choice = validator.readNonEmptyString("Payment method (cash/credit): ")
 	                                       .trim().toLowerCase();
 	            if (choice.equals("credit")) {
