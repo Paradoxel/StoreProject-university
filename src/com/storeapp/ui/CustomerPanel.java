@@ -158,9 +158,9 @@ public class CustomerPanel {
 		        } else {
 		            System.out.println("\n--- Your Cart ---");
 		            for (CartItem ci : cart.getItems()) {
-		                System.out.println(" - " + ci.getProduct().getName() + " x" + ci.getQuantity() + " = " + ci.getTotalPrice() + " Rials");
+		            	System.out.println(" - " + ci.getProduct().getName() + " x" + ci.getQuantity() + " = " + String.format("%.2f", ci.getTotalPrice()) + " Tomans");
 		            }
-		            System.out.println("Total: " + cart.getTotalAmount() + " Rials");
+		            System.out.println("Total: " + String.format("%.2f", cart.getTotalAmount()) + " Tomans");
 		            System.out.println("─────────────────────────────");
 		        }
 		        continue;
