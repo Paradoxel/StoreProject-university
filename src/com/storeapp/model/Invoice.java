@@ -2,6 +2,7 @@ package com.storeapp.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 // Represents a invoice 
@@ -55,42 +56,36 @@ public class Invoice implements Serializable {
 	// showing the object 
 	@Override
 	public String toString() {
+	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm");
 	    StringBuilder sb = new StringBuilder();
 
-	    sb.append("═══════════════════════════════════\n");
-	    sb.append("🧾 Official Store Invoice\n");
-	    sb.append("═══════════════════════════════════\n");
-	    sb.append("Invoice # : ").append(id).append("\n");
-	    sb.append("Date      : ").append(dateTime).append("\n");
-	    sb.append("Customer  : ").append(customer.getName()).append("\n");
-	    sb.append("Phone     : ").append(customer.getPhone()).append("\n");
+	    sb.append("══════════════════════════════════════════════════════\n");
+	    sb.append("               🧾 OFFICIAL INVOICE                    \n");
+	    sb.append("══════════════════════════════════════════════════════\n");
+	    sb.append(" Invoice # : ").append(id).append("\n");
+	    sb.append(" Date      : ").append(dateTime.format(fmt)).append("\n");
+	    sb.append(" Customer  : ").append(customer.getName()).append("\n");
+	    sb.append(" Phone     : ").append(customer.getPhone()).append("\n");
+	    sb.append("──────────────────────────────────────────────────────\n");
 
-	    if (customer instanceof LoyalCustomer) {
-	        LoyalCustomer loyal = (LoyalCustomer) customer;
-	        sb.append("Member Code : ").append(loyal.getMembershipCode()).append("\n");
-	    }
-
-	    sb.append("───────────────────────────────────\n");
-	    sb.append("Purchased Items :\n");
+	 
+	    sb.append(String.format(" %-24s %-6s %-8s %-12s %-14s%n", "Item", "Qty", "Unit", "Price", "Subtotal"));
+	    sb.append(" ------------------------ ------ -------- ------------ --------------\n");
 
 	    for (CartItem item : items) {
-	        sb.append("  - ")
-	          .append(item.getProduct().getName())
-	          .append(" (")
-	          .append(item.getQuantity())
-	          .append(" ")
-	          .append(item.getProduct().getUnitType())
-	          .append(") = ")
-	          .append(String.format("%.2f", item.getTotalPrice()))  // formatted to avoid scientific notation
-	          .append(" Tomans\n");
+	        Product p = item.getProduct();
+	        sb.append(String.format(" %-24s %-6.1f %-8s %-12.2f %-14.2f%n",
+	                p.getName(),
+	                item.getQuantity(),
+	                p.getUnitType(),
+	                p.getDiscountedPrice(),
+	                item.getTotalPrice()));
 	    }
 
-	    sb.append("───────────────────────────────────\n");
-	    sb.append("Total Amount : ").append(String.format("%.2f", finalAmount)).append(" Tomans\n");
-	    sb.append("Payment     : ")
-	      .append(paymentMethod == PaymentMethod.CASH ? "Cash" : "Credit")
-	      .append("\n");
-	    sb.append("═══════════════════════════════════\n");
+	    sb.append(" ------------------------ ------ -------- ------------ --------------\n");
+	    sb.append(String.format(" TOTAL AMOUNT : %.2f Tomans%n", finalAmount));
+	    sb.append(" PAYMENT      : ").append(paymentMethod == PaymentMethod.CASH ? "Cash" : "Credit").append("\n");
+	    sb.append("══════════════════════════════════════════════════════\n");
 
 	    return sb.toString();
 	}

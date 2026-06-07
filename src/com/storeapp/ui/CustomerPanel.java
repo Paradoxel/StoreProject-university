@@ -153,16 +153,24 @@ public class CustomerPanel {
 		    }
 		    // check if user wants to see current Cart
 		    if (input.equalsIgnoreCase("cart")) {
-		        if (cart.getItems().isEmpty()) {
-		            System.out.println("🛒 Your cart is empty.");
-		        } else {
-		            System.out.println("\n--- Your Cart ---");
-		            for (CartItem ci : cart.getItems()) {
-		            	System.out.println(" - " + ci.getProduct().getName() + " x" + ci.getQuantity() + " = " + String.format("%.2f", ci.getTotalPrice()) + " Tomans");
-		            }
-		            System.out.println("Total: " + String.format("%.2f", cart.getTotalAmount()) + " Tomans");
-		            System.out.println("─────────────────────────────");
-		        }
+		    	if (cart.getItems().isEmpty()) {
+		    	    System.out.println("🛒 Your cart is empty.");
+		    	} else {
+		    	    System.out.println("\n--- Your Cart ---");
+		    	    System.out.printf(" %-24s %-6s %-8s %-12s %-14s%n", "Item", "Qty", "Unit", "Price", "Subtotal");
+		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
+		    	    for (CartItem ci : cart.getItems()) {
+		    	        Product p = ci.getProduct();
+		    	        System.out.printf(" %-24s %-6.1f %-8s %-12.2f %-14.2f%n",
+		    	                p.getName(),
+		    	                ci.getQuantity(),
+		    	                p.getUnitType(),
+		    	                p.getDiscountedPrice(),
+		    	                ci.getTotalPrice());
+		    	    }
+		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
+		    	    System.out.printf(" Total: %.2f Tomans%n", cart.getTotalAmount());
+		    	}
 		        continue;
 		    }
 		    
