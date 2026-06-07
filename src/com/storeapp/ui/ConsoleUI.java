@@ -110,6 +110,7 @@ public class ConsoleUI {
      * Handles sign-up for new customers.
      */
     public void signUp() {
+    	validator.printTitle("SIGN UP");
         String phone = validator.readNonEmptyString("Enter your phone number: ");
 
         // Check if phone number is already taken
