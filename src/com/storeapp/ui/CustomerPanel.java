@@ -274,6 +274,7 @@ public class CustomerPanel {
 	        System.out.println(" - " + ci.getProduct().getCode() + " (" + ci.getProduct().getName() + ") x" + ci.getQuantity());
 	    }
 	    String code = validator.readNonEmptyString("Product code to return: ");
+	    System.out.print("Quantity to return: ");
 	    double qty = validator.readPositiveDouble();
 	    try {
 	        store.processReturn(lc, inv, code, qty);
