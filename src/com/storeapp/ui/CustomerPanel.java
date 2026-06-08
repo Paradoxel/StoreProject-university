@@ -297,13 +297,16 @@ public class CustomerPanel {
 		System.out.println("\n--- Edit Info ---");
 		System.out.println("(Press Enter to keep the current value)");
 		String newName = validator.readOptionalString("New name (current: " + customer.getName() + "): ");
-		if(newName!=null && !newName.isEmpty()) {
-			customer.setName(newName);
-		}
 		String newPhone = validator.readOptionalString("New phone (current: " + customer.getPhone() + "): ");
 		if (newPhone != null && !newPhone.isEmpty()) {
-	        customer.setPhone(newPhone);
-	    }
+		    // Check if the new phone is already taken by another customer
+		    Customer existing = store.findCustomerByPhone(newPhone);
+		    if (existing != null && existing != customer) {
+		        System.out.println("❌ This phone number is already registered by another customer.");
+		        return;
+		    }
+		    customer.setPhone(newPhone);
+		}
 		try {
 	        store.saveToFile(Constants.STORE_FILE);
 	        System.out.println("✅ Info updated.");
