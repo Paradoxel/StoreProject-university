@@ -201,9 +201,15 @@ public class CustomerPanel {
 		PaymentMethod method=getPaymentMethod(customer);
 		// Execute checkout for invoice
 		Invoice invoice =store.checkoutCart(cart, method);
-		// Show final invoice
-		System.out.println("\n" + invoice.toString());
-		System.out.println("✅ Purchase completed. Thank you!");
+		// save to file
+		try {
+			store.saveToFile(Constants.STORE_FILE);
+			// Show final invoice
+			System.out.println("\n" + invoice.toString());
+			System.out.println("✅ Purchase completed. Thank you!");
+		}  catch (IOException e) {
+		    System.out.println("❌ Purchase completed but could not save to file: " + e.getMessage());
+		}
 	}
 	
 	public void showProducts() {
