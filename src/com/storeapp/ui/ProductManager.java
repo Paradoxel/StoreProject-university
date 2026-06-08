@@ -154,13 +154,13 @@ public class ProductManager {
     	System.out.println("---- --------------- ------------ ---------- -------- --------");
     	int index = 1;
         for (Product p : results) {
-            System.out.printf("%-4d %-15s %-10s %12.2f %8.2f %-8s%n",
-                    index,
-                    p.getName(),
-                    p.getCode(),
-                    p.getPrice(),
-                    p.getStock(),
-                    p.getUnitType());
+        	System.out.printf("%-4d %-15s %-10s %,12d %8.1f %-8s%n",
+        	        index,
+        	        p.getName(),
+        	        p.getCode(),
+        	        (long) p.getPrice(),
+        	        p.getStock(),
+        	        p.getUnitType());
             index++;
         }
         System.out.println("---- --------------- ------------ ---------- -------- --------");
