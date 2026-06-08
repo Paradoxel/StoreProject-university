@@ -2,7 +2,9 @@ package com.storeapp.service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -12,7 +14,8 @@ public class Store implements Serializable {
 	private List<Product> products;
 	private List<Customer> customers;
 	private List<Invoice> invoices;
-	
+	// hash map for return item safe(key pair value)
+	private Map<String, Double> returnedQuantities = new HashMap<>();
 	
 	public Store() {
 	    this.products = new ArrayList<>();
@@ -213,7 +216,19 @@ public class Store implements Serializable {
 	    if (quantity <= 0 || quantity > target.getQuantity()) {
 	        throw new IllegalArgumentException("Invalid quantity.");
 	    }
-	 // 1. Increase stock 
+	    // build the uniqu key for this invoice item 
+	    String returnKey=inv.getId()+":"+target.getProduct().getCode();
+	    // How many of this item have already been returned?
+	    double alreadyReturned=returnedQuantities.getOrDefault(returnKey, 0.0);
+	    // Calculate total
+	    double totalAfterThis=alreadyReturned+quantity;
+	    // check if exist
+	    if (totalAfterThis > target.getQuantity()) {
+	        throw new IllegalArgumentException(
+	            "Cannot return more than purchased. Already returned: " + alreadyReturned + ", Purchased: " + target.getQuantity());
+	    }
+	 // 1. if valid --> Increase stock 
+	    returnedQuantities.put(returnKey, totalAfterThis);
 	    target.getProduct().increaseStock(quantity);
 	    double refund = target.getProduct().getDiscountedPrice() * quantity;
 	    lc.addCredit(refund);
