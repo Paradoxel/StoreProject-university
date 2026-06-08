@@ -74,9 +74,16 @@ public class Invoice implements Serializable {
 
 	    for (CartItem item : items) {
 	        Product p = item.getProduct();
-	        sb.append(String.format(" %-24s %-6.1f %-8s %,12d %,14d%n",
+	        String qtyStr;
+	        if (item.getQuantity() == Math.floor(item.getQuantity())) {
+	            qtyStr = String.valueOf((long) item.getQuantity());
+	        } else {
+	            qtyStr = String.format("%.1f", item.getQuantity());
+	        }
+	        sb.append(String.format(" %-24s %-6s %-8s %,12d %,14d%n",
 	                p.getName(),
-	                item.getQuantity(),
+	                // Format quantity
+	                qtyStr,
 	                p.getUnitType(),
 	                (long) p.getDiscountedPrice(),    
 	                (long) item.getTotalPrice()));    
