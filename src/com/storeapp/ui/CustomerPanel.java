@@ -214,6 +214,7 @@ public class CustomerPanel {
 			// Show final invoice
 			System.out.println("\n" + invoice.toString());
 			System.out.println("✅ Purchase completed. Thank you!");
+			validator.pause();
 		}  catch (IOException e) {
 		    System.out.println("❌ Purchase completed but could not save to file: " + e.getMessage());
 		}
