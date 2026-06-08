@@ -77,6 +77,8 @@ public class ProductManager {
             index++;
         }
         System.out.println("---- --------------- ---------- ------------ -------- --------");
+        // to pause
+        validator.pause();
     }
 
 
@@ -164,6 +166,8 @@ public class ProductManager {
             index++;
         }
         System.out.println("---- --------------- ------------ ---------- -------- --------");
+        // pause
+        validator.pause();
     }
     
     

@@ -193,6 +193,12 @@ public class InputValidator {
         System.out.println("└" + line + "┘");
     }
     
+    // pause for user 
+    public void pause() {
+    	System.out.println("\nPress Enter to continue...");
+    	scanner.nextLine();
+    }
+    
     
     
     

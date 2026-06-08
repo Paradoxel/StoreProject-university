@@ -297,6 +297,8 @@ public class CustomerPanel {
 	    } catch (Exception e) {
 	        System.out.println("❌ " + e.getMessage());
 	    }
+	    // pause
+	    validator.pause();
 	}
 	
 	// edit info user
@@ -347,6 +349,8 @@ public class CustomerPanel {
 	    	        inv.getPaymentMethod());
 	    }
 	    System.out.println("-------------------- -------------------- ---------- ----------");
+	    // To pause
+	    validator.pause();
 	}
 	
 	// show status of loyal custoemr
@@ -356,6 +360,8 @@ public class CustomerPanel {
 		System.out.println("Total Credit : " + String.format("%,d Tomans", (long) lc.getCredit()));
 		System.out.println("Can Buy on Credit? : " + (lc.canBuyOnCredit() ? "Yes" : "No (limit reached)"));
 		System.out.println("─────────────────────────────");
+		// pause
+		validator.pause();
 	}
 	
 	// pay debt for loyal customer

@@ -80,6 +80,8 @@ public class AdminPanel {
 	        "Outstanding Debt: " + String.format("%,d Tomans", (long) totalDebt)
 	    };
 	    validator.printBox("STORE DASHBOARD", stats);
+	    // pause
+	    validator.pause();
 	}
 	
 	
@@ -107,6 +109,8 @@ public class AdminPanel {
 	    }
 	    // Footer
 	    System.out.println("-------------------- --------------- -------------------- ---------- ----------");
+	    // pause
+	    validator.pause();
 	}
 	
 }

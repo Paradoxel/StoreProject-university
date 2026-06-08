@@ -112,6 +112,8 @@ public class CustomerManager {
         }
         // Footer line
         System.out.println("---- -------------------- --------------- ---------- ---------- ---------- ----------");
+        // for pause
+        validator.pause();
     }
     
     
@@ -145,6 +147,8 @@ public class CustomerManager {
             System.out.println("Credit      : " + String.format("%.2f Tomans", lc.getCredit()));
         }
         System.out.println("─────────────────────────────");
+        // pause
+        validator.pause();
     }
     
     
