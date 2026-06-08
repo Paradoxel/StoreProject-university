@@ -73,12 +73,8 @@ public class Cart implements Serializable {
 	public void removeItem(String code) {
 		if(status==CartStatus.CLOSED)
 			throw new IllegalStateException ("سفید خرید بسته است نمیتوانید محصولی اضافه یا کم کنید .");
-		for(CartItem item:items) {
-			if(item.getProduct().getCode().equals(code)) {
-				items.remove(item);
-				return;
-			}
-		}
+		items.removeIf(item ->item.getProduct().getCode().equals(code));
+		
 	}
 	
 	
