@@ -160,11 +160,18 @@ public class CustomerPanel {
 		    	    System.out.println("\n--- Your Cart ---");
 		    	    System.out.printf(" %-24s %-6s %-8s %-12s %-14s%n", "Item", "Qty", "Unit", "Price", "Subtotal");
 		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
+		    	    
 		    	    for (CartItem ci : cart.getItems()) {
+		    	    	String qtyStr;
+		    	    	if (ci.getQuantity() == Math.floor(ci.getQuantity())) {
+		    	    	    qtyStr = String.valueOf((long) ci.getQuantity());
+		    	    	} else {
+		    	    	    qtyStr = String.format("%.1f", ci.getQuantity());
+		    	    	}
 		    	        Product p = ci.getProduct();
-		    	        System.out.printf(" %-24s %-6.1f %-8s %,12d %,14d%n",
+		    	        System.out.printf(" %-24s %-6s %-8s %,12d %,14d%n",
 		    	                p.getName(),
-		    	                ci.getQuantity(),
+		    	                qtyStr,
 		    	                p.getUnitType(),
 		    	                (long) p.getDiscountedPrice(),   
 		    	                (long) ci.getTotalPrice()); 
