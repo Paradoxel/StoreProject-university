@@ -213,5 +213,5 @@ This application represents my effort to apply object-oriented design, software 
 
 Feedback, suggestions, and contributions are always welcome.
 
-Best regards,  
+Your sincerecly ,  
 **Mohammadreza**
