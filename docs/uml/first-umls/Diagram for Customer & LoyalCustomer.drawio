@@ -1,0 +1,45 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.1 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.1">
+  <diagram name="Page-1" id="_TTyCXcJvHTnkcC_kfTi">
+    <mxGraphModel dx="1287" dy="840" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-1" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Customer&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="290" x="120" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-2" parent="DcufP4NiDnfrZ53RPbQD-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- name: String&lt;div&gt;- phone: String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="290" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-3" parent="DcufP4NiDnfrZ53RPbQD-1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="290" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-4" parent="DcufP4NiDnfrZ53RPbQD-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ canBuyOnCredit(): boolean --&amp;gt; return false&lt;div&gt;+ canReturnItem():&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;boolean -&amp;gt; return false&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="52" width="290" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-5" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="LoyalCustomer" vertex="1">
+          <mxGeometry height="190" width="300" x="-230" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-6" parent="DcufP4NiDnfrZ53RPbQD-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;- membershipCode: String&lt;/div&gt;&lt;div&gt;- joinDate: LocalDate&lt;/div&gt;&lt;div&gt;- credit: double&lt;/div&gt;&lt;div&gt;- debt: double&lt;/div&gt;" vertex="1">
+          <mxGeometry height="74" width="300" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-7" parent="DcufP4NiDnfrZ53RPbQD-5" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="300" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-8" parent="DcufP4NiDnfrZ53RPbQD-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;div&gt;+&amp;nbsp;&lt;span style=&quot;color: rgb(15, 17, 21); font-family: Menlo, Monaco, Consolas, &amp;quot;Cascadia Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, &amp;quot;DejaVu Sans Mono&amp;quot;, &amp;quot;Liberation Mono&amp;quot;, &amp;quot;JetBrains Mono&amp;quot;, &amp;quot;Fira Code&amp;quot;, Cousine, &amp;quot;Roboto Mono&amp;quot;, &amp;quot;Courier New&amp;quot;, Courier, sans-serif, system-ui; font-size: 13px; background-color: transparent;&quot;&gt;&amp;lt;&amp;lt;override&amp;gt;&amp;gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;canBuyOnCredit(): boolean&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+&amp;nbsp;&lt;span style=&quot;color: rgb(15, 17, 21); font-family: Menlo, Monaco, Consolas, &amp;quot;Cascadia Mono&amp;quot;, &amp;quot;Ubuntu Mono&amp;quot;, &amp;quot;DejaVu Sans Mono&amp;quot;, &amp;quot;Liberation Mono&amp;quot;, &amp;quot;JetBrains Mono&amp;quot;, &amp;quot;Fira Code&amp;quot;, Cousine, &amp;quot;Roboto Mono&amp;quot;, &amp;quot;Courier New&amp;quot;, Courier, sans-serif, system-ui; font-size: 13px; background-color: transparent;&quot;&gt;&amp;lt;&amp;lt;override&amp;gt;&amp;gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;canReturnItem(): boolean&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ addDebt(amount: double): void&lt;/div&gt;&lt;div&gt;+ addCredit(amount: double): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="82" width="300" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="DcufP4NiDnfrZ53RPbQD-9" edge="1" parent="1" source="DcufP4NiDnfrZ53RPbQD-5" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="DcufP4NiDnfrZ53RPbQD-1" value="Loyal Customer Extends Customer">
+          <mxGeometry relative="1" width="160" x="-0.1874" y="21" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="50" y="250" />
+              <mxPoint x="260" y="360" />
+            </Array>
+            <mxPoint x="-90" y="460" as="sourcePoint" />
+            <mxPoint x="70" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

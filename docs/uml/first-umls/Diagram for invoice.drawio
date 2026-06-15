@@ -1,0 +1,22 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.1 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.1">
+  <diagram name="Page-1" id="YU6j5ggZylzJtSA0p6sv">
+    <mxGraphModel dx="864" dy="840" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="QIFwj9w8TpPQg3AGN7DW-1" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Invoice" vertex="1">
+          <mxGeometry height="250" width="270" x="-280" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="QIFwj9w8TpPQg3AGN7DW-2" parent="QIFwj9w8TpPQg3AGN7DW-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- id: String {final}&lt;div&gt;- items: List&amp;lt;CartItem&amp;gt; {final}&lt;/div&gt;&lt;div&gt;- customer: Customer {final}&lt;/div&gt;&lt;div&gt;- dateTime: LocalDateTime&lt;/div&gt;&lt;div&gt;- finalAmout: double {final}&lt;/div&gt;&lt;div&gt;- paymentMethod: PaymentMethod{final}&lt;/div&gt;" vertex="1">
+          <mxGeometry height="104" width="270" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="QIFwj9w8TpPQg3AGN7DW-3" parent="QIFwj9w8TpPQg3AGN7DW-1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="270" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="QIFwj9w8TpPQg3AGN7DW-4" parent="QIFwj9w8TpPQg3AGN7DW-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ getId(): String&lt;div&gt;+ getItems(): List&amp;lt;CartItem&amp;gt;&lt;/div&gt;&lt;div&gt;+ getCustomer(): Customer&lt;/div&gt;&lt;div&gt;+ getDateTime(): LocalDateTime&lt;/div&gt;&lt;div&gt;+ getFinalAmout(): double&lt;/div&gt;&lt;div&gt;+ getPaymentMethod(): PaymentMethod&lt;/div&gt;" vertex="1">
+          <mxGeometry height="112" width="270" y="138" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
