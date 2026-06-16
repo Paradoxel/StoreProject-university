@@ -1,5 +1,7 @@
 package com.storeapp.util;
 
+import java.time.format.DateTimeFormatter;
+
 /**
  * Central place for all fixed values used in the application.
  */
@@ -23,4 +25,10 @@ public class Constants {
     public static final String[] COLORS={
     	    "Red", "Blue", "White", "Yellow", "Green", "Black"
     };
+    
+ // Path for the log file
+    public static final String LOG_FILE = "store.log";
+
+    // Timestamp format used in log entries
+    public static final DateTimeFormatter log_fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 }
