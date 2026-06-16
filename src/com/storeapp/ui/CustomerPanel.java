@@ -1,5 +1,6 @@
 package com.storeapp.ui;
 
+import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
@@ -391,6 +392,7 @@ public class CustomerPanel {
 		try {
 	        store.saveToFile(Constants.STORE_FILE);
 	        System.out.println("✅ Paid " + String.format("%,d Tomans", (long) amount) + ". Remaining debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
+	        Logger.log("Debt payment: " + lc.getName() + " paid " + amount + " Tomans");
 	    } catch (IOException e) {
 	        System.out.println("❌ Could not save changes.");
 	    }
@@ -417,10 +419,12 @@ public class CustomerPanel {
 	        store.saveToFile(Constants.STORE_FILE);
 	        System.out.println("✅ New membership code: " + newCode);
 	        System.out.println("⚠️ Please save this code – you will need it to log in.");
+	        Logger.log("Membership renewed: " + lc.getName() + " | Old: " + oldCode + " | New: " + newCode);
 
 	    } catch (IOException e) {
 	    	 lc.setMembershipCode(oldCode);
 	        System.out.println("❌ Could not save the new code.");
+	        Logger.log("ERROR: Membership renewal failed for " + lc.getName() + " - rolled back");
 	    }
 	}
 	

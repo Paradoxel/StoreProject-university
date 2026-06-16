@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import com.storeapp.model.*;
+import com.storeapp.service.Logger;
 import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
 import com.storeapp.util.InputValidator;
@@ -193,6 +194,7 @@ public class ProductManager {
         try {
             store.saveToFile(Constants.STORE_FILE);
             System.out.println("✅ Product '" + product.getName() + "' deleted successfully!");
+            Logger.log("Product deleted by admin: " + product.getCode() + " - " + product.getName());
         } catch (IOException e) {
             System.out.println("❌ Product deleted in memory, but could not save to file.");
         }
@@ -237,6 +239,7 @@ public class ProductManager {
         try {
             store.saveToFile(Constants.STORE_FILE);
             System.out.println("✅ Product '" + product.getName() + "' updated successfully!");
+            Logger.log("Product edited: " + product.getCode() + " - " + product.getName());
         } catch (IOException e) {
             System.out.println("❌ Product updated in memory, but could not save to file.");
         }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import com.storeapp.model.Customer;
 import com.storeapp.model.LoyalCustomer;
+import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
@@ -26,6 +27,7 @@ public class ConsoleUI {
         try {
             this.store = Store.loadFromFile(Constants.STORE_FILE);
         } catch (ClassNotFoundException | IOException e) {
+        	Logger.log("ERROR: Failed to load store from file: " + e.getMessage());
             this.store = new Store();
         }
     }
@@ -75,7 +77,7 @@ public class ConsoleUI {
         // Check for admin login
         
         if (userCode.equals(Constants.ADMIN_CODE)) {
-        	
+        	Logger.log("Admin logged in");
             AdminPanel adminPanel = new AdminPanel(store, validator);
             adminPanel.showDashboard();
             adminPanel.showMenu();
@@ -86,6 +88,7 @@ public class ConsoleUI {
         if (loyalCustomer != null) {
             System.out.println("✅ Welcome back, " + loyalCustomer.getName() + " (Loyal Customer)!");
             CustomerPanel customerPanel = new CustomerPanel(store, validator);
+            Logger.log("Loyal customer logged in: " + loyalCustomer.getName() + " (Code: " + userCode + ")");
             customerPanel.startPurchase(loyalCustomer);
             return;
         }
@@ -96,9 +99,11 @@ public class ConsoleUI {
         	if(customer instanceof LoyalCustomer) {
         		// A loyal customer tried to log in with phone number
                 System.out.println("❌ Loyal customers must use their membership code. Please try again.");
+                Logger.log("SECURITY: Loyal customer " + customer.getName() + " attempted login with phone instead of membership code");
                 return;
         	}
             System.out.println("✅ Welcome back, " + customer.getName() + "!");
+            Logger.log("Customer logged in: " + customer.getName() + " (Phone: " + customer.getPhone() + ")");
             CustomerPanel customerPanel = new CustomerPanel(store, validator);
             customerPanel.startPurchase(customer);
         } else {
@@ -125,6 +130,7 @@ public class ConsoleUI {
         try {
             store.saveToFile(Constants.STORE_FILE);
             System.out.println("✅ Account created successfully! Welcome, " + name + "!");
+            Logger.log("New customer signed up: " + name + " (" + phone + ")");
         } catch (IOException e) {
             System.out.println("Error saving customer.");
         }
