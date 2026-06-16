@@ -1,6 +1,7 @@
 package com.storeapp.ui;
 
 import com.storeapp.model.*;
+import com.storeapp.service.Logger;
 import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
 import com.storeapp.util.InputValidator;
@@ -65,8 +66,10 @@ public class CustomerManager {
         try {
             store.saveToFile(Constants.STORE_FILE);
             System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
+            Logger.log("Loyal customer created by admin: " + name + " | Code: " + membershipCode);
         } catch (IOException e) {
             System.out.println("❌ Error saving customer. Please try again.");
+            Logger.log("ERROR: Failed to save customer: " + e.getMessage());
         }
     }
     

@@ -70,11 +70,13 @@ public class RandomDataGenerator {
 	
 	
 	public void generateProducts(int count) {
+		Logger.log("Random product generation started – Count: " + count);
 	    for (int i = 0; i < count; i++) {
 	        store.addProduct(generateRandomProduct());
 	        System.out.println("Product " + (i+1) + " generated successfully.");
 	    }
 	    System.out.println("Successfully generated all " + count + " products.");
+	    Logger.log("Random product generation completed – Total: " + count);
 	}
 	
 	
@@ -94,11 +96,13 @@ public class RandomDataGenerator {
 	}
 	
 	public void generateCustomers(int count) {
+		Logger.log("Random customer generation started – Count: " + count);
 		for(int i=0;i<count;i++) {
 			store.addCustomer(generateRandomCustomer());
 			System.out.println("Customer " + (i + 1) + " generated successfully.");
 		}
 		System.out.println("Successfully generated " + count + " random customers.");
+		Logger.log("Random customer generation completed – Total: " + count);
 	}
 	
 	
