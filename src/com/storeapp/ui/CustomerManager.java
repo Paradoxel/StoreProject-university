@@ -63,14 +63,8 @@ public class CustomerManager {
         System.out.println("⚠️ Please save this code securely – the customer will need it to log in.");
         LoyalCustomer loyalCustomer = new LoyalCustomer(name, phone, membershipCode, joinDate);
         store.addCustomer(loyalCustomer);
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
-            Logger.log("Loyal customer created by admin: " + name + " | Code: " + membershipCode);
-        } catch (IOException e) {
-            System.out.println("❌ Error saving customer. Please try again.");
-            Logger.log("ERROR: Failed to save customer: " + e.getMessage());
-        }
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
     }
     
     
@@ -160,12 +154,8 @@ public class CustomerManager {
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
         gen.generateCustomers(count);
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ " + count + " sample customers generated and saved!");
-        } catch (IOException e) {
-            System.out.println("❌ Customers generated but could not save.");
-        }
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ " + count + " sample customers generated and saved!");
     }
     
     

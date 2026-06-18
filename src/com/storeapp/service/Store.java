@@ -134,25 +134,34 @@ public class Store implements Serializable {
 	
 	
 	// method for write or read 
-	public void saveToFile(String filePath) throws IOException {
-	    try (
-	        FileOutputStream fileOut = new FileOutputStream(filePath);
-	        ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)
-	    ) {
+	public void saveToFile(String filePath) {
+	    try (FileOutputStream fileOut = new FileOutputStream(filePath);
+	         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
 	        objectOut.writeObject(this);
 	        Logger.log("Store saved to file successfully");
+	    } catch (IOException e) {
+	        Logger.log("ERROR: Failed to save store: " + e.getMessage());
+	        System.err.println("❌ Could not save store data. Please check disk space or permissions.");
 	    }
 	}
 	
-	public static Store loadFromFile(String filePath) throws IOException, ClassNotFoundException {
+	public static Store loadFromFile(String filePath) {
 	    try (FileInputStream fileIn = new FileInputStream(filePath);
 	         ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-	    	Store loaded = (Store) objectIn.readObject();
-	    	Logger.log("Store loaded from file: " + loaded.getProducts().size() + " products, " +
-	    	           loaded.getCustomers().size() + " customers, " +
-	    	           loaded.getInvoices().size() + " invoices");
-	    	return loaded;
+	        Store loaded = (Store) objectIn.readObject();
+	        Logger.log("Store loaded from file: " + loaded.getProducts().size() + " products, " +
+	                   loaded.getCustomers().size() + " customers, " +
+	                   loaded.getInvoices().size() + " invoices");
+	        return loaded;
+	    // catch blocks ordered from most specific to most general
+	    } catch (FileNotFoundException e) {
+	        Logger.log("No saved store found – new empty store created");
+	    } catch (IOException | ClassNotFoundException e) {
+	        Logger.log("ERROR: Failed to load store from file: " + e.getMessage());
+	        System.err.println("❌ Could not load store data. Starting with an empty store.");
 	    }
+	    // Fallback: if any unexpected error occurs, return an empty store
+	    return new Store();
 	}
 	
 	

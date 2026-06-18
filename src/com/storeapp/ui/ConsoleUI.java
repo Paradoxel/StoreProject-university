@@ -1,6 +1,6 @@
 package com.storeapp.ui;
 
-import java.io.IOException;
+
 import java.util.Scanner;
 import com.storeapp.model.Customer;
 import com.storeapp.model.LoyalCustomer;
@@ -24,12 +24,7 @@ public class ConsoleUI {
      */
     public ConsoleUI(Scanner scanner) {
         this.validator = new InputValidator(scanner);
-        try {
-            this.store = Store.loadFromFile(Constants.STORE_FILE);
-        } catch (ClassNotFoundException | IOException e) {
-        	Logger.log("ERROR: Failed to load store from file: " + e.getMessage());
-            this.store = new Store();
-        }
+        this.store =Store.loadFromFile(Constants.STORE_FILE);
     }
 
 
@@ -115,8 +110,8 @@ public class ConsoleUI {
      * Handles sign-up for new customers.
      */
     public void signUp() {
-    	validator.printTitle("SIGN UP");
-    	String phone = validator.readPhoneNumber();
+        validator.printTitle("SIGN UP");
+        String phone = validator.readPhoneNumber();
 
         // Check if phone number is already taken
         if (store.findCustomerByPhone(phone) != null) {
@@ -127,14 +122,9 @@ public class ConsoleUI {
         String name = validator.readNonEmptyString("Enter your name: ");
         Customer newCustomer = new Customer(name, phone);
         store.addCustomer(newCustomer);
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ Account created successfully! Welcome, " + name + "!");
-            Logger.log("New customer signed up: " + name + " (" + phone + ")");
-        } catch (IOException e) {
-            System.out.println("Error saving customer.");
-        }
-        
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ Account created successfully! Welcome, " + name + "!");
+        Logger.log("New customer signed up: " + name + " (" + phone + ")");
     }
 
 

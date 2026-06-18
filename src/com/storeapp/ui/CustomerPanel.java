@@ -210,15 +210,9 @@ public class CustomerPanel {
 		// Execute checkout for invoice
 		Invoice invoice =store.checkoutCart(cart, method);
 		// save to file
-		try {
-			store.saveToFile(Constants.STORE_FILE);
-			// Show final invoice
-			System.out.println("\n" + invoice.toString());
-			System.out.println("✅ Purchase completed. Thank you!");
-			validator.pause();
-		}  catch (IOException e) {
-		    System.out.println("❌ Purchase completed but could not save to file: " + e.getMessage());
-		}
+		store.saveToFile(Constants.STORE_FILE);
+		System.out.println("\n" + invoice.toString());
+		System.out.println("✅ Purchase completed. Thank you!");
 	}
 	
 	public void showProducts() {
@@ -292,13 +286,9 @@ public class CustomerPanel {
 	    String code = validator.readNonEmptyString("Product code to return: ");
 	    System.out.print("Quantity to return: ");
 	    double qty = validator.readPositiveDouble();
-	    try {
-	        store.processReturn(lc, inv, code, qty);
-	        System.out.println("✅ Returned " + (long) qty + " of " + code + ". Credit: " + (long) lc.getCredit() + " Tomans.");
-	        store.saveToFile(Constants.STORE_FILE);
-	    } catch (Exception e) {
-	        System.out.println("❌ " + e.getMessage());
-	    }
+	    store.processReturn(lc, inv, code, qty);
+	    System.out.println("✅ Returned " + qty + " of " + code + ". Credit: " + lc.getCredit() + " Tomans.");
+	    store.saveToFile(Constants.STORE_FILE);
 	    // pause
 	    validator.pause();
 	}
@@ -318,12 +308,8 @@ public class CustomerPanel {
 		    }
 		    customer.setPhone(newPhone);
 		}
-		try {
-	        store.saveToFile(Constants.STORE_FILE);
-	        System.out.println("✅ Info updated.");
-	    } catch (IOException e) {
-	        System.out.println("❌ Could not save changes.");
-	    }
+		store.saveToFile(Constants.STORE_FILE);
+		System.out.println("✅ Info updated.");
 	}
 	
 	// show customer invoice
@@ -389,13 +375,8 @@ public class CustomerPanel {
 			return;
 		}
 		lc.payDebt(amount);
-		try {
-	        store.saveToFile(Constants.STORE_FILE);
-	        System.out.println("✅ Paid " + String.format("%,d Tomans", (long) amount) + ". Remaining debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
-	        Logger.log("Debt payment: " + lc.getName() + " paid " + amount + " Tomans");
-	    } catch (IOException e) {
-	        System.out.println("❌ Could not save changes.");
-	    }
+		store.saveToFile(Constants.STORE_FILE);
+		System.out.println("✅ Paid " + String.format("%,d Tomans", (long) amount) + ". Remaining debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
 	}
 	
 	
@@ -415,21 +396,9 @@ public class CustomerPanel {
 		String oldCode = lc.getMembershipCode();
 		// set the code
 		lc.setMembershipCode(newCode);
-		try {
-	        store.saveToFile(Constants.STORE_FILE);
-	        System.out.println("✅ New membership code: " + newCode);
-	        System.out.println("⚠️ Please save this code – you will need it to log in.");
-	        Logger.log("Membership renewed: " + lc.getName() + " | Old: " + oldCode + " | New: " + newCode);
-
-	    } catch (IOException e) {
-	    	 lc.setMembershipCode(oldCode);
-	        System.out.println("❌ Could not save the new code.");
-	        Logger.log("ERROR: Membership renewal failed for " + lc.getName() + " - rolled back");
-	    }
+		store.saveToFile(Constants.STORE_FILE);
+		System.out.println("✅ New membership code: " + newCode);
+		System.out.println("⚠️ Please save this code – you will need it to log in.");
 	}
-	
-	
-	
-
 
 }

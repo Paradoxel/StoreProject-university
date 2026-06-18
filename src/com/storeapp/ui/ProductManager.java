@@ -133,13 +133,8 @@ public class ProductManager {
     	
     	Product product=builder.build();
     	store.addProduct(product);
-    	try {
-			store.saveToFile(Constants.STORE_FILE);
-			System.out.println("✅ Product '" + product.getName() + "' added successfully!");
-		} catch (IOException e) {
-			System.out.print("Error...\nTry again" );
-		}
-    	
+		store.saveToFile(Constants.STORE_FILE);
+		System.out.println("✅ Product '" + product.getName() + "' added successfully!");
     }
 
     private void searchProduct() {
@@ -191,13 +186,10 @@ public class ProductManager {
         store.removeProduct(product);
         
         // Save changes to file
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ Product '" + product.getName() + "' deleted successfully!");
-            Logger.log("Product deleted by admin: " + product.getCode() + " - " + product.getName());
-        } catch (IOException e) {
-            System.out.println("❌ Product deleted in memory, but could not save to file.");
-        }
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ Product '" + product.getName() + "' deleted successfully!");
+        Logger.log("Product deleted by admin: " + product.getCode() + " - " + product.getName());
+
     }
     
     private void editProduct() {
@@ -236,13 +228,10 @@ public class ProductManager {
         }
 
         // Save changes
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ Product '" + product.getName() + "' updated successfully!");
-            Logger.log("Product edited: " + product.getCode() + " - " + product.getName());
-        } catch (IOException e) {
-            System.out.println("❌ Product updated in memory, but could not save to file.");
-        }
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ Product '" + product.getName() + "' updated successfully!");
+        Logger.log("Product edited: " + product.getCode() + " - " + product.getName());
+
     }
     
     
@@ -280,12 +269,8 @@ public class ProductManager {
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
         gen.generateProducts(count);
-        try {
-            store.saveToFile(Constants.STORE_FILE);
-            System.out.println("✅ " + count + " sample products generated and saved!");
-        } catch (IOException e) {
-            System.out.println("❌ Products generated but could not save.");
-        }
+        store.saveToFile(Constants.STORE_FILE);
+        System.out.println("✅ " + count + " sample products generated and saved!");
     }
     
     
