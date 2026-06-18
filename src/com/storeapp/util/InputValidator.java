@@ -201,5 +201,21 @@ public class InputValidator {
     
     
     
+    // Reads a valid phone number for iranian(Start with 09, 11 digit)
+    public String readPhoneNumber() {
+        while (true) {
+            String phone = readNonEmptyString("Enter your phone number: ");
+            
+            if (!phone.matches("^09\\d{9}$")) {
+                System.out.println("❌ Invalid phone number. It must start with 09 and have 11 digits.");
+                continue;
+            }
+            
+            return phone;
+        }
+    }
+    
+    
+    
     
 }

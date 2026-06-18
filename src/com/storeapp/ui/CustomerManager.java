@@ -50,7 +50,7 @@ public class CustomerManager {
         String name = validator.readNonEmptyString("Name: ");
         String phone;
         while (true) {
-            phone = validator.readNonEmptyString("Phone: ");
+        	phone = validator.readPhoneNumber();
             if (store.findCustomerByPhone(phone) == null) {
                 break;
             }

@@ -116,7 +116,7 @@ public class ConsoleUI {
      */
     public void signUp() {
     	validator.printTitle("SIGN UP");
-        String phone = validator.readNonEmptyString("Enter your phone number: ");
+    	String phone = validator.readPhoneNumber();
 
         // Check if phone number is already taken
         if (store.findCustomerByPhone(phone) != null) {
