@@ -193,7 +193,7 @@ master
 - Unit testing with JUnit
 - Database integration
 - Exportable reports
-- Logging support
+- ~~Logging support~~ ✅
 - REST API layer
 - Dependency injection framework
 
