@@ -216,6 +216,29 @@ public class InputValidator {
     }
     
     
+    // Reads a amount or empty
+    public Double readOptionalPositiveDouble(String prompt) {
+    	while(true) {
+    		System.out.print(prompt);
+    		String input = scanner.nextLine().trim();
+    		if (input.isEmpty()) {
+                return null;
+            }
+    		try {
+                double value = Double.parseDouble(input);
+
+                if (value > 0) {
+                    return value;
+                }
+
+                System.out.println("❌ Value must be positive.");
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid number. Try again.");
+            }
+    	}
+    }
+    
+    
     
     
 }

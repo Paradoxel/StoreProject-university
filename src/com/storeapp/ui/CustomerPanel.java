@@ -365,10 +365,9 @@ public class CustomerPanel {
 			System.out.println("❌ Payment cancelled. Press Enter to continue...");
 			return;
 		}
-		System.out.print("Amount to pay (or press Enter to skip): ");
-		double amount = validator.readPositiveDouble();
-		if(amount==0) {
-			return;
+		Double amount = validator.readOptionalPositiveDouble("Amount to pay (or press Enter to skip): ");
+		if (amount == null) {
+		    return;
 		}
 		if(amount>lc.getDebt()) {
 			System.out.println("❌ Cannot pay more than your debt.");
@@ -376,7 +375,8 @@ public class CustomerPanel {
 		}
 		lc.payDebt(amount);
 		store.saveToFile(Constants.STORE_FILE);
-		System.out.println("✅ Paid " + String.format("%,d Tomans", (long) amount) + ". Remaining debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
+		System.out.println("✅ Paid " + String.format("%,.2f Tomans", amount)
+        + ". Remaining debt: " + String.format("%,.2f Tomans", lc.getDebt()));
 	}
 	
 	
