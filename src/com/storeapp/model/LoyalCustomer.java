@@ -2,7 +2,7 @@ package com.storeapp.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-
+import com.storeapp.util.Constants;
 public class LoyalCustomer extends Customer implements Serializable {
 	// fields + customer fields
 	private String membershipCode;
@@ -29,8 +29,12 @@ public class LoyalCustomer extends Customer implements Serializable {
 	public double getDebt() {return debt;}
 	
 	@Override
-	public boolean canBuyOnCredit() {
-		return debt<1000000;
+	public boolean canBuyOnCredit(double purchaseAmount) {
+		return (debt + purchaseAmount) <= Constants.CREDIT_LIMIT;
+	}
+	
+	public boolean isCreditAvailable() {
+		return (debt) <= Constants.CREDIT_LIMIT;
 	}
 	
 	@Override

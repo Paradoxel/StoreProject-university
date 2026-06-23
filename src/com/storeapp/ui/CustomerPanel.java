@@ -206,7 +206,7 @@ public class CustomerPanel {
 			return ;
 		}
 		// Choose payment method
-		PaymentMethod method=getPaymentMethod(customer);
+		PaymentMethod method=getPaymentMethod(customer,cart.getTotalAmount());
 		// Execute checkout for invoice
 		Invoice invoice =store.checkoutCart(cart, method);
 		// save to file
@@ -240,14 +240,16 @@ public class CustomerPanel {
 		
 	}
 	
-	private PaymentMethod getPaymentMethod(Customer customer) {
+	private PaymentMethod getPaymentMethod(Customer customer,double cartTotal) {
 	    if (customer instanceof LoyalCustomer) {
         	// cast for code clean
         	LoyalCustomer lc=(LoyalCustomer)customer;
 	        while (true) {
 	        	// check if loyal customer can on buy credit(debt<100000)
-	        	if(!lc.canBuyOnCredit()) {
-	        		System.out.println("ℹ️ Your debt exceeds the credit limit. Only cash payment is available.");
+	        	if(!lc.canBuyOnCredit(cartTotal)) {
+	        		System.out.println(
+	        		        "ℹ️ Your current debt + this purchase exceeds your credit limit."
+	        		 );
 	        		return PaymentMethod.CASH;
 	        	}
 	            String choice = validator.readNonEmptyString("Payment method (cash/credit): ")
@@ -346,7 +348,7 @@ public class CustomerPanel {
 		System.out.println("\n--- Financial Status ---");
 		System.out.println("Total Debt   : " + String.format("%,d Tomans", (long) lc.getDebt()));
 		System.out.println("Total Credit : " + String.format("%,d Tomans", (long) lc.getCredit()));
-		System.out.println("Can Buy on Credit? : " + (lc.canBuyOnCredit() ? "Yes" : "No (limit reached)"));
+		System.out.println("Can Buy on Credit? : " + (lc.isCreditAvailable() ? "Yes" : "No (limit reached)"));
 		System.out.println("─────────────────────────────");
 		// pause
 		validator.pause();

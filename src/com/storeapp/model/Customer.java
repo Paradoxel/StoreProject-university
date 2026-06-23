@@ -23,7 +23,7 @@ public class Customer implements Serializable {
 	public void setPhone(String phone) {this.phone=phone;}
 	
 	// Regular  customers cannot buy on credit
-	public boolean canBuyOnCredit() {return false;}
+	public boolean canBuyOnCredit(double purchaseAmount) {return false;}
 	
 	// Regular customers cannot return items
 	public boolean canReturnItem() {return false;}

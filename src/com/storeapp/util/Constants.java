@@ -31,4 +31,7 @@ public class Constants {
 
     // Timestamp format used in log entries
     public static final DateTimeFormatter log_fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
+    // for creadit limit
+    public static final double CREDIT_LIMIT = 1000000;
 }
