@@ -34,4 +34,23 @@ public class CryptoService {
 	    }
 	}
 	
+	
+	public static String decrypt(String encryptedData) {
+	    try {
+
+	        Cipher cipher = Cipher.getInstance("AES");
+
+	        cipher.init(Cipher.DECRYPT_MODE, getSecretKey());
+
+	        byte[] decoded = Base64.getDecoder().decode(encryptedData);
+
+	        byte[] decrypted = cipher.doFinal(decoded);
+
+	        return new String(decrypted, StandardCharsets.UTF_8);
+
+	    } catch (Exception e) {
+	        throw new RuntimeException("Decryption failed.", e);
+	    }
+	}
+	
 }
