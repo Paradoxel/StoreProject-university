@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 // Represents a invoice 
 import java.util.List;
+
+import com.storeapp.service.CryptoService;
+import com.storeapp.util.Constants;
 public class Invoice implements Serializable {
 	private final PaymentMethod paymentMethod;
 	private final String id;
@@ -16,13 +19,12 @@ public class Invoice implements Serializable {
 	private final double finalAmount;
 	
 	public Invoice(Cart cart,PaymentMethod paymentMethod) {
-		this.paymentMethod=paymentMethod;
-		id = "INV-" + System.currentTimeMillis();
-		// for security a copy of that
-		items=new ArrayList<>(cart.getItems()) ;
-		customer=cart.getCustomer();
-		dateTime=LocalDateTime.now();
-		finalAmount=cart.getTotalAmount();	
+		this.paymentMethod = paymentMethod;
+		items = new ArrayList<>(cart.getItems());
+		customer = cart.getCustomer();
+		dateTime = LocalDateTime.now();
+		finalAmount = cart.getTotalAmount();
+		id = CryptoService.encrypt(buildInvoiceData());
 
 	}
 	
@@ -51,6 +53,14 @@ public class Invoice implements Serializable {
 	}
 	
 	
+	private String buildInvoiceData() {
+	    return String.join(
+	            Constants.SEPARATOR,
+	            customer.getPhone(),
+	            dateTime.toString(),
+	            String.valueOf(finalAmount)
+	    );
+	}
 	
 	
 	// showing the object 

@@ -36,9 +36,9 @@ public class Constants {
     public static final double CREDIT_LIMIT = 1000000;
     
     // Crypto
-    public static final String SECRET_KEY="SECRET_KEY"; 
+    public static final String SECRET_KEY = "InvoiceKey2026!!";
     
-    
+    public static final String SEPARATOR = "|";
     
     
     
