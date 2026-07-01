@@ -34,4 +34,14 @@ public class Constants {
     
     // for creadit limit
     public static final double CREDIT_LIMIT = 1000000;
+    
+    // Crypto
+    public static final String SECRET_KEY="SECRET_KEY"; 
+    
+    
+    
+    
+    
+    
+    
 }
