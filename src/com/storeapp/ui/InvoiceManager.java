@@ -1,6 +1,8 @@
 package com.storeapp.ui;
 
+import com.storeapp.service.CryptoService;
 import com.storeapp.service.Store;
+import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class InvoiceManager {
@@ -40,7 +42,25 @@ public class InvoiceManager {
 	}
 	
 	private void decryptInvoiceToken() {
-		
+		try {
+			String token = validator.readNonEmptyString(
+		            "Enter Secure Invoice Token: ");
+
+		    String decrypted = CryptoService.decrypt(token);
+
+		    String[] parts = decrypted.split(Constants.SEPARATOR);
+
+		    System.out.println("\n════════ Secure Invoice Details ════════");
+		    System.out.println("Phone Number : " + parts[0]);
+		    System.out.println("Date         : " + parts[1]);
+		    System.out.println("Final Amount : " + parts[2] + " Tomans");
+		    System.out.println("═════════════════════════════════════════");
+		    validator.pause();
+		}
+		catch (RuntimeException e) {
+		    System.out.println("❌ Invalid secure invoice token.");
+		}
+	    
 	}
 	
 	

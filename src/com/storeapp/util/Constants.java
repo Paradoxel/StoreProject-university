@@ -38,7 +38,7 @@ public class Constants {
     // Crypto
     public static final String SECRET_KEY = "InvoiceKey2026!!";
     
-    public static final String SEPARATOR = "|";
+    public static final String SEPARATOR = "#";
     
     
     
