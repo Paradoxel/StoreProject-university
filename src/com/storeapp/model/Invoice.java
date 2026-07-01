@@ -72,7 +72,7 @@ public class Invoice implements Serializable {
 	    sb.append("══════════════════════════════════════════════════════\n");
 	    sb.append("               🧾 OFFICIAL INVOICE                    \n");
 	    sb.append("══════════════════════════════════════════════════════\n");
-	    sb.append(" Invoice # : ").append(id).append("\n");
+	    sb.append(" Secure Invoice Token : ").append(id).append("\n");
 	    sb.append(" Date      : ").append(dateTime.format(fmt)).append("\n");
 	    sb.append(" Customer  : ").append(customer.getName()).append("\n");
 	    sb.append(" Phone     : ").append(customer.getPhone()).append("\n");
