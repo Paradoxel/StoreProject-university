@@ -40,7 +40,9 @@ public class Constants {
     
     public static final String SEPARATOR = "#";
     
-    
+    // saving store file
+    public static final String STORE_ENCRYPTION_KEY =
+    	    "9K$wL2@pQ#8xVm!R7cF&nA5zHsT1uYdE";
     
     
     
