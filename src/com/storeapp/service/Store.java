@@ -1,5 +1,6 @@
 package com.storeapp.service;
 import java.io.*;
+import java.rmi.server.ObjID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+
+import javax.print.attribute.standard.NumberOfInterveningJobs;
 
 import com.storeapp.model.*;
 public class Store implements Serializable {
@@ -152,24 +155,40 @@ public class Store implements Serializable {
 			}
 	}
 	
+
+	
 	public static Store loadFromFile(String filePath) {
-	    try (FileInputStream fileIn = new FileInputStream(filePath);
-	         ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
-	        Store loaded = (Store) objectIn.readObject();
-	        Logger.log("Store loaded from file: " + loaded.getProducts().size() + " products, " +
-	                   loaded.getCustomers().size() + " customers, " +
-	                   loaded.getInvoices().size() + " invoices");
-	        return loaded;
-	    // catch blocks ordered from most specific to most general
+	    try (
+	        FileInputStream fileIn = new FileInputStream(filePath)
+	    ) {
+	        byte[] encryptedData = fileIn.readAllBytes();
+	        byte[] decryptedData = CryptoService.decrypt(encryptedData);
+
+	        try (
+	            ByteArrayInputStream byteIn = new ByteArrayInputStream(decryptedData);
+	            ObjectInputStream objectIn = new ObjectInputStream(byteIn)
+	        ) {
+	            Store loaded = (Store) objectIn.readObject();
+	            Logger.log("Store loaded from file: " + loaded.getProducts().size() + " products, " +
+	                    loaded.getCustomers().size() + " customers, " +
+	                    loaded.getInvoices().size() + " invoices");
+	            return loaded;
+	        }
+
 	    } catch (FileNotFoundException e) {
 	        Logger.log("No saved store found – new empty store created");
+	        return new Store();
 	    } catch (IOException | ClassNotFoundException e) {
 	        Logger.log("ERROR: Failed to load store from file: " + e.getMessage());
 	        System.err.println("❌ Could not load store data. Starting with an empty store.");
+	        return new Store();
 	    }
-	    // Fallback: if any unexpected error occurs, return an empty store
-	    return new Store();
 	}
+	
+	
+	
+	
+	
 	
 	
 	public boolean isMembershipCodeTaken(String code) {
