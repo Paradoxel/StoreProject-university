@@ -77,9 +77,18 @@ public class CryptoService {
 	    }
 	}
 	
-	
-	
-	
-	
-	
+	public static byte[] decrypt(byte[] encryptedData) {
+	    try {
+
+	        Cipher cipher = Cipher.getInstance("AES");
+
+	        cipher.init(Cipher.DECRYPT_MODE, getStoreSecretKey());
+
+	        return cipher.doFinal(encryptedData);
+
+	    } catch (Exception e) {
+	        throw new RuntimeException("Decryption failed.", e);
+	    }
+	}
+		
 }
