@@ -55,4 +55,31 @@ public class CryptoService {
 	    
 	}
 	
+	
+	// for store file
+	private static SecretKeySpec getStoreSecretKey() {
+	    return new SecretKeySpec(
+	            Constants.STORE_ENCRYPTION_KEY.getBytes(StandardCharsets.UTF_8),
+	            "AES");
+	}
+	
+	public static byte[] encrypt(byte[] data) {
+	    try {
+
+	        Cipher cipher = Cipher.getInstance("AES");
+
+	        cipher.init(Cipher.ENCRYPT_MODE, getStoreSecretKey());
+
+	        return cipher.doFinal(data);
+
+	    } catch (Exception e) {
+	        throw new RuntimeException("Encryption failed.", e);
+	    }
+	}
+	
+	
+	
+	
+	
+	
 }
