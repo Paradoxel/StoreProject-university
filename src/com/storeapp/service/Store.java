@@ -135,14 +135,21 @@ public class Store implements Serializable {
 	
 	// method for write or read 
 	public void saveToFile(String filePath) {
-	    try (FileOutputStream fileOut = new FileOutputStream(filePath);
-	         ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
-	        objectOut.writeObject(this);
-	        Logger.log("Store saved to file successfully");
-	    } catch (IOException e) {
-	        Logger.log("ERROR: Failed to save store: " + e.getMessage());
-	        System.err.println("❌ Could not save store data. Please check disk space or permissions.");
-	    }
+		try (
+			    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+			    ObjectOutputStream objectOut = new ObjectOutputStream(byteOut);
+			    FileOutputStream fileOut = new FileOutputStream(filePath)
+			) {
+			    objectOut.writeObject(this);
+			    byte[] plainData = byteOut.toByteArray();
+			    byte[] encryptedData = CryptoService.encrypt(plainData);
+
+			    fileOut.write(encryptedData);
+			    Logger.log("Store serialized and encrypted successfully.");
+			} catch (IOException e) {
+			    Logger.log("ERROR: Failed to save store: " + e.getMessage());
+			    System.err.println("❌ Could not save store data.");
+			}
 	}
 	
 	public static Store loadFromFile(String filePath) {
