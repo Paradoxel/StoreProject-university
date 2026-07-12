@@ -1,5 +1,6 @@
 package com.storeapp.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.storeapp.model.Invoice;
@@ -146,6 +147,7 @@ public class InvoiceManager {
 			int choice = validator.readIntRange(1, 4);
 			switch(choice) {
 			case 1:
+				searchByPhone();
 				break;
 			case 2:
 				break;
@@ -159,6 +161,22 @@ public class InvoiceManager {
 		
 		
 		
+	}
+	
+	private void searchByPhone() {
+		String phone = validator.readPhoneNumber();
+
+		List<Invoice> results = new ArrayList<>();
+		for (Invoice inv : store.getInvoices()) {
+			if (inv.getCustomer().getPhone().equals(phone)) {
+				results.add(inv);
+			}
+		}
+
+
+
+		printInvoiceTable(results);
+		validator.pause();
 	}
 	
 	
