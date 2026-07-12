@@ -1,10 +1,13 @@
 package com.storeapp.ui;
 
+import java.util.List;
+
+import com.storeapp.model.Invoice;
 import com.storeapp.service.CryptoService;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
-
+import com.storeapp.util.Constants;
 public class InvoiceManager {
 	Store store;
 	InputValidator validator;
@@ -31,7 +34,7 @@ public class InvoiceManager {
 			int choice = validator.readIntRange(1, 5);
 			switch (choice) {
 				case 1:
-					//showAllInvoices();
+					showAllInvoices();
 					break;
 				case 2:
 					//findInvoiceById();
@@ -73,6 +76,48 @@ public class InvoiceManager {
 		}
 	    
 	}
+	
+
+	
+	private void printInvoiceTable(List<Invoice> invoices) {
+		if (invoices.isEmpty()) {
+			System.out.println("\n⚠️ No invoices to display.");
+			return;
+		}
+
+		System.out.println("\n--- Invoice History ---");
+		System.out.printf("%-20s %-15s %-20s %-10s %-10s%n",
+				"Invoice #", "Customer", "Date", "Amount", "Payment");
+		System.out.println("-------------------- --------------- -------------------- ---------- ----------");
+
+
+
+		for (Invoice inv : invoices) {
+			System.out.printf("%-20s %-15s %-20s %,10d %-10s%n",
+					shortId(inv.getId()),
+					inv.getCustomer().getName(),
+					inv.getDateTime().format(Constants.DISPLAY_DATETIME_FORMAT),
+					(long) inv.getFinalAmount(),
+					inv.getPaymentMethod());
+		}
+
+		System.out.println("-------------------- --------------- -------------------- ---------- ----------");
+	}
+	
+	public void showAllInvoices() {
+		printInvoiceTable(store.getInvoices());
+		validator.pause();
+	}
+	
+	private String shortId(String id) {
+		int visibleChars = 17;
+		if (id.length() > visibleChars) {
+			return id.substring(0,visibleChars)+"...";
+		}
+		return id;
+	}
+	
+	
 	
 	
 }
