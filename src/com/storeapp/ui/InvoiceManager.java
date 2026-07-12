@@ -37,7 +37,7 @@ public class InvoiceManager {
 					showAllInvoices();
 					break;
 				case 2:
-					//findInvoiceById();
+					findInvoiceById();
 					break;
 				case 3:
 					//findInvoicesByCustomer();
@@ -118,6 +118,17 @@ public class InvoiceManager {
 	}
 	
 	
+	private void findInvoiceById() {
+		String id = validator.readNonEmptyString("Enter Invoice ID: ");
+		Invoice invoice = store.findInvoiceById(id);
+		if (invoice == null) {
+			System.out.println("\n⚠️ No invoice found with that ID.");
+			validator.pause();
+			return;
+		}
+		System.out.println(invoice);
+		validator.pause();	
+	}
 	
 	
 }
