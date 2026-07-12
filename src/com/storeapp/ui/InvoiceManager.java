@@ -88,23 +88,42 @@ public class InvoiceManager {
 			return;
 		}
 
+		int idW = 20, nameW = 15, phoneW = 13, dateW = 20, itemsW = 6, amountW = 16, payW = 10;
+
+		String top    = "┌" + "─".repeat(idW+2) + "┬" + "─".repeat(nameW+2) + "┬" + "─".repeat(phoneW+2) + "┬" + "─".repeat(dateW+2) + "┬" + "─".repeat(itemsW+2) + "┬" + "─".repeat(amountW+2) + "┬" + "─".repeat(payW+2) + "┐";
+		String mid    = "├" + "─".repeat(idW+2) + "┼" + "─".repeat(nameW+2) + "┼" + "─".repeat(phoneW+2) + "┼" + "─".repeat(dateW+2) + "┼" + "─".repeat(itemsW+2) + "┼" + "─".repeat(amountW+2) + "┼" + "─".repeat(payW+2) + "┤";
+		String bottom = "└" + "─".repeat(idW+2) + "┴" + "─".repeat(nameW+2) + "┴" + "─".repeat(phoneW+2) + "┴" + "─".repeat(dateW+2) + "┴" + "─".repeat(itemsW+2) + "┴" + "─".repeat(amountW+2) + "┴" + "─".repeat(payW+2) + "┘";
+
 		System.out.println("\n--- Invoice History ---");
-		System.out.printf("%-20s %-15s %-20s %-10s %-10s%n",
-				"Invoice #", "Customer", "Date", "Amount", "Payment");
-		System.out.println("-------------------- --------------- -------------------- ---------- ----------");
+		System.out.println(top);
+		System.out.printf("│ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "s │ %" + amountW + "s │ %-" + payW + "s │%n",
+				"Invoice #", "Customer", "Phone", "Date", "Items", "Amount (Tomans)", "Payment");
+		System.out.println(mid);
 
-
+		double totalAmount = 0;
+		int cashCount = 0, creditCount = 0;
 
 		for (Invoice inv : invoices) {
-			System.out.printf("%-20s %-15s %-20s %,10d %-10s%n",
+			System.out.printf("│ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "d │ %," + amountW + "d │ %-" + payW + "s │%n",
 					shortId(inv.getId()),
 					inv.getCustomer().getName(),
+					inv.getCustomer().getPhone(),
 					inv.getDateTime().format(Constants.DISPLAY_DATETIME_FORMAT),
+					inv.getItems().size(),
 					(long) inv.getFinalAmount(),
 					inv.getPaymentMethod());
+
+			totalAmount += inv.getFinalAmount();
+			if (inv.getPaymentMethod().toString().equals("CASH")) {
+				cashCount++;
+			} else {
+				creditCount++;
+			}
 		}
 
-		System.out.println("-------------------- --------------- -------------------- ---------- ----------");
+		System.out.println(bottom);
+		System.out.printf("%nShowing %d invoice(s)  |  Total: %,d Tomans  |  Cash: %d  |  Credit: %d%n",
+				invoices.size(), (long) totalAmount, cashCount, creditCount);
 	}
 	
 	public void showAllInvoices() {
