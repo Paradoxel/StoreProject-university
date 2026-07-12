@@ -3,7 +3,9 @@ package com.storeapp.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.storeapp.model.Customer;
 import com.storeapp.model.Invoice;
+import com.storeapp.model.LoyalCustomer;
 import com.storeapp.service.CryptoService;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
@@ -153,6 +155,7 @@ public class InvoiceManager {
 				searchByName();
 				break;
 			case 3:
+				searchByMembershipCode();
 				break;
 			case 4:
 				return;
@@ -192,6 +195,22 @@ public class InvoiceManager {
 			}
 		}
 
+
+		printInvoiceTable(results);
+		validator.pause();
+	}
+	
+	
+	private void searchByMembershipCode() {
+		String code = validator.readNonEmptyString("Enter Membership Code: ");
+
+		List<Invoice> results = new ArrayList<>();
+		for (Invoice inv : store.getInvoices()) {
+			Customer c = inv.getCustomer();
+			if (c instanceof LoyalCustomer lc && lc.getMembershipCode().equals(code)) {
+				results.add(inv);
+			}
+		}
 
 		printInvoiceTable(results);
 		validator.pause();
