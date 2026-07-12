@@ -45,5 +45,8 @@ public class Constants {
     	    "9K$wL2@pQ#8xVm!R7cF&nA5zHsT1uYdE";
     
     
+	public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    
+    
     
 }
