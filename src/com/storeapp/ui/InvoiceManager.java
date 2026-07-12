@@ -40,7 +40,7 @@ public class InvoiceManager {
 					findInvoiceById();
 					break;
 				case 3:
-					//findInvoicesByCustomer();
+					findInvoicesByCustomer();
 					break;
 				case 4:
 					decryptInvoiceToken();
@@ -128,6 +128,37 @@ public class InvoiceManager {
 		}
 		System.out.println(invoice);
 		validator.pause();	
+	}
+	
+	
+	
+	
+	private void findInvoicesByCustomer() {
+		String[] options = {
+				"1. By Phone Number",
+				"2. By Name",
+				"3. By Membership Code",
+				"4. Back"
+		};
+
+		while(true) {
+			validator.printBox("FIND INVOICES BY CUSTOMER", options);
+			int choice = validator.readIntRange(1, 4);
+			switch(choice) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				return;
+			}
+		}
+		
+		
+		
+		
 	}
 	
 	
