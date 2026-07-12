@@ -150,6 +150,7 @@ public class InvoiceManager {
 				searchByPhone();
 				break;
 			case 2:
+				searchByName();
 				break;
 			case 3:
 				break;
@@ -173,6 +174,23 @@ public class InvoiceManager {
 			}
 		}
 
+
+
+		printInvoiceTable(results);
+		validator.pause();
+	}
+	
+	
+	private void searchByName() {
+		String name = validator.readNonEmptyString(
+				"Enter customer name (or part of it): ").toLowerCase();
+
+		List<Invoice> results = new ArrayList<>();
+		for (Invoice inv : store.getInvoices()) {
+			if (inv.getCustomer().getName().toLowerCase().contains(name)) {
+				results.add(inv);
+			}
+		}
 
 
 		printInvoiceTable(results);
