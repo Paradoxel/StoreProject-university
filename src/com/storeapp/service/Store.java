@@ -44,7 +44,7 @@ public class Store implements Serializable {
 	// Product management
 	public void addProduct(Product product) {
 		products.add(product);
-		Logger.log("Product added: " + product.getCode() + " - " + product.getName() + " | Price: " + product.getPrice());
+		Logger.info("Product added: " + product.getCode() + " - " + product.getName() + " | Price: " + product.getPrice());
 	}
 	
 	public Product findItemByCode(String code) {
@@ -70,9 +70,9 @@ public class Store implements Serializable {
 	public void addCustomer(Customer customer) {
 		customers.add(customer);
 		if (customer instanceof LoyalCustomer lc) {
-		    Logger.log("Loyal customer added: " + lc.getName() + " | Code: " + lc.getMembershipCode());
+			Logger.info("Loyal customer added: " + lc.getName() + " | Code: " + lc.getMembershipCode());
 		} else {
-		    Logger.log("Customer added: " + customer.getName() + " | Phone: " + customer.getPhone());
+			Logger.info("Customer added: " + customer.getName() + " | Phone: " + customer.getPhone());
 		}
 	}
 	
@@ -102,11 +102,11 @@ public class Store implements Serializable {
 	
 	public Invoice checkoutCart(Cart cart,PaymentMethod paymentmethod) {
 		if (cart.getStatus() == CartStatus.CLOSED) {
-		    Logger.log("ERROR: Checkout failed – cart is already closed for " + cart.getCustomer().getName());
+			Logger.warning("Checkout failed – cart is already closed for " + cart.getCustomer().getName());
 		    throw new IllegalStateException("سبد خرید بسته است.");
 		}
 		if (cart.getItems().isEmpty()) {
-		    Logger.log("ERROR: Checkout failed – cart is empty for " + cart.getCustomer().getName());
+			Logger.warning("Checkout failed – cart is empty for " + cart.getCustomer().getName());
 		    throw new IllegalStateException("سبد خرید خالی است.");
 		}
 			
@@ -120,9 +120,12 @@ public class Store implements Serializable {
 		if(paymentmethod==PaymentMethod.CREDIT && invoice.getCustomer() instanceof LoyalCustomer) {
 			LoyalCustomer loyal=(LoyalCustomer) invoice.getCustomer();
 			loyal.addDebt(invoice.getFinalAmount());
-			Logger.log("Debt increased: " + loyal.getName() +
-			           " | Added: " + invoice.getFinalAmount() + " Tomans" +
-			           " | New Total Debt: " + loyal.getDebt() + " Tomans");
+			Logger.info("Debt increased: "
+					+ loyal.getName() + 
+					" | Added: " +
+					invoice.getFinalAmount() +
+					" Tomans | New Total Debt: " +
+					loyal.getDebt() + " Tomans");
 		}
 			
 		
@@ -148,9 +151,9 @@ public class Store implements Serializable {
 			    byte[] encryptedData = CryptoService.encrypt(plainData);
 
 			    fileOut.write(encryptedData);
-			    Logger.log("Store serialized and encrypted successfully.");
+			    Logger.info("Store serialized and encrypted successfully.");
 			} catch (IOException e) {
-			    Logger.log("ERROR: Failed to save store: " + e.getMessage());
+				Logger.error("ERROR: Failed to save store: " + e.getMessage());
 			    System.err.println("❌ Could not save store data.");
 			}
 	}
@@ -169,17 +172,17 @@ public class Store implements Serializable {
 	            ObjectInputStream objectIn = new ObjectInputStream(byteIn)
 	        ) {
 	            Store loaded = (Store) objectIn.readObject();
-	            Logger.log("Store loaded from file: " + loaded.getProducts().size() + " products, " +
+	            Logger.info("Store loaded from file: " + loaded.getProducts().size() + " products, " +
 	                    loaded.getCustomers().size() + " customers, " +
 	                    loaded.getInvoices().size() + " invoices");
 	            return loaded;
 	        }
 
 	    } catch (FileNotFoundException e) {
-	        Logger.log("No saved store found – new empty store created");
+	    	Logger.info("No saved store found – new empty store created");
 	        return new Store();
 	    } catch (IOException | ClassNotFoundException e) {
-	        Logger.log("ERROR: Failed to load store from file: " + e.getMessage());
+	    	Logger.error("ERROR: Failed to load store from file: " + e.getMessage());
 	        System.err.println("❌ Could not load store data. Starting with an empty store.");
 	        return new Store();
 	    }
@@ -234,7 +237,7 @@ public class Store implements Serializable {
 	
 	public void removeProduct(Product product) {
 	    products.remove(product);
-	    Logger.log("Product removed: " + product.getCode() + " - " + product.getName());
+	    Logger.info("Product removed: " + product.getCode() + " - " + product.getName());
 	}
 	
 	
@@ -269,11 +272,11 @@ public class Store implements Serializable {
 	        }
 	    }
 	    if (target == null) {
-	        Logger.log("ERROR: Return failed – product not in invoice. Product: " + productCode + " | Invoice: " + inv.getId());
+	    	Logger.warning("ERROR: Return failed – product not in invoice. Product: " + productCode + " | Invoice: " + inv.getId());
 	        throw new IllegalArgumentException("Product not in this invoice.");
 	    }
 	    if (quantity <= 0 || quantity > target.getQuantity()) {
-	        Logger.log("ERROR: Return failed – invalid quantity. Product: " + productCode + " | Qty: " + quantity + " | Available: " + target.getQuantity());
+	    	Logger.warning("ERROR: Return failed – invalid quantity...");
 	        throw new IllegalArgumentException("Invalid quantity.");
 	    }
 	    // build the uniqu key for this invoice item 
@@ -284,7 +287,7 @@ public class Store implements Serializable {
 	    double totalAfterThis=alreadyReturned+quantity;
 	    // check if exist
 	    if (totalAfterThis > target.getQuantity()) {
-	        Logger.log("ERROR: Return failed – exceeds purchased. Product: " + productCode + " | Requested: " + quantity + " | Already returned: " + alreadyReturned + " | Purchased: " + target.getQuantity());
+	    	Logger.warning("ERROR: Return failed – exceeds purchased...");
 	        throw new IllegalArgumentException("Cannot return more than purchased...");
 	    }
 	 // 1. if valid --> Increase stock 
@@ -292,7 +295,7 @@ public class Store implements Serializable {
 	    target.getProduct().increaseStock(quantity);
 	    double refund = target.getProduct().getDiscountedPrice() * quantity;
 	    lc.addCredit(refund);
-	    Logger.log("Return: " + lc.getName() +
+	    Logger.info("Return processed: " + lc.getName() +
 	            " | Product: " + productCode +
 	            " | Qty: " + quantity +
 	            " | Refund: " + refund + " Tomans" +
@@ -301,12 +304,7 @@ public class Store implements Serializable {
 	
 	
 	
-	
-	
 
-	
-	
-	
 
 	
 	

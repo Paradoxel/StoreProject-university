@@ -29,7 +29,7 @@ public class Logger {
         }
     }
 
-    // Convenience methods
+    // log level methods
     public static void debug(String message) {
         log(Level.DEBUG, message);
     }
