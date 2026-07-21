@@ -1,5 +1,6 @@
 package com.storeapp.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Coupon implements Serializable {
@@ -61,6 +62,28 @@ public class Coupon implements Serializable {
     
     public LocalDate getExpirationDate() {
     	return expirationDate;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+
+    public int getMaxUsage() {
+        return maxUsage;
+    }
+
+    public int getUsedCount() {
+        return usedCount;
+    }
+    
+    // Calculator total amount
+    
+    public double calculateDiscount(double amount) {
+        return amount * (discountPercentage / 100.0);
+    }
+    
+    public double applyDiscount(double amount) {
+        return amount - calculateDiscount(amount);
     }
     
     
