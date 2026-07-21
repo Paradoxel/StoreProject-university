@@ -109,17 +109,7 @@ public class CouponManager  {
 	}
 	
 	
-	public boolean isActive() {
-	    return active;
-	}
-
-	public int getMaxUsage() {
-	    return maxUsage;
-	}
-
-	public int getUsedCount() {
-	    return usedCount;
-	}
+	
 	
 	
 }

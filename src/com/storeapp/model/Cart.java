@@ -78,7 +78,7 @@ public class Cart implements Serializable {
 	}
 	
 	
-	public Invoice checkout(PaymentMethod paymentmethod) {
+	public Invoice checkout(PaymentMethod paymentmethod,double finalAmount) {
 		if(status==CartStatus.CLOSED)
 			throw new IllegalStateException("سبد خرید بسته است.");
 		if (items.isEmpty())
@@ -86,7 +86,7 @@ public class Cart implements Serializable {
 		
 		
 		this.status=CartStatus.CLOSED;
-		return new Invoice(this, paymentmethod);
+		return new Invoice(this, paymentmethod,finalAmount);
 		
 	}
 	

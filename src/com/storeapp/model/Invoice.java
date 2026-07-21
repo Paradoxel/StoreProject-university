@@ -18,12 +18,12 @@ public class Invoice implements Serializable {
 	private final LocalDateTime dateTime;
 	private final double finalAmount;
 	
-	public Invoice(Cart cart,PaymentMethod paymentMethod) {
+	public Invoice(Cart cart,PaymentMethod paymentMethod,double finalAmount) {
 		this.paymentMethod = paymentMethod;
 		items = new ArrayList<>(cart.getItems());
 		customer = cart.getCustomer();
 		dateTime = LocalDateTime.now();
-		finalAmount = cart.getTotalAmount();
+		this.finalAmount = finalAmount;
 		id = CryptoService.encrypt(buildInvoiceData());
 
 	}

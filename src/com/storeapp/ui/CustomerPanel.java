@@ -14,6 +14,11 @@ import com.storeapp.model.*;
 public class CustomerPanel {
 	private Store store;
 	private InputValidator validator;
+	
+	
+	
+	// When a coupon is valid
+	private Coupon appliedCoupon;
 	public CustomerPanel(Store store,InputValidator validator) {
 		this.store=store;
 		this.validator=validator;
@@ -110,6 +115,9 @@ public class CustomerPanel {
 	
 	
 	public void shop(Customer customer) {
+		
+		// clear old coupon
+		appliedCoupon = null;
 		// create a new shoping cart
 		Cart cart=store.createCart(customer);
 		System.out.println("🛒 Shopping cart ready.");
@@ -205,10 +213,24 @@ public class CustomerPanel {
 			System.out.println("❌ Your cart is empty. Nothing to checkout.");
 			return ;
 		}
+		System.out.println("\n--- Order Summary ---");
+		System.out.printf("Original  amount: %,d Tomans%n",
+		        (long) cart.getTotalAmount());
+		System.out.println("---------------------");
+		
+		
+		double finalAmount = calculateFinalAmountWithCoupon(cart);
+
+		
 		// Choose payment method
-		PaymentMethod method=getPaymentMethod(customer,cart.getTotalAmount());
+		PaymentMethod method = getPaymentMethod(customer, finalAmount);
 		// Execute checkout for invoice
-		Invoice invoice =store.checkoutCart(cart, method);
+		Invoice invoice =store.checkoutCart(cart, method,finalAmount);
+		// if user have token this block execute
+		if (appliedCoupon != null) {
+		    appliedCoupon.incrementUsage();
+		}
+		
 		// save to file
 		store.saveToFile(Constants.STORE_FILE);
 		System.out.println("\n" + invoice.toString());
@@ -401,6 +423,42 @@ public class CustomerPanel {
 		store.saveToFile(Constants.STORE_FILE);
 		System.out.println("✅ New membership code: " + newCode);
 		System.out.println("⚠️ Please save this code – you will need it to log in.");
+	}
+	
+	
+	
+	
+	// For Coupon 
+	private double calculateFinalAmountWithCoupon(Cart cart) {
+		double finalAmount = cart.getTotalAmount();
+		while(true) {
+			boolean hasCoupon = validator.yesOrNo("Do you have a coupon?");
+			if (!hasCoupon) {
+				return finalAmount;
+			}
+			String code = validator.readNonEmptyString("Enter coupon code: ");
+			Coupon coupon = store.findCouponByCode(code);
+			if (coupon==null) {
+				System.out.println("❌ Coupon not found.");
+			}
+			else if(!coupon.isAvailable()) {
+				System.out.println("❌ Coupon is expired or unavailable.");
+			}
+			else {
+				finalAmount = coupon.applyDiscount(finalAmount);
+				this.appliedCoupon=coupon;
+				System.out.printf(
+					    "✅ Coupon applied! New amount: %,d Tomans%n",
+					    (long) finalAmount
+					);
+				return finalAmount;
+			}
+			boolean tryAgain =validator.yesOrNo("Try another coupon?");
+			if (!tryAgain) {
+	            return finalAmount;
+	        }
+		}
+		
 	}
 
 }

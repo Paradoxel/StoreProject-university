@@ -102,7 +102,7 @@ public class Store implements Serializable {
 		return new Cart(customer);
 	}
 	
-	public Invoice checkoutCart(Cart cart,PaymentMethod paymentmethod) {
+	public Invoice checkoutCart(Cart cart,PaymentMethod paymentmethod,double finalAmount) {
 		if (cart.getStatus() == CartStatus.CLOSED) {
 			Logger.warning("Checkout failed – cart is already closed for " + cart.getCustomer().getName());
 		    throw new IllegalStateException("سبد خرید بسته است.");
@@ -112,7 +112,7 @@ public class Store implements Serializable {
 		    throw new IllegalStateException("سبد خرید خالی است.");
 		}
 			
-		Invoice invoice = cart.checkout(paymentmethod);
+		Invoice invoice = cart.checkout(paymentmethod,finalAmount);
 		
 		for(CartItem item:invoice.getItems()) {
 			Product product=item.getProduct();
