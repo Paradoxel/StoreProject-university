@@ -21,21 +21,23 @@ public class AdminPanel {
 	
 	public void showMenu() {
 	    ProductManager productManager = new ProductManager(store, validator);
+	    CouponManager couponManager = new CouponManager(store, validator);
 	    CustomerManager customerManager = new CustomerManager(store, validator);
 	    InvoiceManager invoiceManager = new InvoiceManager(store, validator);
-	    
+
 	    String[] options = {
 	            "1. Product Management",
-	            "2. Customer Management",
-	            "3. Invoice Management",
-	            "4. Reports",
-	            "5. Back to main menu"
+	            "2. Coupon Management",
+	            "3. Customer Management",
+	            "4. Invoice Management",
+	            "5. Reports",
+	            "6. Back to main menu"
 	    };
 
 	    while (true) {
 	        validator.printBox("ADMIN PANEL", options);
 
-	        int choice = validator.readIntRange(1, 5);
+	        int choice = validator.readIntRange(1, 6);
 
 	        switch (choice) {
 	            case 1:
@@ -43,18 +45,22 @@ public class AdminPanel {
 	                break;
 
 	            case 2:
-	                customerManager.showMenu();
+	                couponManager.showMenu();
 	                break;
 
 	            case 3:
-	                invoiceManager.showMenu();
+	                customerManager.showMenu();
 	                break;
 
 	            case 4:
-	                showReports();
+	                invoiceManager.showMenu();
 	                break;
 
 	            case 5:
+	                showReports();
+	                break;
+
+	            case 6:
 	                return;
 	        }
 	    }
