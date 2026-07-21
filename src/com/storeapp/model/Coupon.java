@@ -2,7 +2,7 @@ package com.storeapp.model;
 
 import java.time.LocalDate;
 
-public class Coupon {
+public class Coupon implements Serializable {
 	private String code;
     private double discountPercentage;
     private boolean active;
@@ -61,6 +61,20 @@ public class Coupon {
     
     public LocalDate getExpirationDate() {
     	return expirationDate;
+    }
+    
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "Code: %-12s | Discount: %5.1f%% | Status: %-11s | Expiration: %s | Usage: %d/%d",
+            code,
+            discountPercentage,
+            isAvailable() ? "Available" : "Unavailable",
+            expirationDate,
+            usedCount,
+            maxUsage
+        );
     }
     
     

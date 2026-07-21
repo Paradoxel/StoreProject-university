@@ -1,13 +1,14 @@
 package com.storeapp.ui;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.storeapp.model.Coupon;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
-public class CouponManager {
+public class CouponManager  {
 	private Store store;
 	private InputValidator validator;
 	public CouponManager(Store store, InputValidator validator) {
@@ -75,7 +76,21 @@ public class CouponManager {
 	}
 
 	private void viewCoupons() {
-	    // TODO: Implement viewing all coupons
+
+	    validator.printTitle("COUPON LIST");
+	    List<Coupon> coupons = store.getCoupons();
+	    if (coupons.isEmpty()) {
+	        System.out.println("⚠️ No coupons available.");
+	        validator.pause();
+	        return;
+	    }
+
+	    int index = 1;
+	    for (Coupon coupon : coupons) {
+	        System.out.println(index++ + ". " + coupon);
+	    }
+
+	    validator.pause();
 	}
 	
 	
