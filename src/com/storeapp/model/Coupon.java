@@ -49,4 +49,20 @@ public class Coupon {
     public void deactivate() {
     	active=false;
     }
+    
+    // Getters
+    public String getCode() {
+    	return code;
+    }
+    
+    public int getDiscountPercentage() {
+    	return discountPercentage;
+    }
+    
+    public LocalDate getExpirationDate() {
+    	return expirationDate;
+    }
+    
+    
+    
 }

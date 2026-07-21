@@ -17,6 +17,7 @@ public class Store implements Serializable {
 	private List<Product> products;
 	private List<Customer> customers;
 	private List<Invoice> invoices;
+	private List<Coupon> coupons;
 	// hash map for return item safe(key pair value)
 	private Map<String, Double> returnedQuantities = new HashMap<>();
 	
@@ -24,6 +25,7 @@ public class Store implements Serializable {
 	    this.products = new ArrayList<>();
 	    this.customers = new ArrayList<>();
 	    this.invoices = new ArrayList<>();
+	    this.coupons=new ArrayList<>();
 	}
 	
 	
@@ -301,6 +303,38 @@ public class Store implements Serializable {
 	            " | Refund: " + refund + " Tomans" +
 	            " | Invoice: " + inv.getId());
 	}
+	
+	
+	
+	// Get all coupons
+	public List<Coupon> getCoupons(){
+		return Collections.unmodifiableList(coupons);
+	}
+	
+	// add to Coupons 
+	public void addCoupon(Coupon coupon) {
+		if (findCouponByCode(coupon.getCode()) == null) {
+		    coupons.add(coupon);
+		    Logger.info("Coupon added: " + coupon.getCode()
+	        + " | Discount: " + coupon.getDiscountPercentage()
+	        + "% | Expiration: " + coupon.getExpirationDate());
+		} else {
+		    Logger.warning("Duplicate coupon rejected: " + coupon.getCode());
+		}
+		
+	}
+	
+	
+	// Find coupon by code
+	public Coupon findCouponByCode(String code) {
+	    for (Coupon cp : coupons) {
+	        if (cp.getCode().equals(code)) {
+	            return cp;
+	        }
+	    }
+	    return null;
+	}
+	
 	
 	
 	
