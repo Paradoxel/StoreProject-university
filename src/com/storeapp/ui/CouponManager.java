@@ -1,6 +1,10 @@
 package com.storeapp.ui;
 
+import java.time.LocalDate;
+
+import com.storeapp.model.Coupon;
 import com.storeapp.service.Store;
+import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class CouponManager {
@@ -42,11 +46,51 @@ public class CouponManager {
 	
 	
 	private void addCoupon() {
-	    // TODO: Implement adding a new coupon
+
+	    validator.printTitle("ADD COUPON");
+
+	    String code = readUniqueCouponCode();
+
+	    double discount = validator.readRequiredDiscountPercentage(
+	            "Discount Percentage: ");
+
+	    LocalDate expirationDate = validator.readDate(
+	            "Expiration Date (yyyy-MM-dd): ");
+
+	    System.out.print("Maximum Usage: ");
+	    int maxUsage = validator.readIntRange(1, Constants.MAX_COUPON_USAGE);
+
+	    Coupon coupon = new Coupon(
+	            code,
+	            discount,
+	            expirationDate,
+	            maxUsage
+	    );
+
+	    store.addCoupon(coupon);
+
+	    System.out.println("\n✅ Coupon '" + code + "' created successfully.");
+
+	    validator.pause();
 	}
 
 	private void viewCoupons() {
 	    // TODO: Implement viewing all coupons
+	}
+	
+	
+	
+	
+	private String readUniqueCouponCode() {
+	    while (true) {
+	        String code = validator.readNonEmptyString("Coupon Code: ").trim().toUpperCase();
+
+	        if (store.findCouponByCode(code) == null) {
+	            return code;
+	        }
+
+	        System.out.println("❌ Coupon code already exists. Please enter another code.");
+	    }
 	}
 	
 	

@@ -55,4 +55,9 @@ public class Constants {
    
    
     public static final DateTimeFormatter DISPLAY_DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    
+    
+    
+    // max coupon usage
+    public static final int MAX_COUPON_USAGE = 100;
 }

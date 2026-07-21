@@ -4,25 +4,25 @@ import java.time.LocalDate;
 
 public class Coupon {
 	private String code;
-    private int discountPercentage;
+    private double discountPercentage;
     private boolean active;
     private LocalDate expirationDate;
     private int maxUsage;
     private int usedCount;
 
     public Coupon(String code,
-                  int discountPercentage,
-                  LocalDate expirationDate,
-                  int maxUsage) {
-
-        this.code = code;
-        this.discountPercentage = discountPercentage;
-        this.expirationDate = expirationDate;
-        this.maxUsage = maxUsage;
-
-        this.active = true;
-        this.usedCount = 0;
-    }
+            double discountPercentage,
+            LocalDate expirationDate,
+            int maxUsage) {
+	
+	  this.code = code;
+	  this.discountPercentage = discountPercentage;
+	  this.expirationDate = expirationDate;
+	  this.maxUsage = maxUsage;
+	
+	  this.active = true;
+	  this.usedCount = 0;
+	}
     
     
     
@@ -55,7 +55,7 @@ public class Coupon {
     	return code;
     }
     
-    public int getDiscountPercentage() {
+    public double getDiscountPercentage() {
     	return discountPercentage;
     }
     
