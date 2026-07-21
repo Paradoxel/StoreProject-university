@@ -1,5 +1,7 @@
 package com.storeapp.util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import com.storeapp.model.UnitType;
@@ -236,6 +238,50 @@ public class InputValidator {
                 System.out.println("❌ Invalid number. Try again.");
             }
     	}
+    }
+    
+    
+    public double readRequiredDiscountPercentage(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                System.out.println("❌ Discount percentage is required.");
+                continue;
+            }
+
+            try {
+                double discount = Double.parseDouble(input);
+
+                if (discount >= 0 && discount <= 100) {
+                    return discount;
+                }
+
+                System.out.println("❌ Discount must be between 0 and 100.");
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Please enter a valid number.");
+            }
+        }
+        
+
+    }
+    
+    
+    
+    public LocalDate readDate(String prompt) {
+        while (true) {
+        	
+        
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+
+            try {
+                return LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("❌ Invalid date. Please use yyyy-MM-dd format.");
+            }
+        }
     }
     
     
