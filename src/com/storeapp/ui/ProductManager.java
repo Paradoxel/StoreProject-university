@@ -131,9 +131,19 @@ public class ProductManager {
             builder.discountPercent(discount);
     	}
     	
-    	Product product=builder.build();
+    	Product product = builder.build();
+
     	store.addProduct(product);
-		store.saveToFile(Constants.STORE_FILE);
+    	store.save();
+
+    	Logger.info(
+    	    "PRODUCT_CREATED | Code=" + product.getCode()
+    	    + " | Name=" + product.getName()
+    	    + " | Price=" + product.getPrice()
+    	    + " | Stock=" + product.getStock()
+    	    + " | Unit=" + product.getUnitType()
+    	);
+    	
 		System.out.println("✅ Product '" + product.getName() + "' added successfully!");
     }
 
@@ -173,10 +183,17 @@ public class ProductManager {
         
         Product product = store.findItemByCode(code);
         if (product == null) {
-            System.out.println("❌ No product found with code '" + code + "'.");
+
+            Logger.warning(
+                "PRODUCT_DELETE_FAILED | Code="
+                + code
+                + " | Reason=NOT_FOUND"
+            );
+
+            System.out.println("❌ No product found");
             return;
         }
-     // Ask for confirmation before deleting
+        // Ask for confirmation before deleting
         if (!validator.yesOrNo("Are you sure you want to delete '" + product.getName() + "'?")) {
             System.out.println("❌ Deletion cancelled.");
             return;
@@ -186,9 +203,18 @@ public class ProductManager {
         store.removeProduct(product);
         
         // Save changes to file
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
         System.out.println("✅ Product '" + product.getName() + "' deleted successfully!");
-        Logger.log("Product deleted by admin: " + product.getCode() + " - " + product.getName());
+        Logger.warning(
+        	    "PRODUCT_DELETED | Code="
+        	    + product.getCode()
+        	    + " | Name="
+        	    + product.getName()
+        	    + " | PreviousStock="
+        	    + product.getStock()
+        	    + " | PreviousPrice="
+        	    + product.getPrice()
+        	);
 
     }
     
@@ -201,7 +227,10 @@ public class ProductManager {
             System.out.println("❌ No product found with code '" + code + "'.");
             return;
         }
-
+        // Data berfor editing
+        double oldPrice = product.getPrice();
+        double oldStock = product.getStock();
+        double oldDiscount = product.getDiscountPercent();
         // Show current values
         System.out.println("\nEditing product: " + product.getName());
         System.out.println("(Press Enter to keep the current value)\n");
@@ -228,9 +257,18 @@ public class ProductManager {
         }
 
         // Save changes
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
         System.out.println("✅ Product '" + product.getName() + "' updated successfully!");
-        Logger.log("Product edited: " + product.getCode() + " - " + product.getName());
+        Logger.info(
+        	    "PRODUCT_UPDATED | Code="
+        	    + product.getCode()
+        	    + " | OldPrice=" + oldPrice
+        	    + " | NewPrice=" + product.getPrice()
+        	    + " | OldStock=" + oldStock
+        	    + " | NewStock=" + product.getStock()
+        	    + " | OldDiscount=" + oldDiscount
+        	    + " | NewDiscount=" + product.getDiscountPercent()
+        	);
 
     }
     
@@ -260,6 +298,10 @@ public class ProductManager {
         if (p.getProductionDate() != null) System.out.println("Prod.Date: " + p.getProductionDate());
         if (p.getExpirationDate() != null) System.out.println("Exp.Date : " + p.getExpirationDate());
         System.out.println("─────────────────────────────");
+        Logger.debug(
+        	    "PRODUCT_VIEW | Code="
+        	    + code
+        	);
     }
     
     
@@ -269,7 +311,11 @@ public class ProductManager {
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
         gen.generateProducts(count);
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
+        Logger.info(
+        	    "SAMPLE_PRODUCTS_GENERATED | Count="
+        	    + count
+        	);
         System.out.println("✅ " + count + " sample products generated and saved!");
     }
     

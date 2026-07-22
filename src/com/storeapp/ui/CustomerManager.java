@@ -63,7 +63,15 @@ public class CustomerManager {
         System.out.println("⚠️ Please save this code securely – the customer will need it to log in.");
         LoyalCustomer loyalCustomer = new LoyalCustomer(name, phone, membershipCode, joinDate);
         store.addCustomer(loyalCustomer);
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
+        Logger.info(
+        	    "Loyal customer added: "
+        	    + loyalCustomer.getName()
+        	    + " | Phone: "
+        	    + loyalCustomer.getPhone()
+        	    + " | Membership Code: "
+        	    + loyalCustomer.getMembershipCode()
+        	);
         System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
     }
     
@@ -154,7 +162,10 @@ public class CustomerManager {
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
         gen.generateCustomers(count);
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
+        Logger.info(
+        	    count + " sample customers generated successfully."
+        	);
         System.out.println("✅ " + count + " sample customers generated and saved!");
     }
     

@@ -54,6 +54,7 @@ public class ConsoleUI {
                     signUp();
                     break;
                 case 3:
+                	store.save();
                 	validator.printTitle("👋 Goodbye!");
                     return;
             }
@@ -122,7 +123,7 @@ public class ConsoleUI {
         String name = validator.readNonEmptyString("Enter your name: ");
         Customer newCustomer = new Customer(name, phone);
         store.addCustomer(newCustomer);
-        store.saveToFile(Constants.STORE_FILE);
+        store.save();
         System.out.println("✅ Account created successfully! Welcome, " + name + "!");
         Logger.log("New customer signed up: " + name + " (" + phone + ")");
     }

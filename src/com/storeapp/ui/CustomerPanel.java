@@ -291,7 +291,17 @@ public class CustomerPanel {
 		}
 		
 		// save to file
-		store.saveToFile(Constants.STORE_FILE);
+		store.save();
+		Logger.info(
+			    "Purchase completed | Customer: "
+			    + customer.getName()
+			    + " | Invoice: "
+			    + invoice.getId()
+			    + " | Amount: "
+			    + invoice.getFinalAmount()
+			    + " | Payment: "
+			    + invoice.getPaymentMethod()
+			);
 		System.out.println("\n" + invoice.toString());
 		System.out.println("✅ Purchase completed. Thank you!");
 	}
@@ -399,28 +409,75 @@ public class CustomerPanel {
 	    double qty = validator.readPositiveDouble();
 	    store.processReturn(lc, inv, code, qty);
 	    System.out.println("✅ Returned " + qty + " of " + code + ". Credit: " + lc.getCredit() + " Tomans.");
-	    store.saveToFile(Constants.STORE_FILE);
+	    store.save();
+	    Logger.info(
+	    	    "Item returned | Customer: "
+	    	    + lc.getName()
+	    	    + " | Invoice: "
+	    	    + invoiceId
+	    	    + " | Product: "
+	    	    + code
+	    	    + " | Quantity: "
+	    	    + qty
+	    	);
 	    // pause
 	    validator.pause();
 	}
 	
-	// edit info user
+	// edit customer information
 	private void editCustomerInfo(Customer customer) {
-		System.out.println("\n--- Edit Info ---");
-		System.out.println("(Press Enter to keep the current value)");
-		String newName = validator.readOptionalString("New name (current: " + customer.getName() + "): ");
-		String newPhone = validator.readOptionalString("New phone (current: " + customer.getPhone() + "): ");
-		if (newPhone != null && !newPhone.isEmpty()) {
-		    // Check if the new phone is already taken by another customer
-		    Customer existing = store.findCustomerByPhone(newPhone);
-		    if (existing != null && existing != customer) {
-		        System.out.println("❌ This phone number is already registered by another customer.");
-		        return;
-		    }
-		    customer.setPhone(newPhone);
-		}
-		store.saveToFile(Constants.STORE_FILE);
-		System.out.println("✅ Info updated.");
+	    System.out.println("\n--- Edit Info ---");
+	    System.out.println("(Press Enter to keep the current value)");
+
+	    boolean updated = false;
+
+	    String newName = validator.readOptionalString(
+	            "New name (current: " + customer.getName() + "): ");
+
+	    if (newName != null && !newName.equals(customer.getName())) {
+	        customer.setName(newName);
+	        updated = true;
+	    }
+
+	    String newPhone = validator.readOptionalString(
+	            "New phone (current: " + customer.getPhone() + "): ");
+
+	    if (newPhone != null && !newPhone.isEmpty()) {
+
+	        Customer existing = store.findCustomerByPhone(newPhone);
+
+	        if (existing != null && existing != customer) {
+	            Logger.warning(
+	                "Customer update failed | Duplicate phone: "
+	                + newPhone
+	                + " | Customer: "
+	                + customer.getName()
+	            );
+
+	            System.out.println("❌ This phone number is already registered by another customer.");
+	            return;
+	        }
+
+	        if (!newPhone.equals(customer.getPhone())) {
+	            customer.setPhone(newPhone);
+	            updated = true;
+	        }
+	    }
+
+	    if (updated) {
+	        store.save();
+
+	        Logger.info(
+	                "Customer updated: "
+	                + customer.getName()
+	                + " | Phone: "
+	                + customer.getPhone()
+	        );
+
+	        System.out.println("✅ Customer information updated successfully.");
+	    } else {
+	        System.out.println("ℹ️ No changes were made.");
+	    }
 	}
 	
 	// show customer invoice
@@ -485,7 +542,15 @@ public class CustomerPanel {
 			return;
 		}
 		lc.payDebt(amount);
-		store.saveToFile(Constants.STORE_FILE);
+		store.save();
+		Logger.info(
+			    "Debt payment | Customer: "
+			    + lc.getName()
+			    + " | Paid: "
+			    + amount
+			    + " | Remaining Debt: "
+			    + lc.getDebt()
+			);
 		System.out.println("✅ Paid " + String.format("%,.2f Tomans", amount)
         + ". Remaining debt: " + String.format("%,.2f Tomans", lc.getDebt()));
 	}
@@ -507,7 +572,15 @@ public class CustomerPanel {
 		String oldCode = lc.getMembershipCode();
 		// set the code
 		lc.setMembershipCode(newCode);
-		store.saveToFile(Constants.STORE_FILE);
+		store.save();
+		Logger.info(
+			    "Membership code renewed | Customer: "
+			    + lc.getName()
+			    + " | Old: "
+			    + oldCode
+			    + " | New: "
+			    + newCode
+			);
 		System.out.println("✅ New membership code: " + newCode);
 		System.out.println("⚠️ Please save this code – you will need it to log in.");
 	}

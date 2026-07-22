@@ -7,13 +7,13 @@ import com.storeapp.model.Customer;
 import com.storeapp.model.Invoice;
 import com.storeapp.model.LoyalCustomer;
 import com.storeapp.service.CryptoService;
+import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
-import com.storeapp.util.Constants;
 public class InvoiceManager {
-	Store store;
-	InputValidator validator;
+	private Store store;
+	private InputValidator validator;
 	public InvoiceManager(Store store, InputValidator validator) {
         this.store = store;
         this.validator = validator;
@@ -66,7 +66,10 @@ public class InvoiceManager {
 		    String decrypted = CryptoService.decrypt(token);
 
 		    String[] parts = decrypted.split(Constants.SEPARATOR);
-
+		    if (parts.length != 3) {
+		    	
+		        throw new RuntimeException("Invalid token");
+		    }
 		    System.out.println("\n════════ Secure Invoice Details ════════");
 		    System.out.println("Phone Number : " + parts[0]);
 		    System.out.println("Date         : " + parts[1]);
@@ -75,6 +78,9 @@ public class InvoiceManager {
 		    validator.pause();
 		}
 		catch (RuntimeException e) {
+			Logger.warning(
+				    "Invalid invoice token entered."
+				);
 		    System.out.println("❌ Invalid secure invoice token.");
 		}
 	    
@@ -144,10 +150,16 @@ public class InvoiceManager {
 		String id = validator.readNonEmptyString("Enter Invoice ID: ");
 		Invoice invoice = store.findInvoiceById(id);
 		if (invoice == null) {
+			Logger.warning(
+				    "Invoice not found: " + id
+				);
 			System.out.println("\n⚠️ No invoice found with that ID.");
 			validator.pause();
 			return;
 		}
+		Logger.info(
+			    "Invoice viewed: " + id
+			);
 		System.out.println(invoice);
 		validator.pause();	
 	}
