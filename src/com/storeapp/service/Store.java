@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.print.attribute.standard.NumberOfInterveningJobs;
 
 import com.storeapp.model.*;
+import com.storeapp.util.Constants;
 public class Store implements Serializable {
 	// fields
 	private List<Product> products;
@@ -335,6 +336,12 @@ public class Store implements Serializable {
 	    return null;
 	}
 	
+	
+	
+	// save all of elemtns
+	public void save() {
+		saveToFile(Constants.STORE_FILE);
+	}
 	
 	
 	
