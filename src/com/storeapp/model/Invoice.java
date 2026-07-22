@@ -66,47 +66,103 @@ public class Invoice implements Serializable {
 	// showing the object 
 	@Override
 	public String toString() {
-		double originalPrice=0;
-	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm");
+
+	    double originalTotal = 0;
+	    double productDiscount = 0;
+
+	    DateTimeFormatter fmt =
+	            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
 	    StringBuilder sb = new StringBuilder();
 
-	    sb.append("══════════════════════════════════════════════════════\n");
-	    sb.append("               🧾 OFFICIAL INVOICE                    \n");
-	    sb.append("══════════════════════════════════════════════════════\n");
-	    sb.append(" Secure Invoice Token : ").append(id).append("\n");
-	    sb.append(" Date      : ").append(dateTime.format(fmt)).append("\n");
-	    sb.append(" Customer  : ").append(customer.getName()).append("\n");
-	    sb.append(" Phone     : ").append(customer.getPhone()).append("\n");
-	    sb.append("──────────────────────────────────────────────────────\n");
+	    sb.append("════════════════════════════════════════════════════════════════════════════\n");
+	    sb.append("                           🧾 OFFICIAL INVOICE\n");
+	    sb.append("════════════════════════════════════════════════════════════════════════════\n");
 
-	 
-	    sb.append(String.format(" %-24s %-6s %-8s %-12s %-14s%n", "Item", "Qty", "Unit", "Price", "Subtotal"));
-	    sb.append(" ------------------------ ------ -------- ------------ --------------\n");
+	    sb.append(" Invoice Token : ").append(id).append('\n');
+	    sb.append(" Date          : ").append(dateTime.format(fmt)).append('\n');
+	    sb.append(" Customer      : ").append(customer.getName()).append('\n');
+	    sb.append(" Phone         : ").append(customer.getPhone()).append('\n');
+
+	    sb.append("────────────────────────────────────────────────────────────────────────────\n");
+
+	    sb.append(String.format(
+	            "%-20s %-6s %-8s %12s %8s %12s %14s%n",
+	            "Item",
+	            "Qty",
+	            "Unit",
+	            "Price",
+	            "Disc",
+	            "Final",
+	            "Subtotal"));
+
+	    sb.append("────────────────────────────────────────────────────────────────────────────\n");
 
 	    for (CartItem item : items) {
+
 	        Product p = item.getProduct();
-	        String qtyStr;
-	        if (item.getQuantity() == Math.floor(item.getQuantity())) {
-	            qtyStr = String.valueOf((long) item.getQuantity());
-	        } else {
-	            qtyStr = String.format("%.1f", item.getQuantity());
-	        }
-	        sb.append(String.format(" %-24s %-6s %-8s %,12d %,14d%n",
+
+	        String qtyStr =
+	                item.getQuantity() == Math.floor(item.getQuantity())
+	                        ? String.valueOf((long) item.getQuantity())
+	                        : String.format("%.1f", item.getQuantity());
+
+	        originalTotal += item.getOriginalTotalPrice();
+	        productDiscount += item.getDiscountAmount();
+
+	        String discount =
+	                p.getDiscountPercent() > 0
+	                        ? String.format("%.0f%%", p.getDiscountPercent())
+	                        : "-";
+
+	        sb.append(String.format(
+	                "%-20s %-6s %-8s %,12d %8s %,12d %,14d%n",
 	                p.getName(),
-	                // Format quantity
 	                qtyStr,
 	                p.getUnitType(),
-	                (long) p.getDiscountedPrice(),    
-	                (long) item.getTotalPrice()));
-	        		originalPrice+=item.getTotalPrice();
+	                (long) p.getPrice(),
+	                discount,
+	                (long) item.getFinalUnitPrice(),
+	                (long) item.getTotalPrice()
+	        ));
 	    }
-	    double discountAmount = originalPrice - finalAmount;
-	    sb.append(" ---------------------------------------------------------------\n");
-	    sb.append(String.format(" ORIGINAL TOTAL : %,11d Tomans%n", (long) originalPrice));
-	    sb.append(String.format(" DISCOUNT       : %,11d Tomans%n", (long) discountAmount));
-	    sb.append(String.format(" FINAL TOTAL    : %,11d Tomans%n", (long) finalAmount));
-	    sb.append(" PAYMENT      : ").append(paymentMethod == PaymentMethod.CASH ? "Cash" : "Credit").append("\n");
-	    sb.append("══════════════════════════════════════════════════════\n");
+
+	    double couponDiscount =
+	            (originalTotal - productDiscount) - finalAmount;
+
+	    if (couponDiscount < 0)
+	        couponDiscount = 0;
+
+	    sb.append("────────────────────────────────────────────────────────────────────────────\n");
+
+	    sb.append(String.format(
+	            "%-20s %,22d Tomans%n",
+	            "Original Total:",
+	            (long) originalTotal));
+
+	    sb.append(String.format(
+	            "%-20s %,22d Tomans%n",
+	            "Product Discount:",
+	            (long) productDiscount));
+
+	    sb.append(String.format(
+	            "%-20s %,22d Tomans%n",
+	            "Coupon Discount:",
+	            (long) couponDiscount));
+
+	    sb.append("────────────────────────────────────────────────────────────────────────────\n");
+
+	    sb.append(String.format(
+	            "%-20s %,22d Tomans%n",
+	            "Final Total:",
+	            (long) finalAmount));
+
+	    sb.append(String.format(
+	            "%-20s %s%n",
+	            "Payment:",
+	            paymentMethod));
+
+	    sb.append("════════════════════════════════════════════════════════════════════════════\n");
 
 	    return sb.toString();
 	}
