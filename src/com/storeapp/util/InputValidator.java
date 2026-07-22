@@ -332,5 +332,35 @@ public class InputValidator {
     
     
     
+    public Double readOptionalDiscountPercentage(String prompt) {
+
+        while (true) {
+
+            System.out.print(prompt);
+
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                return null;
+            }
+
+            try {
+
+                double value = Double.parseDouble(input);
+
+                if (value >= 0 && value <= 100) {
+                    return value;
+                }
+
+                System.out.println("❌ Discount percentage must be between 0 and 100.");
+
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid number. Please try again.");
+            }
+        }
+    }
+    
+    
+    
     
 }
