@@ -182,8 +182,8 @@ public class CustomerPanel {
 		    	                p.getName(),
 		    	                qtyStr,
 		    	                p.getUnitType(),
-		    	                (long) p.getDiscountedPrice(),   
-		    	                (long) ci.getTotalPrice()); 
+		    	                 p.getDiscountedPrice(),   
+		    	                 ci.getTotalPrice()); 
 		    	    }
 		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
 		    	    System.out.printf(" Total: %,d Tomans%n", (long) cart.getTotalAmount());
@@ -238,28 +238,56 @@ public class CustomerPanel {
 	}
 	
 	public void showProducts() {
-		List<Product> products=store.getProducts();
-		if(products.isEmpty()) {
-			System.out.println("\n⚠️ No products available.");
-			return ;
-		}
-		// simple table header
-		System.out.println("\n--- Available Products ---");
-		System.out.printf("%-10s %-20s %11s %8s %-8s%n",
-                "Code", "Name", "Price", "Stock", "Unit");
-		System.out.println("---------- -------------------- ---------- -------- --------");
-		for (Product p : products) {
-	        if (p.isSellable()) {  // only show sellable products
-	        	System.out.printf("%-10s %-20s %,11d %8.1f %-8s%n",
-	        	        p.getCode(),
-	        	        p.getName(),
-	        	        (long) p.getPrice(),   
-	        	        p.getStock(),          
-	        	        p.getUnitType());
-	        }
+	    List<Product> products = store.getProducts();
+
+	    if (products.isEmpty()) {
+	        System.out.println("\n⚠️ No products available.");
+	        return;
 	    }
-		System.out.println("---------- -------------------- ----------- -------- --------");
-		
+
+	    System.out.println("\n============================== AVAILABLE PRODUCTS ==============================");
+	    System.out.printf(
+	            "%-10s %-20s %12s %10s %12s %8s %-8s%n",
+	            "Code",
+	            "Name",
+	            "Price",
+	            "Discount",
+	            "Final Price",
+	            "Stock",
+	            "Unit"
+	    );
+	    System.out.println("-------------------------------------------------------------------------------");
+
+	    boolean hasSellableProducts = false;
+
+	    for (Product p : products) {
+	        if (!p.isSellable()) {
+	            continue;
+	        }
+
+	        hasSellableProducts = true;
+
+	        String discount = p.getDiscountPercent() > 0
+	                ? String.format("%.0f%%", p.getDiscountPercent())
+	                : "-";
+
+	        System.out.printf(
+	                "%-10s %-20s %,12d %10s %,12d %8.1f %-8s%n",
+	                p.getCode(),
+	                p.getName(),
+	                (long) p.getPrice(),
+	                discount,
+	                (long) p.getDiscountedPrice(),
+	                p.getStock(),
+	                p.getUnitType()
+	        );
+	    }
+
+	    System.out.println("-------------------------------------------------------------------------------");
+
+	    if (!hasSellableProducts) {
+	        System.out.println("⚠️ No sellable products available.");
+	    }
 	}
 	
 	private PaymentMethod getPaymentMethod(Customer customer,double cartTotal) {
@@ -431,8 +459,8 @@ public class CustomerPanel {
 	// For Coupon 
 	private double calculateFinalAmountWithCoupon(Cart cart) {
 		double finalAmount = cart.getTotalAmount();
+		boolean hasCoupon = validator.yesOrNo("Do you have a coupon?");
 		while(true) {
-			boolean hasCoupon = validator.yesOrNo("Do you have a coupon?");
 			if (!hasCoupon) {
 				return finalAmount;
 			}
