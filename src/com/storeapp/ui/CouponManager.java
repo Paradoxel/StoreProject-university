@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.storeapp.model.Coupon;
+import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
@@ -18,18 +19,24 @@ public class CouponManager  {
 	
 	
 	public void showMenu() {
+
 	    String[] options = {
 	            "1. Add Coupon",
 	            "2. View Coupons",
-	            "3. Back"
+	            "3. Edit Coupon",
+	            "4. Change Coupon Status",
+	            "5. Delete Coupon",
+	            "6. Back"
 	    };
 
 	    while (true) {
+
 	        validator.printBox("COUPON MANAGEMENT", options);
 
-	        int choice = validator.readIntRange(1, 3);
+	        int choice = validator.readIntRange(1, 6);
 
 	        switch (choice) {
+
 	            case 1:
 	                addCoupon();
 	                break;
@@ -39,6 +46,18 @@ public class CouponManager  {
 	                break;
 
 	            case 3:
+	                editCoupon();
+	                break;
+
+	            case 4:
+	                //changeCouponStatus();
+	                break;
+
+	            case 5:
+	                //deleteCoupon();
+	                break;
+
+	            case 6:
 	                return;
 	        }
 	    }
@@ -69,6 +88,18 @@ public class CouponManager  {
 	    );
 
 	    store.addCoupon(coupon);
+	    store.save();
+
+	    Logger.info(
+	        "Coupon added: "
+	        + coupon.getCode()
+	        + " | Discount: "
+	        + coupon.getDiscountPercentage()
+	        + "% | Expiration: "
+	        + coupon.getExpirationDate()
+	        + " | Max Usage: "
+	        + coupon.getMaxUsage()
+	    );
 
 	    System.out.println("\n✅ Coupon '" + code + "' created successfully.");
 
@@ -91,6 +122,74 @@ public class CouponManager  {
 	    }
 
 	    validator.pause();
+	}
+	
+	private void editCoupon() {
+		
+		validator.printTitle("EDIT COUPON");
+		String code = validator.readNonEmptyString("Coupon Code: ");
+		Coupon coupon = store.findCouponByCode(code);
+		if (coupon==null) {
+			System.out.println("❌ Coupon not found.");
+	        validator.pause();
+	        return;
+		}
+		boolean updated = false;
+		System.out.println("(Press Enter to keep the current value)");
+
+		Double newDiscount = validator.readOptionalDiscountPercentage(
+		        "New discount percentage (current: "
+		        + coupon.getDiscountPercentage() + "%): "
+		);
+
+		if (newDiscount != null) {
+			updated = true;
+		    coupon.setDiscountPercentage(newDiscount);
+		}
+		
+
+		LocalDate newExpiration = validator.readOptionalDate(
+			    "New expiration date (current: " + coupon.getExpirationDate() + "): "
+			);
+
+		if (newExpiration != null) {
+			updated = true;
+		    coupon.setExpirationDate(newExpiration);
+		}
+		
+
+		
+		
+		
+		Integer newMaxUsage = validator.readOptionalIntRange(
+		        "New maximum usage (current: " + coupon.getMaxUsage() + "): ",
+		        1,
+		        Constants.MAX_COUPON_USAGE
+		);
+
+		if (newMaxUsage != null) {
+			updated = true;
+		    coupon.setMaxUsage(newMaxUsage);
+		}
+		
+		if (updated) {
+		    store.save();
+		    Logger.info(
+		    	    "Coupon updated: "
+		    	    + coupon.getCode()
+		    	    + " | Discount: "
+		    	    + coupon.getDiscountPercentage()
+		    	    + "% | Expiration: "
+		    	    + coupon.getExpirationDate()
+		    	    + " | Max Usage: "
+		    	    + coupon.getMaxUsage()
+		    	);
+		    System.out.println("\n✅ Coupon '" + coupon.getCode() + "' updated successfully.");
+		} else {
+		    System.out.println("\nℹ️ No changes were made.");
+		}
+
+		validator.pause();
 	}
 	
 	

@@ -115,4 +115,19 @@ public class Coupon implements Serializable {
     
     
     
+    // Setters
+    public void setDiscountPercentage(double newDiscountPercentage) {
+    	this.discountPercentage=newDiscountPercentage;
+    }
+    
+    public void setExpirationDate(LocalDate newExpirationDate) {
+    	this.expirationDate=newExpirationDate;
+    }
+    
+    public void setMaxUsage(int newMaxUsage) {
+    	this.maxUsage=newMaxUsage;
+    }
+    
+    
+    
 }
