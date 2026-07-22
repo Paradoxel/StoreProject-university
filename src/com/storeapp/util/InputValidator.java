@@ -268,13 +268,32 @@ public class InputValidator {
     }
     
     
-    
+    // required
     public LocalDate readDate(String prompt) {
         while (true) {
         	
         
             System.out.print(prompt);
             String input = scanner.nextLine().trim();
+
+            try {
+                return LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("❌ Invalid date. Please use yyyy-MM-dd format.");
+            }
+        }
+    }
+    // optional
+    public LocalDate readOptionalDate(String prompt) {
+        while (true) {
+
+            System.out.print(prompt);
+
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                return null;
+            }
 
             try {
                 return LocalDate.parse(input);
