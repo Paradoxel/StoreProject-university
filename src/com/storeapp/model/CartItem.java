@@ -55,6 +55,20 @@ public class CartItem implements Serializable{
 	    return product.getName() + " x " + quantity + " = " + getTotalPrice() + " Tomans";
 	}
 	
+	
+	
+	public double getOriginalTotalPrice() {
+	    return product.getPrice() * quantity;
+	}
+
+	public double getDiscountAmount() {
+	    return getOriginalTotalPrice() - getTotalPrice();
+	}
+
+	public double getFinalUnitPrice() {
+	    return product.getDiscountedPrice();
+	}
+	
 
 	
 }
