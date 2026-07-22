@@ -17,7 +17,7 @@ public class Invoice implements Serializable {
 	private final Customer customer;
 	private final LocalDateTime dateTime;
 	private final double finalAmount;
-	
+
 	public Invoice(Cart cart,PaymentMethod paymentMethod,double finalAmount) {
 		this.paymentMethod = paymentMethod;
 		items = new ArrayList<>(cart.getItems());
@@ -66,6 +66,7 @@ public class Invoice implements Serializable {
 	// showing the object 
 	@Override
 	public String toString() {
+		double originalPrice=0;
 	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd  HH:mm");
 	    StringBuilder sb = new StringBuilder();
 
@@ -96,11 +97,14 @@ public class Invoice implements Serializable {
 	                qtyStr,
 	                p.getUnitType(),
 	                (long) p.getDiscountedPrice(),    
-	                (long) item.getTotalPrice()));    
+	                (long) item.getTotalPrice()));
+	        		originalPrice+=item.getTotalPrice();
 	    }
-
-	    sb.append(" ------------------------ ------ -------- ------------ --------------\n");
-	    sb.append(String.format(" TOTAL AMOUNT : %,d Tomans%n", (long) finalAmount));
+	    double discountAmount = originalPrice - finalAmount;
+	    sb.append(" ---------------------------------------------------------------\n");
+	    sb.append(String.format(" ORIGINAL TOTAL : %,11d Tomans%n", (long) originalPrice));
+	    sb.append(String.format(" DISCOUNT       : %,11d Tomans%n", (long) discountAmount));
+	    sb.append(String.format(" FINAL TOTAL    : %,11d Tomans%n", (long) finalAmount));
 	    sb.append(" PAYMENT      : ").append(paymentMethod == PaymentMethod.CASH ? "Cash" : "Credit").append("\n");
 	    sb.append("══════════════════════════════════════════════════════\n");
 
