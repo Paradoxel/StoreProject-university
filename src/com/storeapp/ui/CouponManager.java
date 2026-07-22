@@ -54,7 +54,7 @@ public class CouponManager  {
 	                break;
 
 	            case 5:
-	                //deleteCoupon();
+	                deleteCoupon();
 	                break;
 
 	            case 6:
@@ -249,6 +249,28 @@ public class CouponManager  {
 	    	);
 
 	    validator.pause();
+	}
+	
+	
+	// Delete work flow 
+	public void deleteCoupon() {
+		String code = validator.readNonEmptyString("Coupon Code: ");
+		Coupon coupon = store.findCouponByCode(code);
+		if (coupon == null) {
+		    System.out.println("❌ Coupon not found.");
+		    validator.pause();
+		    return;
+		}
+		System.out.println(coupon);
+		if (!validator.yesOrNo("Delete this coupon?")) {
+		    System.out.println("❌ Deletion cancelled.");
+		    validator.pause();
+		    return;
+		}
+		store.removeCoupon(coupon);
+		store.save();
+		System.out.println("✅ Coupon deleted successfully.");
+		validator.pause();
 	}
 	
 	

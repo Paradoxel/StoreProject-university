@@ -344,7 +344,16 @@ public class Store implements Serializable {
 	}
 	
 	
-	
+	// remove couponse 
+	public void removeCoupon(Coupon coupon) {
+	    if (coupons.remove(coupon)) {
+	        Logger.info("Coupon removed: " + coupon.getCode());
+	        return;
+	    }
+
+	    Logger.warning("Attempt to remove non-existing coupon: " + coupon.getCode());
+	    
+	}
 
 
 	
