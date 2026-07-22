@@ -50,7 +50,7 @@ public class CouponManager  {
 	                break;
 
 	            case 4:
-	                //changeCouponStatus();
+	                changeCouponStatus();
 	                break;
 
 	            case 5:
@@ -205,6 +205,50 @@ public class CouponManager  {
 
 	        System.out.println("❌ Coupon code already exists. Please enter another code.");
 	    }
+	}
+	
+	
+	// change status
+	public void changeCouponStatus() {
+
+	    validator.printTitle("CHANGE COUPON STATUS");
+
+	    String code = validator.readNonEmptyString("Coupon Code: ");
+	    Coupon coupon = store.findCouponByCode(code);
+
+	    if (coupon == null) {
+	        System.out.println("❌ Coupon not found.");
+	        validator.pause();
+	        return;
+	    }
+
+	    System.out.println(
+	        "Current Status: "
+	        + (coupon.isActive() ? "ACTIVE" : "INACTIVE")
+	    );
+
+	    if (!validator.yesOrNo("Change coupon status?")) {
+	        System.out.println("❌ Operation cancelled.");
+	        return;
+	    }
+
+	    coupon.toggleStatus();
+
+	    store.save();
+
+	    Logger.info(
+	        "Coupon status changed | Code: "
+	        + coupon.getCode()
+	        + " | New Status: "
+	        + (coupon.isActive() ? "ACTIVE" : "INACTIVE")
+	    );
+
+	    System.out.println(
+	    	    "✅ Coupon status changed to "
+	    	    + (coupon.isActive() ? "ACTIVE." : "INACTIVE.")
+	    	);
+
+	    validator.pause();
 	}
 	
 	

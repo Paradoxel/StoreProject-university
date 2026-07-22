@@ -130,4 +130,14 @@ public class Coupon implements Serializable {
     
     
     
+    
+    
+    
+    // change status
+    public void toggleStatus() {
+    	active=!active;
+    }
+    
+    
+    
 }
