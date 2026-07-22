@@ -127,12 +127,10 @@ public class CouponManager  {
 	private void editCoupon() {
 		
 		validator.printTitle("EDIT COUPON");
-		String code = validator.readNonEmptyString("Coupon Code: ");
-		Coupon coupon = store.findCouponByCode(code);
-		if (coupon==null) {
-			System.out.println("❌ Coupon not found.");
-	        validator.pause();
-	        return;
+		Coupon coupon = findExistingCoupon();
+
+		if (coupon == null) {
+		    return;
 		}
 		boolean updated = false;
 		System.out.println("(Press Enter to keep the current value)");
@@ -209,16 +207,13 @@ public class CouponManager  {
 	
 	
 	// change status
-	public void changeCouponStatus() {
+	private void changeCouponStatus() {
 
 	    validator.printTitle("CHANGE COUPON STATUS");
 
-	    String code = validator.readNonEmptyString("Coupon Code: ");
-	    Coupon coupon = store.findCouponByCode(code);
+	    Coupon coupon = findExistingCoupon();
 
 	    if (coupon == null) {
-	        System.out.println("❌ Coupon not found.");
-	        validator.pause();
 	        return;
 	    }
 
@@ -253,12 +248,10 @@ public class CouponManager  {
 	
 	
 	// Delete work flow 
-	public void deleteCoupon() {
-		String code = validator.readNonEmptyString("Coupon Code: ");
-		Coupon coupon = store.findCouponByCode(code);
+	private void deleteCoupon() {
+		Coupon coupon = findExistingCoupon();
+
 		if (coupon == null) {
-		    System.out.println("❌ Coupon not found.");
-		    validator.pause();
 		    return;
 		}
 		System.out.println(coupon);
@@ -269,10 +262,28 @@ public class CouponManager  {
 		}
 		store.removeCoupon(coupon);
 		store.save();
-		System.out.println("✅ Coupon deleted successfully.");
+		System.out.println("✅ Coupon '" + coupon.getCode() + "' deleted successfully.");
 		validator.pause();
 	}
 	
+	
+	
+	
+	
+	// find a cp beside find cp in store class
+	private Coupon findExistingCoupon() {
+
+	    String code = validator.readNonEmptyString("Coupon Code: ");
+
+	    Coupon coupon = store.findCouponByCode(code);
+
+	    if (coupon == null) {
+	        System.out.println("❌ Coupon not found.");
+	        validator.pause();
+	    }
+
+	    return coupon;
+	}
 	
 	
 	
