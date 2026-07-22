@@ -89,14 +89,27 @@ public class Coupon implements Serializable {
     
     @Override
     public String toString() {
+
+        String status;
+
+        if (!active) {
+            status = "Inactive";
+        } else if (isExpired()) {
+            status = "Expired";
+        } else if (isUsageLimitReached()) {
+            status = "Limit Reached";
+        } else {
+            status = "Available";
+        }
+
         return String.format(
-            "Code: %-12s | Discount: %5.1f%% | Status: %-11s | Expiration: %s | Usage: %d/%d",
-            code,
-            discountPercentage,
-            isAvailable() ? "Available" : "Unavailable",
-            expirationDate,
-            usedCount,
-            maxUsage
+                "[%s]  %,.0f%% OFF  |  Status: %-13s  |  Expires: %s  |  Usage: %d/%d",
+                code,
+                discountPercentage,
+                status,
+                expirationDate,
+                usedCount,
+                maxUsage
         );
     }
     
