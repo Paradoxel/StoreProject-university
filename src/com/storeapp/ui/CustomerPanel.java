@@ -161,33 +161,92 @@ public class CustomerPanel {
 		        }
 		        continue;
 		    }
-		    // check if user wants to see current Cart
+		    
+		    
+		    
+		    
+		 // check if user wants to see current Cart
 		    if (input.equalsIgnoreCase("cart")) {
-		    	if (cart.getItems().isEmpty()) {
-		    	    System.out.println("🛒 Your cart is empty.");
-		    	} else {
-		    	    System.out.println("\n--- Your Cart ---");
-		    	    System.out.printf(" %-24s %-6s %-8s %-12s %-14s%n", "Item", "Qty", "Unit", "Price", "Subtotal");
-		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
-		    	    
-		    	    for (CartItem ci : cart.getItems()) {
-		    	    	String qtyStr;
-		    	    	if (ci.getQuantity() == Math.floor(ci.getQuantity())) {
-		    	    	    qtyStr = String.valueOf((long) ci.getQuantity());
-		    	    	} else {
-		    	    	    qtyStr = String.format("%.1f", ci.getQuantity());
-		    	    	}
-		    	        Product p = ci.getProduct();
-		    	        System.out.printf(" %-24s %-6s %-8s %,12d %,14d%n",
-		    	                p.getName(),
-		    	                qtyStr,
-		    	                p.getUnitType(),
-		    	                 p.getDiscountedPrice(),   
-		    	                 ci.getTotalPrice()); 
-		    	    }
-		    	    System.out.println(" ------------------------ ------ -------- ------------ --------------");
-		    	    System.out.printf(" Total: %,d Tomans%n", (long) cart.getTotalAmount());
-		    	}
+
+		        if (cart.getItems().isEmpty()) {
+		            System.out.println("🛒 Your cart is empty.");
+		            continue;
+		        }
+
+		        double originalTotal = 0;
+		        double discountedTotal = 0;
+
+		        System.out.println("\n════════════════════════════════════════════════════════════════════════════");
+		        System.out.println("                           🛒 YOUR SHOPPING CART");
+		        System.out.println("════════════════════════════════════════════════════════════════════════════");
+
+		        System.out.printf(
+		                "%-22s %-6s %-8s %12s %8s %14s%n",
+		                "Item", "Qty", "Unit", "Price", "Disc", "Subtotal");
+
+		        System.out.println("────────────────────── ────── ──────── ─────────── ─────── ─────────────");
+
+		        for (CartItem ci : cart.getItems()) {
+
+		            Product p = ci.getProduct();
+
+		            String qtyStr = (ci.getQuantity() == Math.floor(ci.getQuantity()))
+		                    ? String.valueOf((long) ci.getQuantity())
+		                    : String.format("%.1f", ci.getQuantity());
+
+		            double originalSubtotal = p.getPrice() * ci.getQuantity();
+		            double discountedSubtotal = ci.getTotalPrice();
+
+		            originalTotal += originalSubtotal;
+		            discountedTotal += discountedSubtotal;
+
+		            String discount =
+		                    p.getDiscountPercent() > 0
+		                            ? String.format("%.0f%%", p.getDiscountPercent())
+		                            : "-";
+
+		            System.out.printf(
+		                    "%-22s %-6s %-8s %,12d %8s %,14d%n",
+		                    p.getName(),
+		                    qtyStr,
+		                    p.getUnitType(),
+		                    (long) p.getPrice(),
+		                    discount,
+		                    (long) discountedSubtotal
+		            );
+		        }
+
+		        double saved = originalTotal - discountedTotal;
+
+		        System.out.println("────────────────────────────────────────────────────────────────────────────");
+
+		        System.out.printf(" %-20s %,18d Tomans%n",
+		                "Original Total:",
+		                (long) originalTotal);
+
+		        System.out.printf(" %-20s %,18d Tomans%n",
+		                "Product Discount:",
+		                (long) saved);
+
+		        System.out.printf(" %-20s %,18d Tomans%n",
+		                "Coupon Discount:",
+		                0L); // Later: replace with coupon discount
+
+		        System.out.println("────────────────────────────────────────────────────────────────────────────");
+
+		        System.out.printf(" %-20s %,18d Tomans%n",
+		                "Current Total:",
+		                (long) discountedTotal);
+
+		        System.out.println("════════════════════════════════════════════════════════════════════════════");
+
+		        if (saved > 0) {
+		            System.out.printf(
+		                    "🎉 Great! You have already saved %,d Tomans on this purchase.%n",
+		                    (long) saved);
+		        }
+		        validator.pause();
+
 		        continue;
 		    }
 		    
