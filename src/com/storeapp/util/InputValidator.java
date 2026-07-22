@@ -303,6 +303,33 @@ public class InputValidator {
         }
     }
     
+    // Reads n option int 
+    // Press Enter to keep the current value.
+    public Integer  readOptionalIntRange(String prompt, int min, int max) {
+        while (true) {
+
+            System.out.print(prompt);
+
+            String input = scanner.nextLine().trim();
+
+            if (input.isEmpty()) {
+                return null;
+            }
+
+            try {
+                int value = Integer.parseInt(input);
+
+                if (value >= min && value <= max) {
+                    return value;
+                }
+
+                System.out.println("❌ Value must be between " + min + " and " + max + ".");
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid number. Please try again.");
+            }
+        }
+    }
+    
     
     
     
