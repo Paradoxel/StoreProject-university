@@ -6,6 +6,7 @@ import com.storeapp.model.Customer;
 import com.storeapp.model.LoyalCustomer;
 import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
@@ -18,6 +19,7 @@ public class ConsoleUI {
     // Core dependencies
     private Store store;
     private InputValidator validator;
+    private Navigation navigation;
 
     /**
      * Constructor: loads the store from file and sets up the validator.
@@ -25,6 +27,7 @@ public class ConsoleUI {
     public ConsoleUI(Scanner scanner) {
         this.validator = new InputValidator(scanner);
         this.store =Store.loadFromFile(Constants.STORE_FILE);
+        this.navigation = new Navigation();
     }
 
 
@@ -34,7 +37,7 @@ public class ConsoleUI {
      */
     public void start() {
         System.out.println("🎉 Welcome to the Store Management System!");
-
+        navigation.push("Main Menu");
         String[] options = {
             "1. Login",
             "2. Sign Up",
@@ -42,6 +45,7 @@ public class ConsoleUI {
         };
 
         while (true) {
+        	navigation.printBreadcrumb();
             validator.printBox("MAIN MENU", options);
 
             int choice = validator.readIntRange(1, 3);
@@ -55,8 +59,10 @@ public class ConsoleUI {
                     break;
                 case 3:
                 	store.save();
+                	navigation.clear();
+                	navigation.printBreadcrumb();
                 	validator.printTitle("👋 Goodbye!");
-                    return;
+                	System.exit(0);
             }
         }
     }
@@ -74,7 +80,7 @@ public class ConsoleUI {
         
         if (userCode.equals(Constants.ADMIN_CODE)) {
         	Logger.log("Admin logged in");
-            AdminPanel adminPanel = new AdminPanel(store, validator);
+            AdminPanel adminPanel = new AdminPanel(store, validator, navigation);
             adminPanel.showDashboard();
             adminPanel.showMenu();
             return;
@@ -83,7 +89,7 @@ public class ConsoleUI {
         Customer loyalCustomer = store.findLoyalCustomerByCode(userCode);
         if (loyalCustomer != null) {
             System.out.println("✅ Welcome back, " + loyalCustomer.getName() + " (Loyal Customer)!");
-            CustomerPanel customerPanel = new CustomerPanel(store, validator);
+            CustomerPanel customerPanel = new CustomerPanel(store, validator, navigation);
             Logger.log("Loyal customer logged in: " + loyalCustomer.getName() + " (Code: " + userCode + ")");
             customerPanel.startPurchase(loyalCustomer);
             return;
@@ -100,7 +106,7 @@ public class ConsoleUI {
         	}
             System.out.println("✅ Welcome back, " + customer.getName() + "!");
             Logger.log("Customer logged in: " + customer.getName() + " (Phone: " + customer.getPhone() + ")");
-            CustomerPanel customerPanel = new CustomerPanel(store, validator);
+            CustomerPanel customerPanel = new CustomerPanel(store, validator, navigation);
             customerPanel.startPurchase(customer);
         } else {
             System.out.println("❌ No account found with this phone number. Please sign up first.");
