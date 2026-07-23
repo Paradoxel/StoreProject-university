@@ -6,20 +6,27 @@ import java.util.List;
 import com.storeapp.model.Coupon;
 import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class CouponManager  {
 	private Store store;
 	private InputValidator validator;
-	public CouponManager(Store store, InputValidator validator) {
-		this.store=store;
-		this.validator=validator;
-	}
+	private Navigation navigation;
+	public CouponManager(
+		    Store store,
+		    InputValidator validator,
+		    Navigation navigation
+		) {
+		    this.store = store;
+		    this.validator = validator;
+		    this.navigation = navigation;
+		}
 	
 	
 	public void showMenu() {
-
+		navigation.push("Coupons");
 	    String[] options = {
 	            "1. Add Coupon",
 	            "2. View Coupons",
@@ -30,7 +37,7 @@ public class CouponManager  {
 	    };
 
 	    while (true) {
-
+	    	navigation.printBreadcrumb();
 	        validator.printBox("COUPON MANAGEMENT", options);
 
 	        int choice = validator.readIntRange(1, 6);
@@ -58,6 +65,7 @@ public class CouponManager  {
 	                break;
 
 	            case 6:
+	            	navigation.pop();
 	                return;
 	        }
 	    }
@@ -66,7 +74,8 @@ public class CouponManager  {
 	
 	
 	private void addCoupon() {
-
+		navigation.push("Add Coupon");
+		navigation.printBreadcrumb();
 	    validator.printTitle("ADD COUPON");
 
 	    String code = readUniqueCouponCode();
@@ -104,15 +113,19 @@ public class CouponManager  {
 	    System.out.println("\n✅ Coupon '" + code + "' created successfully.");
 
 	    validator.pause();
+	    navigation.pop();
+
 	}
 
 	private void viewCoupons() {
-
+		navigation.push("View Coupons");
+		navigation.printBreadcrumb();
 	    validator.printTitle("COUPON LIST");
 	    List<Coupon> coupons = store.getCoupons();
 	    if (coupons.isEmpty()) {
 	        System.out.println("⚠️ No coupons available.");
 	        validator.pause();
+	        navigation.pop();
 	        return;
 	    }
 
@@ -122,14 +135,19 @@ public class CouponManager  {
 	    }
 
 	    validator.pause();
+	    navigation.pop();
 	}
 	
 	private void editCoupon() {
-		
+		navigation.push("Edit Coupon");
+		navigation.printBreadcrumb();
 		validator.printTitle("EDIT COUPON");
 		Coupon coupon = findExistingCoupon();
 
 		if (coupon == null) {
+		    System.out.println("❌ Coupon not found.");
+		    validator.pause();
+		    navigation.pop();
 		    return;
 		}
 		boolean updated = false;
@@ -188,6 +206,7 @@ public class CouponManager  {
 		}
 
 		validator.pause();
+		navigation.pop();
 	}
 	
 	
@@ -208,12 +227,14 @@ public class CouponManager  {
 	
 	// change status
 	private void changeCouponStatus() {
-
+		navigation.push("Change Status");
+		navigation.printBreadcrumb();
 	    validator.printTitle("CHANGE COUPON STATUS");
 
 	    Coupon coupon = findExistingCoupon();
 
 	    if (coupon == null) {
+	    	navigation.pop();
 	        return;
 	    }
 
@@ -223,8 +244,10 @@ public class CouponManager  {
 	    );
 
 	    if (!validator.yesOrNo("Change coupon status?")) {
-	        System.out.println("❌ Operation cancelled.");
-	        return;
+	    	System.out.println("❌ Operation cancelled.");
+	    	validator.pause();
+	    	navigation.pop();
+	    	return;
 	    }
 
 	    coupon.toggleStatus();
@@ -244,26 +267,32 @@ public class CouponManager  {
 	    	);
 
 	    validator.pause();
+	    navigation.pop();
 	}
 	
 	
 	// Delete work flow 
 	private void deleteCoupon() {
+		navigation.push("Delete Coupon");
+		navigation.printBreadcrumb();
 		Coupon coupon = findExistingCoupon();
 
 		if (coupon == null) {
+			navigation.pop();
 		    return;
 		}
 		System.out.println(coupon);
 		if (!validator.yesOrNo("Delete this coupon?")) {
 		    System.out.println("❌ Deletion cancelled.");
 		    validator.pause();
+		    navigation.pop();
 		    return;
 		}
 		store.removeCoupon(coupon);
 		store.save();
 		System.out.println("✅ Coupon '" + coupon.getCode() + "' deleted successfully.");
 		validator.pause();
+		navigation.pop();
 	}
 	
 	
@@ -272,17 +301,8 @@ public class CouponManager  {
 	
 	// find a cp beside find cp in store class
 	private Coupon findExistingCoupon() {
-
-	    String code = validator.readNonEmptyString("Coupon Code: ");
-
-	    Coupon coupon = store.findCouponByCode(code);
-
-	    if (coupon == null) {
-	        System.out.println("❌ Coupon not found.");
-	        validator.pause();
-	    }
-
-	    return coupon;
+	    String code = validator.readNonEmptyString("Coupon Code:");
+	    return store.findCouponByCode(code);
 	}
 	
 	
