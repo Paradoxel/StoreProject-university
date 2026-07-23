@@ -4,6 +4,7 @@ import com.storeapp.model.*;
 import com.storeapp.service.Logger;
 import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.InputValidator;
 import com.storeapp.util.Constants;
 import java.io.IOException;
@@ -14,13 +15,19 @@ public class CustomerManager {
 
     private Store store;
     private InputValidator validator;
+    private Navigation navigation;
+    public CustomerManager(
+            Store store,
+            InputValidator validator,
+            Navigation navigation) {
 
-    public CustomerManager(Store store, InputValidator validator) {
         this.store = store;
         this.validator = validator;
+        this.navigation = navigation;
     }
 
     public void showMenu() {
+    	navigation.push("Customers");
     	String[] options = {
     		    "1. Show all customers",
     		    "2. Add Loyal Customer",
@@ -28,8 +35,10 @@ public class CustomerManager {
     		    "4. Generate Sample Customers",   
     		    "5. Back to Admin Menu"
     		};
+    	
 
         while (true) {
+        	navigation.printBreadcrumb();
             validator.printBox("CUSTOMER MANAGEMENT", options);
 
             int choice = validator.readIntRange(1, 5);
@@ -40,12 +49,15 @@ public class CustomerManager {
                 case 3: viewCustomerDetails(); break;
                 case 4: generateSampleCustomers(); break;
                 case 5:
+                	navigation.pop();
                     return;
             }
         }
     }
 
     private void addLoyalCustomer() {
+    	navigation.push("Add Loyal Customer");
+    	navigation.printBreadcrumb();
         System.out.println("\n--- Add Loyal Customer ---");
         String name = validator.readNonEmptyString("Name: ");
         String phone;
@@ -73,13 +85,17 @@ public class CustomerManager {
         	    + loyalCustomer.getMembershipCode()
         	);
         System.out.println("✅ Loyal customer '" + loyalCustomer.getName() + "' added successfully!");
+        navigation.pop();
     }
     
     
     private void showAllCustomers() {
+    	navigation.push("Show Customers");
+    	navigation.printBreadcrumb();
         List<Customer> customers = store.getCustomers();
         if (customers.isEmpty()) {
             System.out.println("\n⚠️ No customers registered.");
+            navigation.pop();
             return;
         }
 
@@ -119,10 +135,14 @@ public class CustomerManager {
         System.out.println("---- -------------------- --------------- ---------- ---------- ---------- ----------");
         // for pause
         validator.pause();
+        
+        navigation.pop();
     }
     
     
     private void viewCustomerDetails() {
+    	navigation.push("Customer Details");
+    	navigation.printBreadcrumb();
         System.out.println("\n--- View Customer Details ---");
         String input = validator.readNonEmptyString("Enter phone number or membership code: ");
         
@@ -134,6 +154,7 @@ public class CustomerManager {
         
         if (c == null) {
             System.out.println("❌ No customer found with this phone number or membership code.");
+            navigation.pop();
             return;
         }
 
@@ -154,10 +175,14 @@ public class CustomerManager {
         System.out.println("─────────────────────────────");
         // pause
         validator.pause();
+        
+        navigation.pop();
     }
     
     
     private void generateSampleCustomers() {
+    	navigation.push("Generate Customerss");
+    	navigation.printBreadcrumb();
         System.out.print("How many random customers? (1-10)\n");
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
@@ -167,15 +192,13 @@ public class CustomerManager {
         	    count + " sample customers generated successfully."
         	);
         System.out.println("✅ " + count + " sample customers generated and saved!");
+        validator.pause();
+        navigation.pop();
     }
     
     
     
     
     
-    
-    
-    
-    
-    
+ 
 }
