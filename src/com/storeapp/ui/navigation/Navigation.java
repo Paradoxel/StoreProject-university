@@ -1,11 +1,5 @@
 package com.storeapp.ui.navigation;
 
-import java.awt.Taskbar.State;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
 import java.util.Stack;
 
 public class Navigation {
@@ -43,10 +37,12 @@ public class Navigation {
 	        return "";
 	    }
 
-	    List<String> pages = new ArrayList<>(stack);
-	    Collections.reverse(pages);
-
-	    return String.join(" > ", pages);
+	    return String.join(" > ", stack);
+	}
+	
+	
+	public void printBreadcrumb() {
+	    System.out.println("📍 " + getBreadcrumb());
 	}
        
 }
