@@ -4,6 +4,7 @@ import com.storeapp.model.*;
 import com.storeapp.service.Logger;
 import com.storeapp.service.RandomDataGenerator;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.InputValidator;
 import com.storeapp.util.Constants;
 import java.io.IOException;
@@ -13,11 +14,16 @@ public class ProductManager {
 
     private Store store;
     private InputValidator validator;
-
-    public ProductManager(Store store, InputValidator validator) {
-        this.store = store;
-        this.validator = validator;
-    }
+    private Navigation navigation;
+    
+    
+    public ProductManager(Store store,
+            InputValidator validator,
+            Navigation navigation) {
+		this.store = store;
+		this.validator = validator;
+		this.navigation = navigation;
+		}
     
     public void showMenu() {
     	String[] options = {
@@ -30,8 +36,9 @@ public class ProductManager {
     		    "7. Generate Sample Products",  
     		    "8. Back to admin menu"
     		};
-
+    	navigation.push("Products");
         while (true) {
+        	navigation.printBreadcrumb();
             validator.printBox("PRODUCT MANAGEMENT", options);
 
             int choice = validator.readIntRange(1, 8);  
@@ -45,6 +52,7 @@ public class ProductManager {
                 case 6: searchProduct(); break;
                 case 7: generateSampleProducts(); break;
                 case 8:
+                	navigation.pop();
                     return;
             }
         }
@@ -53,9 +61,12 @@ public class ProductManager {
     
     
     private void showAllProducts() {
+    	navigation.push("Show Products");
+    	navigation.printBreadcrumb();
         List<Product> products = store.getProducts();
         if (products.isEmpty()) {
             System.out.println("\nNo products in the store.");
+            navigation.pop();
             return;
         }
 
@@ -80,10 +91,14 @@ public class ProductManager {
         System.out.println("---- --------------- ---------- ------------ -------- --------");
         // to pause
         validator.pause();
+        
+        navigation.pop();
     }
 
 
     private void addProduct() {
+    	navigation.push("Add Product");
+    	navigation.printBreadcrumb();
     	System.out.println("\n--- Add New Product ---");
     	
     	// Mandatory fields
@@ -145,15 +160,19 @@ public class ProductManager {
     	);
     	
 		System.out.println("✅ Product '" + product.getName() + "' added successfully!");
+		navigation.pop();
     }
 
     private void searchProduct() {
+    	navigation.push("Search Product");
+    	navigation.printBreadcrumb();
     	System.out.println("\n--- Search Product ---");
     	String keyword = validator.readNonEmptyString("Enter keyword to search (name or code): ");
     	
     	List<Product> results = store.searchItems(keyword);
     	if (results.isEmpty()) {
             System.out.println("No products found matching '" + keyword + "'.");
+            navigation.pop();
             return;
         }
     	System.out.println("\n--- Search Results for '" + keyword + "' ---");
@@ -174,10 +193,14 @@ public class ProductManager {
         System.out.println("---- --------------- ------------ ---------- -------- --------");
         // pause
         validator.pause();
+        
+        navigation.pop();
     }
     
     
     private void deleteProduct() {
+    	navigation.push("Delete Product");
+    	navigation.printBreadcrumb();
         System.out.println("\n--- Delete Product ---");
         String code = validator.readNonEmptyString("Enter the product code to delete: ");
         
@@ -191,11 +214,13 @@ public class ProductManager {
             );
 
             System.out.println("❌ No product found");
+            navigation.pop();
             return;
         }
         // Ask for confirmation before deleting
         if (!validator.yesOrNo("Are you sure you want to delete '" + product.getName() + "'?")) {
             System.out.println("❌ Deletion cancelled.");
+            navigation.pop();
             return;
         }
         
@@ -215,10 +240,14 @@ public class ProductManager {
         	    + " | PreviousPrice="
         	    + product.getPrice()
         	);
+        
+        navigation.pop();
 
     }
     
     private void editProduct() {
+    	navigation.push("Edit Product");
+    	navigation.printBreadcrumb();
         System.out.println("\n--- Edit Product ---");
         String code = validator.readNonEmptyString("Enter the product code to edit: ");
         
@@ -269,17 +298,21 @@ public class ProductManager {
         	    + " | OldDiscount=" + oldDiscount
         	    + " | NewDiscount=" + product.getDiscountPercent()
         	);
+        navigation.pop();
 
     }
     
     
     
     private void viewProductDetails() {
+    	navigation.push("Product Details");
+    	navigation.printBreadcrumb();
         System.out.println("\n--- View Product Details ---");
         String code = validator.readNonEmptyString("Product code: ");
         Product p = store.findItemByCode(code);
         if (p == null) {
             System.out.println("❌ No product found.");
+            navigation.pop();
             return;
         }
 
@@ -302,11 +335,15 @@ public class ProductManager {
         	    "PRODUCT_VIEW | Code="
         	    + code
         	);
+        navigation.pop();
     }
     
     
     
+    
     private void generateSampleProducts() {
+    	navigation.push("Generate Samples");
+    	navigation.printBreadcrumb();
         System.out.print("How many random products? (1-10)\n");
         int count = validator.readIntRange(1, 10);
         RandomDataGenerator gen = new RandomDataGenerator(store);
@@ -317,6 +354,7 @@ public class ProductManager {
         	    + count
         	);
         System.out.println("✅ " + count + " sample products generated and saved!");
+        navigation.pop();
     }
     
     
