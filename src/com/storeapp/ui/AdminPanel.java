@@ -8,22 +8,32 @@ import java.util.Scanner;
 
 import com.storeapp.model.*;
 import com.storeapp.service.*;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class AdminPanel {
 	private InputValidator validator;
 	private Store store;
-	public AdminPanel(Store store, InputValidator validator) {
+	private Navigation navigation;
+	public AdminPanel(Store store, InputValidator validator,Navigation navigation) {
 	    this.store = store;
 	    this.validator = validator;
+	    this.navigation = navigation;
 	}
 	
 	public void showMenu() {
-	    ProductManager productManager = new ProductManager(store, validator);
-	    CouponManager couponManager = new CouponManager(store, validator);
-	    CustomerManager customerManager = new CustomerManager(store, validator);
-	    InvoiceManager invoiceManager = new InvoiceManager(store, validator);
+		ProductManager productManager =
+		        new ProductManager(store, validator, navigation);
+
+		CouponManager couponManager =
+		        new CouponManager(store, validator, navigation);
+
+		CustomerManager customerManager =
+		        new CustomerManager(store, validator, navigation);
+
+		InvoiceManager invoiceManager =
+		        new InvoiceManager(store, validator, navigation);
 
 	    String[] options = {
 	            "1. Product Management",
@@ -33,8 +43,9 @@ public class AdminPanel {
 	            "5. Reports",
 	            "6. Back to main menu"
 	    };
-
+	    navigation.push("Admin Panel");
 	    while (true) {
+	    	navigation.printBreadcrumb();
 	        validator.printBox("ADMIN PANEL", options);
 
 	        int choice = validator.readIntRange(1, 6);
@@ -61,6 +72,7 @@ public class AdminPanel {
 	                break;
 
 	            case 6:
+	            	navigation.pop();
 	                return;
 	        }
 	    }
@@ -71,6 +83,8 @@ public class AdminPanel {
 	
 	
 	public void showDashboard() {
+		navigation.push("Dashboard");
+	    navigation.printBreadcrumb();
 	    int totalProducts = store.getProducts().size();
 	    int totalCustomers = store.getCustomers().size();
 	    int totalInvoices = store.getInvoices().size();
@@ -98,13 +112,18 @@ public class AdminPanel {
 	    validator.printBox("STORE DASHBOARD", stats);
 	    // pause
 	    validator.pause();
+	    
+	    navigation.pop();
 	}
 	
 	
 	private void showReports() {
+		navigation.push("Reports");
+		navigation.printBreadcrumb();
 	    List<Invoice> invoices = store.getInvoices();
 	    if (invoices.isEmpty()) {
 	        System.out.println("\n⚠️ No invoices yet.");
+	        navigation.pop();
 	        return;
 	    }
 
@@ -126,7 +145,9 @@ public class AdminPanel {
 	    // Footer
 	    System.out.println("-------------------- --------------- -------------------- ---------- ----------");
 	    // pause
+	    
 	    validator.pause();
+	    navigation.pop();
 	}
 	
 }
