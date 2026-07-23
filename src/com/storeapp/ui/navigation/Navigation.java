@@ -1,35 +1,39 @@
 package com.storeapp.ui.navigation;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Navigation {
 
-	
-	private final List<String> path = new ArrayList<>();
-	
-	public Navigation() {
-		
-	}
-	
-	
-	// push in the list
-	public void push(String label) {
-		path.add(label);
-	}
-	
-	// pop the elelment (last)
-	public void pop() {
-		if(!path.isEmpty()) {
-			path.remove(path.size()-1);
-		}
-	}
-	
-	
-	public void printBreadcrumb() {
-        if (!path.isEmpty()) {
-            System.out.println("📍 " + String.join(" > ", path));
-        }
+    private final Deque<String> stack;
+
+    public Navigation() {
+        this.stack = new ArrayDeque<>();
     }
-	
+
+    public void push(String page) {
+        stack.push(page);
+    }
+
+    public String pop() {
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return stack.pop();
+    }
+
+    public String peek() {
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return stack.peek();
+    }
+
+    public boolean isEmpty() {
+        return stack.isEmpty();
+    }
+
+    public void clear() {
+        stack.clear();
+    }
 }
