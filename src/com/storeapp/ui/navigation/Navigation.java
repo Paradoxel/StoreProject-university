@@ -1,59 +1,52 @@
 package com.storeapp.ui.navigation;
 
+import java.awt.Taskbar.State;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.Stack;
 
 public class Navigation {
 
-    private final Deque<String> stack;
+	private final Stack<String> stack;
 
-    public Navigation() {
-        this.stack = new ArrayDeque<>();
-    }
+	public Navigation() {
+	    stack = new Stack<>();
+	}
 
-    public void push(String page) {
-        stack.push(page);
-    }
+	public void push(String label) {
+	    stack.push(label);
+	}
 
-    public String pop() {
-        if (stack.isEmpty()) {
-            return null;
-        }
-        return stack.pop();
-    }
+	public void pop() {
+	    if (!stack.isEmpty()) {
+	        stack.pop();
+	    }
+	}
 
-    public String peek() {
-        if (stack.isEmpty()) {
-            return null;
-        }
-        return stack.peek();
-    }
+	public String peek() {
+	    if (stack.isEmpty()) {
+	        return null;
+	    }
+	    return stack.peek();
+	}
 
-    public boolean isEmpty() {
-        return stack.isEmpty();
-    }
+	public void clear() {
+	    stack.clear();
+	}
 
-    public void clear() {
-        stack.clear();
-    }
-    
-    
-    public String getBreadcrumb() {
+	public String getBreadcrumb() {
 
-        if (stack.isEmpty()) {
-            return "";
-        }
+	    if (stack.isEmpty()) {
+	        return "";
+	    }
 
-        List<String> pages = new ArrayList<>(stack);
+	    List<String> pages = new ArrayList<>(stack);
+	    Collections.reverse(pages);
 
-        Collections.reverse(pages);
-
-        return String.join(" > ", pages);
-    }
-    
-    
-    
+	    return String.join(" > ", pages);
+	}
+       
 }
