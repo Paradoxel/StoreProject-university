@@ -1,7 +1,10 @@
 package com.storeapp.ui.navigation;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 
 public class Navigation {
 
@@ -36,4 +39,21 @@ public class Navigation {
     public void clear() {
         stack.clear();
     }
+    
+    
+    public String getBreadcrumb() {
+
+        if (stack.isEmpty()) {
+            return "";
+        }
+
+        List<String> pages = new ArrayList<>(stack);
+
+        Collections.reverse(pages);
+
+        return String.join(" > ", pages);
+    }
+    
+    
+    
 }
