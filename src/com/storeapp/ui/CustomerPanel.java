@@ -2,6 +2,7 @@ package com.storeapp.ui;
 
 import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
@@ -14,15 +15,20 @@ import com.storeapp.model.*;
 public class CustomerPanel {
 	private Store store;
 	private InputValidator validator;
-	
+	private Navigation navigation;
 	
 	
 	// When a coupon is valid
 	private Coupon appliedCoupon;
-	public CustomerPanel(Store store,InputValidator validator) {
-		this.store=store;
-		this.validator=validator;
-	}
+	public CustomerPanel(
+		    Store store,
+		    InputValidator validator,
+		    Navigation navigation
+		) {
+		    this.store = store;
+		    this.validator = validator;
+		    this.navigation = navigation;
+		}
 	
 	// show the menu based the customer type
 	public void startPurchase(Customer customer) {
@@ -37,8 +43,10 @@ public class CustomerPanel {
 	
 	// show regular  customer panel
 	public void regularCustomerMenu(Customer customer) {
-		String[] options= {"1. shop","2. My Account","3. Back to main menu"};
+		String[] options= {"1. shop","2. My Account","3. Back"};
+		navigation.push("Customer");
 		while(true) {
+			navigation.printBreadcrumb();
 			validator.printBox("CUSTOMER MENU", options);
 			int choice=validator.readIntRange(1, 3);
 			switch (choice) {
@@ -49,6 +57,7 @@ public class CustomerPanel {
                 myAccount(customer);
                 break;
             case 3:
+            	navigation.pop();
                 return;
 			}
 		}
@@ -56,40 +65,47 @@ public class CustomerPanel {
 	
 	// show loyal customer menu
 	public void loyalCustomerMenu(LoyalCustomer lc) {
+		navigation.push("Loyal Customer");
 		String[] options = {
 		        "1. Shop",
 		        "2. My Account",
 		        "3. Return an Item",
-		        "4. Back to main menu"
+		        "4. Back"
 		    };
 		while(true) {
+			navigation.printBreadcrumb();
 			validator.printBox("LOYAL CUSTOMER MENU", options);
 			int choice=validator.readIntRange(1, 4);
 			switch(choice) {
 				case 1:shop(lc);break;
 				case 2:loyalAccountMenu(lc);break;
 				case 3:returnItem(lc);break;
-				case 4:return; 
+				case 4: navigation.pop();
+					return; 
 			}
 		}
 	}
 	
 	// show the account info for regular customer
 	private void myAccount(Customer customer) {
+		navigation.push("My Account");
 	    String[] options = { "1. Edit Info", "2. Purchase History", "3. Back" };
 	    while (true) {
+	    	navigation.printBreadcrumb();
 	        validator.printBox("MY ACCOUNT", options);
 	        int choice = validator.readIntRange(1, 3);
 	        switch (choice) {
 	            case 1: editCustomerInfo(customer); break;
 	            case 2: showCustomerInvoices(customer); break;
-	            case 3: return;
+	            case 3: navigation.pop(); 
+	            	return;
 	        }
 	    }
 	}
 	
 	// show the account info for loyal customer
 	private void loyalAccountMenu(LoyalCustomer lc) {
+		navigation.push("My Loyal Account");
 	    String[] options = {
 	        "1. Edit Info",
 	        "2. Purchase History",
@@ -99,6 +115,7 @@ public class CustomerPanel {
 	        "6. Back"
 	    };
 	    while (true) {
+	    	navigation.printBreadcrumb();
 	        validator.printBox("LOYAL ACCOUNT", options);
 	        int choice = validator.readIntRange(1, 6);
 	        switch (choice) {
@@ -107,7 +124,9 @@ public class CustomerPanel {
 	            case 3: viewFinancialStatus(lc); break;
 	            case 4: payDebt(lc); break;
 	            case 5: renewMembershipCode(lc); break;
-	            case 6: return;
+	            case 6:
+	            	navigation.pop();
+	            	return;
 	        }
 	    }
 	}
@@ -115,7 +134,8 @@ public class CustomerPanel {
 	
 	
 	public void shop(Customer customer) {
-		
+		navigation.push("Shop");
+		navigation.printBreadcrumb();
 		// clear old coupon
 		appliedCoupon = null;
 		// create a new shoping cart
@@ -284,9 +304,10 @@ public class CustomerPanel {
 		    cart.addItem(product, quantity);
 		    System.out.println("✅ " + product.getName() + " (x" + quantity + ") added to cart.");
 		}
-		if(cart.getItems().isEmpty()) {
-			System.out.println("❌ Your cart is empty. Nothing to checkout.");
-			return ;
+		if(cart.getItems().isEmpty()){
+		    System.out.println("Cart is empty.");
+		    navigation.pop();
+		    return;
 		}
 		System.out.println("\n--- Order Summary ---");
 		System.out.printf("Original  amount: %,d Tomans%n",
@@ -320,13 +341,16 @@ public class CustomerPanel {
 			);
 		System.out.println("\n" + invoice.toString());
 		System.out.println("✅ Purchase completed. Thank you!");
+		navigation.pop();
 	}
 	
 	public void showProducts() {
+
 	    List<Product> products = store.getProducts();
 
 	    if (products.isEmpty()) {
 	        System.out.println("\n⚠️ No products available.");
+	        
 	        return;
 	    }
 
@@ -373,6 +397,7 @@ public class CustomerPanel {
 	    if (!hasSellableProducts) {
 	        System.out.println("⚠️ No sellable products available.");
 	    }
+
 	}
 	
 	private PaymentMethod getPaymentMethod(Customer customer,double cartTotal) {
@@ -405,15 +430,20 @@ public class CustomerPanel {
 	
 	// return an item for loyal customer
 	private void returnItem(LoyalCustomer lc) {
+		navigation.push("Return Item");
+		navigation.printBreadcrumb();
+
 		System.out.println("\n--- Return an Item ---");
 		String invoiceId = validator.readNonEmptyString("Enter invoice ID: ");
 		Invoice inv = store.findInvoiceById(invoiceId);
 		if (inv == null) {
 	        System.out.println("❌ Invoice not found.");
+	        navigation.pop();
 	        return;
 	    }
 		if (!inv.getCustomer().equals(lc)) {
 	        System.out.println("❌ This invoice does not belong to you.");
+	        navigation.pop();
 	        return;
 	    }
 		System.out.println("\nItems in this invoice:");
@@ -438,10 +468,14 @@ public class CustomerPanel {
 	    	);
 	    // pause
 	    validator.pause();
+	    navigation.pop();
 	}
 	
 	// edit customer information
 	private void editCustomerInfo(Customer customer) {
+		navigation.push("Edit Info");
+		navigation.printBreadcrumb();
+		
 	    System.out.println("\n--- Edit Info ---");
 	    System.out.println("(Press Enter to keep the current value)");
 
@@ -471,6 +505,7 @@ public class CustomerPanel {
 	            );
 
 	            System.out.println("❌ This phone number is already registered by another customer.");
+	            navigation.pop();
 	            return;
 	        }
 
@@ -494,10 +529,13 @@ public class CustomerPanel {
 	    } else {
 	        System.out.println("ℹ️ No changes were made.");
 	    }
+	    navigation.pop();
 	}
 	
 	// show customer invoice
 	public void showCustomerInvoices(Customer customer) {
+		navigation.push("Purchase History");
+	    navigation.printBreadcrumb();
 		List<Invoice> allInvoices =store.getInvoices();
 		List<Invoice> customerInvoices =new ArrayList<Invoice>();
 		for(Invoice inv : allInvoices) {
@@ -507,6 +545,7 @@ public class CustomerPanel {
 		}
 		if(customerInvoices.isEmpty()) {
 			System.out.println("\n📭 No invoices found.");
+			navigation.pop();
 	        return;
 		}
 		System.out.println("\n--- Your Invoices ---");
@@ -523,10 +562,14 @@ public class CustomerPanel {
 	    System.out.println("-------------------- -------------------- ---------- ----------");
 	    // To pause
 	    validator.pause();
+	    
+	    navigation.pop();
 	}
 	
 	// show status of loyal custoemr
 	public void viewFinancialStatus(LoyalCustomer lc) {
+		navigation.push("Financial Status");
+		navigation.printBreadcrumb();
 		System.out.println("\n--- Financial Status ---");
 		System.out.println("Total Debt   : " + String.format("%,d Tomans", (long) lc.getDebt()));
 		System.out.println("Total Credit : " + String.format("%,d Tomans", (long) lc.getCredit()));
@@ -534,27 +577,34 @@ public class CustomerPanel {
 		System.out.println("─────────────────────────────");
 		// pause
 		validator.pause();
+		navigation.pop();
 	}
 	
 	// pay debt for loyal customer
 	public void payDebt(LoyalCustomer lc) {
+		navigation.push("Pay Debt");
+		navigation.printBreadcrumb();
 		System.out.println("\n--- Pay Debt ---");
 		System.out.println("Current debt: " + String.format("%,d Tomans", (long) lc.getDebt()));
 		if(lc.getDebt()==0) {
 			System.out.println("✅ No debt to pay.");
+			navigation.pop();
 			return;
 		}
 		// ask from user
 		if (!validator.yesOrNo("Do you want to pay off your debt?")) {
 			System.out.println("❌ Payment cancelled. Press Enter to continue...");
+			navigation.pop();
 			return;
 		}
 		Double amount = validator.readOptionalPositiveDouble("Amount to pay (or press Enter to skip): ");
 		if (amount == null) {
+			navigation.pop();
 		    return;
 		}
 		if(amount>lc.getDebt()) {
 			System.out.println("❌ Cannot pay more than your debt.");
+			navigation.pop();
 			return;
 		}
 		lc.payDebt(amount);
@@ -569,17 +619,21 @@ public class CustomerPanel {
 			);
 		System.out.println("✅ Paid " + String.format("%,.2f Tomans", amount)
         + ". Remaining debt: " + String.format("%,.2f Tomans", lc.getDebt()));
+		navigation.pop();
 	}
 	
 	
 	
 	// new member ship(for expiration code)
 	private void renewMembershipCode(LoyalCustomer lc) {
+		navigation.push("Renew Membership");
+		navigation.printBreadcrumb();
 		System.out.println("\n--- Renew Membership Code ---");
 		System.out.println("Current code: " + lc.getMembershipCode());
 		// ask for confirmation
 		if(!validator.yesOrNo("Generate a new membership code?")) {
 			System.out.println("❌ Renewal cancelled.");
+			navigation.pop();
 			return;
 		}
 		// Generate new code
@@ -599,6 +653,8 @@ public class CustomerPanel {
 			);
 		System.out.println("✅ New membership code: " + newCode);
 		System.out.println("⚠️ Please save this code – you will need it to log in.");
+		validator.pause();
+		navigation.pop();
 	}
 	
 	
@@ -606,10 +662,13 @@ public class CustomerPanel {
 	
 	// For Coupon 
 	private double calculateFinalAmountWithCoupon(Cart cart) {
+		navigation.push("Apply Coupon");
+	    navigation.printBreadcrumb();
 		double finalAmount = cart.getTotalAmount();
 		boolean hasCoupon = validator.yesOrNo("Do you have a coupon?");
 		while(true) {
 			if (!hasCoupon) {
+				navigation.pop();
 				return finalAmount;
 			}
 			String code = validator.readNonEmptyString("Enter coupon code: ");
@@ -627,10 +686,12 @@ public class CustomerPanel {
 					    "✅ Coupon applied! New amount: %,d Tomans%n",
 					    (long) finalAmount
 					);
+				navigation.pop();
 				return finalAmount;
 			}
 			boolean tryAgain =validator.yesOrNo("Try another coupon?");
 			if (!tryAgain) {
+				navigation.pop();
 	            return finalAmount;
 	        }
 		}
