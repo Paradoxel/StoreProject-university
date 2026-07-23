@@ -9,20 +9,28 @@ import com.storeapp.model.LoyalCustomer;
 import com.storeapp.service.CryptoService;
 import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
+import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 public class InvoiceManager {
 	private Store store;
 	private InputValidator validator;
-	public InvoiceManager(Store store, InputValidator validator) {
-        this.store = store;
-        this.validator = validator;
-    }
+	private Navigation navigation;
+	public InvoiceManager(
+	        Store store,
+	        InputValidator validator,
+	        Navigation navigation) {
+
+	    this.store = store;
+	    this.validator = validator;
+	    this.navigation = navigation;
+	}
 	
 	
 	
 
 	public void showMenu() {
+		navigation.push("Invoices");
 		String[] options = {
 	            "1. View All Invoices",
 	            "2. Find Invoice by ID",
@@ -32,6 +40,7 @@ public class InvoiceManager {
 	    };
 		
 		while(true) {
+			navigation.printBreadcrumb();
 			validator.printBox("INVOICE MANAGEMENT", options);
 			
 			int choice = validator.readIntRange(1, 5);
@@ -49,6 +58,7 @@ public class InvoiceManager {
 					decryptInvoiceToken();
 					break;
 				case 5:
+					navigation.pop();
 					return;
 					
 			}
@@ -59,6 +69,8 @@ public class InvoiceManager {
 	}
 	
 	private void decryptInvoiceToken() {
+		navigation.push("Decrypt Token");
+		navigation.printBreadcrumb();
 		try {
 			String token = validator.readNonEmptyString(
 		            "Enter Secure Invoice Token: ");
@@ -75,7 +87,7 @@ public class InvoiceManager {
 		    System.out.println("Date         : " + parts[1]);
 		    System.out.println("Final Amount : " + parts[2] + " Tomans");
 		    System.out.println("═════════════════════════════════════════");
-		    validator.pause();
+		   
 		}
 		catch (RuntimeException e) {
 			Logger.warning(
@@ -83,6 +95,9 @@ public class InvoiceManager {
 				);
 		    System.out.println("❌ Invalid secure invoice token.");
 		}
+		validator.pause();
+		navigation.pop();
+		
 	    
 	}
 	
@@ -133,8 +148,11 @@ public class InvoiceManager {
 	}
 	
 	public void showAllInvoices() {
+		navigation.push("All Invoices");
+		navigation.printBreadcrumb();
 		printInvoiceTable(store.getInvoices());
 		validator.pause();
+		navigation.pop();
 	}
 	
 	private String shortId(String id) {
@@ -147,6 +165,8 @@ public class InvoiceManager {
 	
 	
 	private void findInvoiceById() {
+		navigation.push("Find By ID");
+		navigation.printBreadcrumb();
 		String id = validator.readNonEmptyString("Enter Invoice ID: ");
 		Invoice invoice = store.findInvoiceById(id);
 		if (invoice == null) {
@@ -155,6 +175,7 @@ public class InvoiceManager {
 				);
 			System.out.println("\n⚠️ No invoice found with that ID.");
 			validator.pause();
+			navigation.pop();
 			return;
 		}
 		Logger.info(
@@ -162,12 +183,14 @@ public class InvoiceManager {
 			);
 		System.out.println(invoice);
 		validator.pause();	
+		navigation.pop();
 	}
 	
 	
 	
 	
 	private void findInvoicesByCustomer() {
+		navigation.push("Search Customer");
 		String[] options = {
 				"1. By Phone Number",
 				"2. By Name",
@@ -175,7 +198,9 @@ public class InvoiceManager {
 				"4. Back"
 		};
 
+		
 		while(true) {
+			navigation.printBreadcrumb();
 			validator.printBox("FIND INVOICES BY CUSTOMER", options);
 			int choice = validator.readIntRange(1, 4);
 			switch(choice) {
@@ -189,6 +214,7 @@ public class InvoiceManager {
 				searchByMembershipCode();
 				break;
 			case 4:
+				navigation.pop();
 				return;
 			}
 		}
@@ -199,6 +225,8 @@ public class InvoiceManager {
 	}
 	
 	private void searchByPhone() {
+		navigation.push("Phone");
+		navigation.printBreadcrumb();
 		String phone = validator.readPhoneNumber();
 
 		List<Invoice> results = new ArrayList<>();
@@ -212,10 +240,13 @@ public class InvoiceManager {
 
 		printInvoiceTable(results);
 		validator.pause();
+		navigation.pop();
 	}
 	
 	
 	private void searchByName() {
+		navigation.push("Name");
+		navigation.printBreadcrumb();
 		String name = validator.readNonEmptyString(
 				"Enter customer name (or part of it): ").toLowerCase();
 
@@ -229,10 +260,13 @@ public class InvoiceManager {
 
 		printInvoiceTable(results);
 		validator.pause();
+		navigation.pop();
 	}
 	
 	
 	private void searchByMembershipCode() {
+		navigation.push("Membership Code");
+		navigation.printBreadcrumb();
 		String code = validator.readNonEmptyString("Enter Membership Code: ");
 
 		List<Invoice> results = new ArrayList<>();
@@ -245,6 +279,7 @@ public class InvoiceManager {
 
 		printInvoiceTable(results);
 		validator.pause();
+		navigation.pop();
 	}
 	
 	
