@@ -16,39 +16,35 @@ import com.storeapp.util.InputValidator;
  */
 public class ConsoleUI {
 
+	// final elements
+    private static final String[] MAIN_MENU_OPTIONS = {
+    	    "1. Login",
+    	    "2. Sign Up",
+    	    "3. Exit"
+    	};
+	
+	
     // Core dependencies
-    private Store store;
-    private InputValidator validator;
-    private Navigation navigation;
+	private final Store store;
+	private final InputValidator validator;
+	private final Navigation navigation;
 
-    /**
-     * Constructor: loads the store from file and sets up the validator.
-     */
-    public ConsoleUI(Scanner scanner) {
-        this.validator = new InputValidator(scanner);
-        this.store =Store.loadFromFile(Constants.STORE_FILE);
-        this.navigation = new Navigation();
-    }
+	public ConsoleUI(Scanner scanner) {
+	    this.store = Store.loadFromFile(Constants.STORE_FILE);
+	    this.validator = new InputValidator(scanner);
+	    this.navigation = new Navigation();
+	}
 
 
-
-    /**
-     * Starts the main application loop.
-     */
+    
+    // Starts the main application loop.
     public void start() {
         System.out.println("🎉 Welcome to the Store Management System!");
         navigation.push("Main Menu");
-        String[] options = {
-            "1. Login",
-            "2. Sign Up",
-            "3. Exit"
-        };
-
         while (true) {
         	navigation.printBreadcrumb();
-            validator.printBox("MAIN MENU", options);
-
-            int choice = validator.readIntRange(1, 3);
+        	validator.printBox("MAIN MENU", MAIN_MENU_OPTIONS);
+            int choice = validator.readIntRange(1, MAIN_MENU_OPTIONS.length);
 
             switch (choice) {
                 case 1:
@@ -62,78 +58,183 @@ public class ConsoleUI {
                 	navigation.clear();
                 	navigation.printBreadcrumb();
                 	validator.printTitle("👋 Goodbye!");
-                	System.exit(0);
+                	return;
             }
         }
     }
 
-    // --- Authentication & Registration ---
-
-    /**
-     * Handles login for both admin and regular customers.
-     */
+    // Handles user login.
     public void login() {
-    	validator.printTitle("LOGIN");
-        String userCode = validator.readNonEmptyString("Please enter your code or phone number: ");
+        validator.printTitle("LOGIN");
 
-        // Check for admin login
-        
-        if (userCode.equals(Constants.ADMIN_CODE)) {
-        	Logger.log("Admin logged in");
-            AdminPanel adminPanel = new AdminPanel(store, validator, navigation);
-            adminPanel.showDashboard();
-            adminPanel.showMenu();
-            return;
-        }
-        // check loyal
-        Customer loyalCustomer = store.findLoyalCustomerByCode(userCode);
-        if (loyalCustomer != null) {
-            System.out.println("✅ Welcome back, " + loyalCustomer.getName() + " (Loyal Customer)!");
-            CustomerPanel customerPanel = new CustomerPanel(store, validator, navigation);
-            Logger.log("Loyal customer logged in: " + loyalCustomer.getName() + " (Code: " + userCode + ")");
-            customerPanel.startPurchase(loyalCustomer);
+        String identifier =
+                validator.readNonEmptyString(
+                        "Please enter your code or phone number: ");
+
+        if (loginAdmin(identifier)) {
             return;
         }
 
-        // Check for existing customer
-        Customer customer = store.findCustomerByPhone(userCode);
-        if (customer != null) {
-        	if(customer instanceof LoyalCustomer) {
-        		// A loyal customer tried to log in with phone number
-                System.out.println("❌ Loyal customers must use their membership code. Please try again.");
-                Logger.log("SECURITY: Loyal customer " + customer.getName() + " attempted login with phone instead of membership code");
-                return;
-        	}
-            System.out.println("✅ Welcome back, " + customer.getName() + "!");
-            Logger.log("Customer logged in: " + customer.getName() + " (Phone: " + customer.getPhone() + ")");
-            CustomerPanel customerPanel = new CustomerPanel(store, validator, navigation);
-            customerPanel.startPurchase(customer);
-        } else {
-            System.out.println("❌ No account found with this phone number. Please sign up first.");
+        if (loginLoyalCustomer(identifier)) {
+            return;
         }
+
+        loginRegularCustomer(identifier);
     }
+    
+    // Authenticates the administrator.
+    private boolean loginAdmin(String identifier) {
+        if (!identifier.equals(Constants.ADMIN_CODE)) {
+            return false;
+        }
 
-    /**
-     * Handles sign-up for new customers.
-     */
+        Logger.log("Admin logged in");
+        openAdminPanel();
+
+        return true;
+    }
+    
+    // Authenticates a loyal customer using membership code.
+    private boolean loginLoyalCustomer(String identifier) {
+
+        Customer loyalCustomer =
+                store.findLoyalCustomerByCode(identifier);
+
+        if (loyalCustomer == null) {
+            return false;
+        }
+
+        System.out.println(
+                "✅ Welcome back, "
+                        + loyalCustomer.getName()
+                        + " (Loyal Customer)!");
+
+        Logger.log(
+                "Loyal customer logged in: "
+                        + loyalCustomer.getName()
+                        + " (Code: "
+                        + identifier
+                        + ")");
+
+        openCustomerPanel(loyalCustomer);
+
+        return true;
+    }
+    
+    // Authenticates a regular customer using phone number.
+    private void loginRegularCustomer(String identifier) {
+
+        Customer customer =
+                store.findCustomerByPhone(identifier);
+
+        if (customer == null) {
+            System.out.println(
+                    "❌ No account found with this phone number. Please sign up first.");
+            return;
+        }
+
+        if (customer instanceof LoyalCustomer) {
+
+            System.out.println(
+                    "❌ Loyal customers must use their membership code.");
+
+            Logger.log(
+                    "SECURITY: Loyal customer "
+                            + customer.getName()
+                            + " attempted login with phone.");
+
+            return;
+        }
+
+        System.out.println(
+                "✅ Welcome back, "
+                        + customer.getName()
+                        + "!");
+
+        Logger.log(
+                "Customer logged in: "
+                        + customer.getName()
+                        + " (Phone: "
+                        + customer.getPhone()
+                        + ")");
+
+        openCustomerPanel(customer);
+    }
+    
+    
+
+    
+    // Registers a new customer.
     public void signUp() {
         validator.printTitle("SIGN UP");
-        String phone = validator.readPhoneNumber();
 
-        // Check if phone number is already taken
-        if (store.findCustomerByPhone(phone) != null) {
-            System.out.println("❌ This phone number is already registered. Please login instead.");
+        String phone = readAvailablePhoneNumber();
+        if (phone == null) {
             return;
         }
 
         String name = validator.readNonEmptyString("Enter your name: ");
-        Customer newCustomer = new Customer(name, phone);
-        store.addCustomer(newCustomer);
-        store.save();
-        System.out.println("✅ Account created successfully! Welcome, " + name + "!");
-        Logger.log("New customer signed up: " + name + " (" + phone + ")");
+
+        createCustomer(name, phone);
+        
     }
+    
+    
+    
+    // Reads a phone number and checks if it is already registered.
+    private String readAvailablePhoneNumber() {
+        while (true) {
+            String phone = validator.readPhoneNumber();
 
+            if (store.findCustomerByPhone(phone) == null) {
+                return phone;
+            }
 
+            System.out.println("❌ This phone number is already registered.");
 
+            if (!validator.yesOrNo("Try another phone number?")) {
+                return null;
+            }
+        }
+    }
+    
+    // Creates a new customer.
+    private void createCustomer(String name, String phone) {
+        Customer customer = new Customer(name, phone);
+
+        store.addCustomer(customer);
+        store.save();
+
+        System.out.println(
+        	    "✅ Account created successfully! Welcome, "
+        	            + customer.getName()
+        	            + "!");
+        Logger.log(
+        	    "New customer signed up: "
+        	            + customer.getName()
+        	            + " ("
+        	            + customer.getPhone()
+        	            + ")");
+    }
+    
+    
+
+    
+    // Opens the customer panel.
+    private void openCustomerPanel(Customer customer) {
+        CustomerPanel panel =
+                new CustomerPanel(store, validator, navigation);
+
+        panel.startPurchase(customer);
+    }
+    
+    // Opens the administrator panel.
+    private void openAdminPanel() {
+        AdminPanel panel =
+                new AdminPanel(store, validator, navigation);
+
+        panel.showDashboard();
+        panel.showMenu();
+    }
+    
 }
