@@ -11,9 +11,20 @@ import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 
 public class CouponManager  {
-	private Store store;
-	private InputValidator validator;
-	private Navigation navigation;
+	private final Store store;
+	private final InputValidator validator;
+	private final Navigation navigation;
+	
+	private static final String[] COUPON_MENU_OPTIONS = {
+
+		    "1. Add Coupon",
+		    "2. View Coupons",
+		    "3. Edit Coupon",
+		    "4. Change Coupon Status",
+		    "5. Delete Coupon",
+		    "6. Back"
+		};
+	
 	public CouponManager(
 		    Store store,
 		    InputValidator validator,
@@ -25,57 +36,66 @@ public class CouponManager  {
 		}
 	
 	
-	public void showMenu() {
-		navigation.push("Coupons");
-	    String[] options = {
-	            "1. Add Coupon",
-	            "2. View Coupons",
-	            "3. Edit Coupon",
-	            "4. Change Coupon Status",
-	            "5. Delete Coupon",
-	            "6. Back"
-	    };
-
-	    while (true) {
-	    	navigation.printBreadcrumb();
-	        validator.printBox("COUPON MANAGEMENT", options);
-
-	        int choice = validator.readIntRange(1, 6);
-
-	        switch (choice) {
-
-	            case 1:
-	                addCoupon();
-	                break;
-
-	            case 2:
-	                viewCoupons();
-	                break;
-
-	            case 3:
-	                editCoupon();
-	                break;
-
-	            case 4:
-	                changeCouponStatus();
-	                break;
-
-	            case 5:
-	                deleteCoupon();
-	                break;
-
-	            case 6:
-	            	navigation.pop();
+	public void showMenu(){
+	    navigation.push("Coupons");
+	    try{
+	        while(true){
+	            navigation.printBreadcrumb();
+	            validator.printBox(
+	                "COUPON MANAGEMENT",
+	                COUPON_MENU_OPTIONS
+	            );
+	            int choice =
+	                validator.readIntRange(
+	                    1,
+	                    COUPON_MENU_OPTIONS.length
+	                );
+	            if(!handleChoice(choice)){
 	                return;
+	            }
 	        }
+	    }finally{
+	        navigation.pop();
 	    }
+	}
+	
+	private boolean handleChoice(int choice){
+
+	    switch(choice){
+
+	        case 1:
+	            addCoupon();
+	            break;
+
+	        case 2:
+	            viewCoupons();
+	            break;
+
+	        case 3:
+	            editCoupon();
+	            break;
+
+	        case 4:
+	            changeCouponStatus();
+	            break;
+
+	        case 5:
+	            deleteCoupon();
+	            break;
+
+	        case 6:
+	            return false;
+	    }
+
+	    return true;
 	}
 	
 	
 	
 	private void addCoupon() {
 		navigation.push("Add Coupon");
-		navigation.printBreadcrumb();
+		try {
+			navigation.printBreadcrumb();
 	    validator.printTitle("ADD COUPON");
 
 	    String code = readUniqueCouponCode();
@@ -88,17 +108,14 @@ public class CouponManager  {
 
 	    System.out.print("Maximum Usage: ");
 	    int maxUsage = validator.readIntRange(1, Constants.MAX_COUPON_USAGE);
-
 	    Coupon coupon = new Coupon(
 	            code,
 	            discount,
 	            expirationDate,
 	            maxUsage
 	    );
-
 	    store.addCoupon(coupon);
 	    store.save();
-
 	    Logger.info(
 	        "Coupon added: "
 	        + coupon.getCode()
@@ -109,17 +126,20 @@ public class CouponManager  {
 	        + " | Max Usage: "
 	        + coupon.getMaxUsage()
 	    );
-
 	    System.out.println("\n✅ Coupon '" + code + "' created successfully.");
-
 	    validator.pause();
-	    navigation.pop();
+		}
+		finally {
+			navigation.pop();
+		}
+		
 
 	}
 
 	private void viewCoupons() {
 		navigation.push("View Coupons");
-		navigation.printBreadcrumb();
+		try {
+			navigation.printBreadcrumb();
 	    validator.printTitle("COUPON LIST");
 	    List<Coupon> coupons = store.getCoupons();
 	    if (coupons.isEmpty()) {
@@ -135,12 +155,16 @@ public class CouponManager  {
 	    }
 
 	    validator.pause();
-	    navigation.pop();
+		}
+		finally {
+			navigation.pop();
+		}
 	}
 	
 	private void editCoupon() {
 		navigation.push("Edit Coupon");
-		navigation.printBreadcrumb();
+		try {
+			navigation.printBreadcrumb();
 		validator.printTitle("EDIT COUPON");
 		Coupon coupon = findExistingCoupon();
 
@@ -206,7 +230,11 @@ public class CouponManager  {
 		}
 
 		validator.pause();
-		navigation.pop();
+		}
+		finally {
+			navigation.pop();
+		}
+		
 	}
 	
 	
@@ -228,7 +256,8 @@ public class CouponManager  {
 	// change status
 	private void changeCouponStatus() {
 		navigation.push("Change Status");
-		navigation.printBreadcrumb();
+		try {
+			navigation.printBreadcrumb();
 	    validator.printTitle("CHANGE COUPON STATUS");
 
 	    Coupon coupon = findExistingCoupon();
@@ -267,32 +296,44 @@ public class CouponManager  {
 	    	);
 
 	    validator.pause();
-	    navigation.pop();
+		}
+		finally {
+			navigation.pop();
+		}
+	    
 	}
 	
 	
 	// Delete work flow 
 	private void deleteCoupon() {
 		navigation.push("Delete Coupon");
-		navigation.printBreadcrumb();
+		try {
+			navigation.printBreadcrumb();
 		Coupon coupon = findExistingCoupon();
 
-		if (coupon == null) {
-			navigation.pop();
+		if (coupon == null) {	
 		    return;
 		}
 		System.out.println(coupon);
 		if (!validator.yesOrNo("Delete this coupon?")) {
 		    System.out.println("❌ Deletion cancelled.");
 		    validator.pause();
-		    navigation.pop();
+		    
 		    return;
 		}
 		store.removeCoupon(coupon);
 		store.save();
 		System.out.println("✅ Coupon '" + coupon.getCode() + "' deleted successfully.");
+		Logger.info(
+			    "COUPON_DELETED | Code="
+			    + coupon.getCode()
+			);
 		validator.pause();
-		navigation.pop();
+		}
+		finally {
+			navigation.pop();
+		}
+		
 	}
 	
 	
@@ -304,7 +345,6 @@ public class CouponManager  {
 	    String code = validator.readNonEmptyString("Coupon Code:");
 	    return store.findCouponByCode(code);
 	}
-	
 	
 	
 	
