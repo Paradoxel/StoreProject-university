@@ -6,6 +6,7 @@ import java.util.List;
 import com.storeapp.model.Customer;
 import com.storeapp.model.Invoice;
 import com.storeapp.model.LoyalCustomer;
+import com.storeapp.model.PaymentMethod;
 import com.storeapp.service.CryptoService;
 import com.storeapp.service.Logger;
 import com.storeapp.service.Store;
@@ -13,9 +14,17 @@ import com.storeapp.ui.navigation.Navigation;
 import com.storeapp.util.Constants;
 import com.storeapp.util.InputValidator;
 public class InvoiceManager {
-	private Store store;
-	private InputValidator validator;
-	private Navigation navigation;
+	private final Store store;
+	private final InputValidator validator;
+	private final Navigation navigation;
+	private static final String[] INVOICE_MENU_OPTIONS = {
+
+		    "1. View All Invoices",
+		    "2. Find Invoice by ID",
+		    "3. Find Invoices by Customer",
+		    "4. Decrypt Secure Invoice Token",
+		    "5. Back"
+		};
 	public InvoiceManager(
 	        Store store,
 	        InputValidator validator,
@@ -27,45 +36,66 @@ public class InvoiceManager {
 	}
 	
 	
-	
+	private void showMenu(){
 
-	public void showMenu() {
-		navigation.push("Invoices");
-		String[] options = {
-	            "1. View All Invoices",
-	            "2. Find Invoice by ID",
-	            "3. Find Invoices by Customer",
-	            "4. Decrypt Secure Invoice Token",
-	            "5. Back"
-	    };
-		
-		while(true) {
-			navigation.printBreadcrumb();
-			validator.printBox("INVOICE MANAGEMENT", options);
-			
-			int choice = validator.readIntRange(1, 5);
-			switch (choice) {
-				case 1:
-					showAllInvoices();
-					break;
-				case 2:
-					findInvoiceById();
-					break;
-				case 3:
-					findInvoicesByCustomer();
-					break;
-				case 4:
-					decryptInvoiceToken();
-					break;
-				case 5:
-					navigation.pop();
-					return;
-					
-			}
-		}
-		
-		
-		
+	    navigation.push("Invoices");
+
+	    try{
+
+	        while(true){
+
+	            navigation.printBreadcrumb();
+
+	            validator.printBox(
+	                "INVOICE MANAGEMENT",
+	                INVOICE_MENU_OPTIONS
+	            );
+
+
+	            int choice =
+	                validator.readIntRange(
+	                    1,
+	                    INVOICE_MENU_OPTIONS.length
+	                );
+
+
+	            if(!handleChoice(choice)){
+	                return;
+	            }
+
+	        }
+
+	    }finally{
+
+	        navigation.pop();
+	    }
+	}
+	
+	private boolean handleChoice(int choice){
+
+	    switch(choice){
+
+	        case 1:
+	            showAllInvoices();
+	            break;
+
+	        case 2:
+	            findInvoiceById();
+	            break;
+
+	        case 3:
+	            findInvoicesByCustomer();
+	            break;
+
+	        case 4:
+	            decryptInvoiceToken();
+	            break;
+
+	        case 5:
+	            return false;
+	    }
+
+	    return true;
 	}
 	
 	private void decryptInvoiceToken() {
@@ -135,10 +165,10 @@ public class InvoiceManager {
 					inv.getPaymentMethod());
 
 			totalAmount += inv.getFinalAmount();
-			if (inv.getPaymentMethod().toString().equals("CASH")) {
-				cashCount++;
+			if (inv.getPaymentMethod() == PaymentMethod.CASH) {
+			    cashCount++;
 			} else {
-				creditCount++;
+			    creditCount++;
 			}
 		}
 
@@ -147,12 +177,17 @@ public class InvoiceManager {
 				invoices.size(), (long) totalAmount, cashCount, creditCount);
 	}
 	
-	public void showAllInvoices() {
-		navigation.push("All Invoices");
-		navigation.printBreadcrumb();
-		printInvoiceTable(store.getInvoices());
-		validator.pause();
-		navigation.pop();
+	private void showAllInvoices(){
+	    navigation.push("All Invoices");
+	    try{
+	        navigation.printBreadcrumb();
+	        printInvoiceTable(
+	            store.getInvoices()
+	        );
+	        validator.pause();
+	    }finally{
+	        navigation.pop();
+	    }
 	}
 	
 	private String shortId(String id) {
