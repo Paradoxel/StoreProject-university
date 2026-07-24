@@ -154,6 +154,27 @@ public class Product implements Serializable {
     }
     
 	
+    
+    
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public void setVolume(Double volume) {
+        this.volume = volume;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 	
 	
 }
