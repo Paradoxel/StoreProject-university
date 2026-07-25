@@ -108,6 +108,7 @@ public class CustomerManager {
                 + "' added successfully!"
             );
         } finally {
+        	validator.pause();
             navigation.pop();
         }
     }
@@ -163,8 +164,9 @@ public class CustomerManager {
                 return;
             }
             printCustomerTable(customers);
-            validator.pause();
+            
         } finally {
+        	validator.pause();
             navigation.pop();
         }
     }
@@ -256,8 +258,9 @@ public class CustomerManager {
                 return;
             }
             printCustomerDetails(customer);
-            validator.pause();
+            
         } finally {
+        	validator.pause();
             navigation.pop();
         }
     }
