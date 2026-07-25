@@ -70,6 +70,7 @@ public class CustomerPanel {
 			loyalCustomerMenu(lc);
 		}
 		else {
+			
 			regularCustomerMenu(customer);
 		}
 	}
@@ -214,10 +215,7 @@ public class CustomerPanel {
 		
 	private void addProductToCart(String code, Cart cart) {
 
-		
-		
 
-		
 
 	    Product product = store.findItemByCode(code);
 
@@ -234,10 +232,10 @@ public class CustomerPanel {
 
 	    if(!product.hasEnoughStock(quantity)) {
 
-	        System.out.println(
-	            "❌ Not enough stock. Available: "
-	            + product.getStock()
-	        );
+	    	System.out.println(
+	    	        "❌ Not enough stock. Available: "
+	    	        + String.format("%.0f", product.getStock())
+	    	);
 
 	        return;
 	    }
@@ -261,13 +259,15 @@ public class CustomerPanel {
 	            "Enter product code to remove: "
 	    );
 
-	    boolean exists = cart.getItems()
-	            .stream()
-	            .anyMatch(item ->
-	                    item.getProduct()
-	                        .getCode()
-	                        .equals(code)
-	            );
+	    boolean exists = false;
+
+	    for (CartItem item : cart.getItems()) {
+
+	        if (item.getProduct().getCode().equals(code)) {
+	            exists = true;
+	            break;
+	        }
+	    }
 
 	    if(exists) {
 	        cart.removeItem(code);
@@ -730,40 +730,167 @@ public class CustomerPanel {
 	    return true;
 	}
 	
+	
+	
+	private List<Invoice> getCustomerInvoices(Customer customer) {
+
+	    List<Invoice> customerInvoices = new ArrayList<>();
+
+	    for (Invoice inv : store.getInvoices()) {
+
+	        if (inv.getCustomer().equals(customer)) {
+	            customerInvoices.add(inv);
+	        }
+	    }
+
+	    return customerInvoices;
+	}
+	
 	// show customer invoice
 	private void showCustomerInvoices(Customer customer) {
-		navigation.push("Purchase History");
+	    navigation.push("Purchase History");
 	    navigation.printBreadcrumb();
-		List<Invoice> allInvoices =store.getInvoices();
-		List<Invoice> customerInvoices =new ArrayList<Invoice>();
-		for(Invoice inv : allInvoices) {
-			if(inv.getCustomer().equals(customer)) {
-				customerInvoices.add(inv);
-			}
-		}
-		if(customerInvoices.isEmpty()) {
-			System.out.println("\n📭 No invoices found.");
-			navigation.pop();
+	    List<Invoice> customerInvoices = getCustomerInvoices(customer);
+	    if (customerInvoices.isEmpty()) {
+	        System.out.println("\n📭 No invoices found.");
+	        validator.pause();
+	        navigation.pop();
 	        return;
-		}
-		System.out.println("\n--- Your Invoices ---");
-		System.out.printf("%-20s %-20s %11s %-10s%n", "Invoice #", "Date", "Amount", "Payment");
-		System.out.println("-------------------- -------------------- ----------- ----------");
-	    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-	    for (Invoice inv : customerInvoices) {
-	    	System.out.printf("%-20s %-20s %,10d %-10s%n",
-	    	        inv.getId(),
-	    	        inv.getDateTime().format(fmt),
-	    	        (long) inv.getFinalAmount(),
-	    	        inv.getPaymentMethod());
 	    }
-	    System.out.println("-------------------- -------------------- ---------- ----------");
-	    // To pause
-	    validator.pause();
-	    
+	    System.out.println("\n--- Your Invoices ---");
+	    System.out.printf(
+	            "%-5s %-15s %-20s %15s %-10s%n",
+	            "#",
+	            "Invoice #",
+	            "Date",
+	            "Amount",
+	            "Payment"
+	    );
+	    System.out.println(
+	            "---------------------------------------------------------"
+	    );
+	    DateTimeFormatter fmt =
+	            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	    for (int i = 0; i < customerInvoices.size(); i++) {
+	        Invoice inv = customerInvoices.get(i);
+	        System.out.printf(
+	                "%-5d %-15s %-20s %,15d %-10s%n",
+	                i + 1,
+	                shortenInvoiceId(inv.getId()),
+	                inv.getDateTime().format(fmt),
+	                (long) inv.getFinalAmount(),
+	                inv.getPaymentMethod()
+	        );
+	    }
+	    System.out.println(
+	            "---------------------------------------------------------"
+	    );
+	    if (validator.yesOrNo("View invoice details?")) {
+	        int index = validator.readIntRange(
+	                1,
+	                customerInvoices.size()
+	        );
+	        Invoice selectedInvoice =
+	                customerInvoices.get(index - 1);
+	        showInvoiceDetails(selectedInvoice);
+	    }
 	    navigation.pop();
 	}
 	
+	
+	
+	private void showInvoiceDetails(Invoice invoice) {
+	    navigation.push("Invoice Details");
+	    navigation.printBreadcrumb();
+	    DateTimeFormatter fmt =
+	            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	    System.out.println();
+	    System.out.println(
+	        "════════════════════════════════════════════════════════════════════════════"
+	    );
+	    System.out.println(
+	        "                           🧾 INVOICE DETAILS"
+	    );
+	    System.out.println(
+	        "════════════════════════════════════════════════════════════════════════════"
+	    );
+	    System.out.println(
+	            "Invoice Token: "
+	    );
+
+	    System.out.println(
+	            invoice.getId()
+	    );
+	    System.out.println(
+	        "────────────────────────────────────────────────────────────────────────────"
+	    );
+	    System.out.printf(
+	            "%-15s : %s%n",
+	            "Date",
+	            invoice.getDateTime().format(fmt)
+	    );
+	    System.out.printf(
+	            "%-15s : %s%n",
+	            "Payment",
+	            invoice.getPaymentMethod()
+	    );
+	    System.out.printf(
+	            "%-15s : %,d Tomans%n",
+	            "Final Amount",
+	            (long) invoice.getFinalAmount()
+	    );
+	    System.out.println(
+	        "────────────────────────────────────────────────────────────────────────────"
+	    );
+	    System.out.println("\nItems");
+	    System.out.printf(
+	            "%-25s %-10s %-15s%n",
+	            "Product",
+	            "Quantity",
+	            "Subtotal"
+	    );
+	    System.out.println(
+	        "────────────────────────────────────────────────────────────────────────────"
+	    );
+	    for(CartItem item : invoice.getItems()) {
+
+	        System.out.printf(
+	                "%-25s %-10.1f %,15d%n",
+	                item.getProduct().getName(),
+	                item.getQuantity(),
+	                (long) item.getTotalPrice()
+	        );
+	    }
+
+
+	    System.out.println(
+	        "────────────────────────────────────────────────────────────────────────────"
+	    );
+
+
+	    System.out.printf(
+	            "%-20s %,20d Tomans%n",
+	            "Total:",
+	            (long) invoice.getFinalAmount()
+	    );
+
+
+	    System.out.println(
+	        "════════════════════════════════════════════════════════════════════════════"
+	    );
+
+
+	    validator.pause();
+
+	    navigation.pop();
+	}
+	
+	
+	private String shortenInvoiceId(String id) {
+
+
+	    return id.substring(0, 12) + "...";
+	}
 	
 	
 	
@@ -837,37 +964,46 @@ public class CustomerPanel {
 	        String productCode,
 	        double quantity
 	) {
-
-	    store.processReturn(
-	            customer,
-	            invoice,
-	            productCode,
-	            quantity
-	    );
-
-	    store.save();
-
-	    Logger.info(
-	            "Item returned | Customer: "
-	            + customer.getName()
-	            + " | Invoice: "
-	            + invoice.getId()
-	            + " | Product: "
-	            + productCode
-	            + " | Quantity: "
-	            + quantity
-	    );
-
-	    System.out.println(
-	            "✅ Returned "
-	            + quantity
-	            + " of "
-	            + productCode
-	            + ". Credit: "
-	            + customer.getCredit()
-	            + " Tomans."
-	    );
-
+	    try {
+	        store.processReturn(
+	                customer,
+	                invoice,
+	                productCode,
+	                quantity
+	        );
+	        store.save();
+	        Logger.info(
+	                "Item returned | Customer: "
+	                + customer.getName()
+	                + " | Invoice: "
+	                + invoice.getId()
+	                + " | Product: "
+	                + productCode
+	                + " | Quantity: "
+	                + quantity
+	        );
+	        System.out.println(
+	                "✅ Returned "
+	                + quantity
+	                + " of "
+	                + productCode
+	                + ". Credit: "
+	                + customer.getCredit()
+	                + " Tomans."
+	        );
+	    } catch (IllegalArgumentException e) {
+	        Logger.warning(
+	                "Return failed | Customer: "
+	                + customer.getName()
+	                + " | Invoice: "
+	                + invoice.getId()
+	                + " | Product: "
+	                + productCode
+	                + " | Reason: "
+	                + e.getMessage()
+	        );
+	        System.out.println("❌ " + e.getMessage());
+	    }
 	    validator.pause();
 	}
 	
@@ -892,14 +1028,15 @@ public class CustomerPanel {
 	    navigation.printBreadcrumb();
 
 	    Double amount = requestDebtPayment(customer);
-
+	    
 	    if (amount == null) {
 	        navigation.pop();
+	        validator.pause();
 	        return;
 	    }
 
 	    processDebtPayment(customer, amount);
-
+	    validator.pause();
 	    navigation.pop();
 	}
 	
@@ -926,26 +1063,21 @@ public class CustomerPanel {
 	            "Amount to pay (or press Enter to skip): "
 	    );
 
-	    if (amount == null)
-	        return null;
+	    if (amount == null) {
+	    	return null;
+	    }
+	        
 
 	    if (amount > customer.getDebt()) {
 	        System.out.println("❌ Cannot pay more than your debt.");
 	        return null;
 	    }
-
 	    return amount;
 	}
 	
-	private void processDebtPayment(
-	        LoyalCustomer customer,
-	        double amount
-	) {
-
+	private void processDebtPayment(LoyalCustomer customer,double amount) {
 	    customer.payDebt(amount);
-
 	    store.save();
-
 	    Logger.info(
 	            "Debt payment | Customer: "
 	                    + customer.getName()
@@ -954,7 +1086,6 @@ public class CustomerPanel {
 	                    + " | Remaining Debt: "
 	                    + customer.getDebt()
 	    );
-
 	    System.out.println(
 	            "✅ Paid "
 	                    + String.format("%,.2f Tomans", amount)
@@ -962,7 +1093,7 @@ public class CustomerPanel {
 	                    + String.format("%,.2f Tomans", customer.getDebt())
 	    );
 	}
-	
+
 	// new member ship(for expiration code)
 	private void renewMembershipCode(LoyalCustomer customer) {
 
