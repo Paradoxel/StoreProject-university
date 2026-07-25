@@ -20,7 +20,9 @@ public class Cart implements Serializable {
 		this.customer=customer;
 		items=new ArrayList<>();
 		createdDate=LocalDateTime.now();
+		System.out.println("Before = " + status);
 		status=CartStatus.OPEN;
+		System.out.println("After = " + status);
 	}
 	
 	// getters 
@@ -48,6 +50,11 @@ public class Cart implements Serializable {
 	
 	// important method
 	public void addItem(Product product,double quantity) {
+		System.out.println(
+			    "Status = " + status +
+			    "  OPEN = " + CartStatus.OPEN +
+			    "  CLOSED = " + CartStatus.CLOSED
+			);
 		// check status of cart
 		if(status==CartStatus.CLOSED)
 			throw new IllegalStateException ("سفید خرید بسته است نمیتوانید محصولی اضافه یا کم کنید .");
