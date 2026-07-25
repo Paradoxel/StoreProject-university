@@ -14,8 +14,7 @@ public class AdminPanel {
 	        "2. Coupon Management",
 	        "3. Customer Management",
 	        "4. Invoice Management",
-	        "5. Reports",
-	        "6. Back to main menu"
+	        "5. Back to main menu"
 	};
 	
 	
@@ -98,10 +97,6 @@ public class AdminPanel {
 	            break;
 	
 	        case 5:
-	            showReports();
-	            break;
-	
-	        case 6:
 	            return false;
     }
 
@@ -177,43 +172,6 @@ public class AdminPanel {
 	private String formatMoney(double amount) {
 	    return String.format("%,d Tomans", (long) amount);
 	}
-	
-	private void showReports() {
-		navigation.push("Reports");
-		try {
-			navigation.printBreadcrumb();
-		    List<Invoice> invoices = store.getInvoices();
-		    if (invoices.isEmpty()) {
-		        System.out.println("\n⚠️ No invoices yet.");
-		        return;
-		    }
 
-		    // Table header
-		    System.out.println("\n--- Invoice History ---");
-		    System.out.printf("%-20s %-15s %-20s %-10s %-10s%n",
-		                      "Invoice #", "Customer", "Date", "Amount", "Payment");
-		    System.out.println("-------------------- --------------- -------------------- ---------- ----------");
-		    DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		    // Table rows
-		    for (Invoice inv : invoices) {
-		    	System.out.printf("%-20s %-15s %-20s %,10d %-10s%n",
-		    	        inv.getId(),
-		    	        inv.getCustomer().getName(),
-		    	        inv.getDateTime().format(fmt),   
-		    	        (long) inv.getFinalAmount(),    
-		    	        inv.getPaymentMethod());
-		    }
-		    // Footer
-		    System.out.println("-------------------- --------------- -------------------- ---------- ----------");
-		    // pause
-		    
-		    validator.pause();
-		}
-		finally {
-			navigation.pop();
-		}
-		
-	    
-	}
 	
 }
