@@ -536,7 +536,7 @@ This project demonstrates the following software engineering concepts in a pract
 | **Append-only logging** | Timestamped audit trail for all business events and errors |
 | **Defensive programming** | Null checks, range validation, stock checks before every state change |
 | **Separation of concerns** | Logger, Constants, RandomDataGenerator, CryptoService each have one clear responsibility |
-| **Iterative refactoring** | 181 commits following Conventional Commits, including dedicated `refactor:` passes on UI structure, coupon lookup, and navigation |
+| **Iterative refactoring** | 202 commits following Conventional Commits, including dedicated `refactor:` passes on UI structure, coupon lookup, and navigation |
 
 ---
 
