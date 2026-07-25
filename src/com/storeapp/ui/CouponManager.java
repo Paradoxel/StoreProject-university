@@ -282,7 +282,6 @@ public class CouponManager  {
 	    coupon.toggleStatus();
 
 	    store.save();
-
 	    Logger.info(
 	        "Coupon status changed | Code: "
 	        + coupon.getCode()
@@ -294,7 +293,6 @@ public class CouponManager  {
 	    	    "✅ Coupon status changed to "
 	    	    + (coupon.isActive() ? "ACTIVE." : "INACTIVE.")
 	    	);
-
 	    validator.pause();
 		}
 		finally {
@@ -335,10 +333,6 @@ public class CouponManager  {
 		}
 		
 	}
-	
-	
-	
-	
 	
 	// find a cp beside find cp in store class
 	private Coupon findExistingCoupon() {
