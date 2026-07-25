@@ -576,10 +576,10 @@ public class ProductManager {
 
 
         System.out.print(
-            "New price (" 
-            + product.getPrice()
-            + "): "
-        );
+        	    "New price ("
+        	    + String.format("%,.0f", product.getPrice())
+        	    + " Tomans): "
+        	);
 
         Double price =
                 validator.readOptionalDouble();
@@ -664,9 +664,9 @@ public class ProductManager {
 
 
             if(validator.yesOrNo(
-                "Edit manufacturer (current: "
-                + current
-                + ")?"
+            		"Edit manufacturer? (Current: "
+            				+ current
+            				+ ")"
             )){
 
                 product.setManufacturer(
@@ -689,7 +689,7 @@ public class ProductManager {
 
                 product.setColor(
                     validator.readNonEmptyString(
-                        "Color: "
+                        "New Color: "
                     )
                 );
             }
@@ -697,9 +697,7 @@ public class ProductManager {
         } else {
 
             if (validator.yesOrNo(
-                    "Edit color (current: " 
-                    + current 
-                    + ")?"
+            		"Edit color? (Current: " + current + ")"
             )) {
 
                 product.setColor(
@@ -718,33 +716,32 @@ public class ProductManager {
 
         if (current == null) {
 
-            if (validator.yesOrNo("Add weight?")) {
+        	if (validator.yesOrNo("Add weight?")) {
 
-                double weight =
-                        validator.readPositiveDouble();
+        	    System.out.print("Weight (kg): ");
 
-                if(weight > 0){
-                    product.setWeight(weight);
-                }
-            }
+        	    double weight =
+        	            validator.readPositiveDouble();
+
+        	    product.setWeight(weight);
+        	}
 
         } else {
+        	System.out.println(
+        		    "Current weight: "
+        		    + current
+        		    + " kg"
+        		);
 
-            System.out.println(
-                "Current weight: " 
-                + current 
-                + " kg"
-            );
+        		if (validator.yesOrNo("Edit weight?")) {
 
-            if (validator.yesOrNo("Edit weight?")) {
+        		    System.out.print("New weight (kg): ");
 
-                double weight =
-                        validator.readPositiveDouble();
+        		    double weight =
+        		            validator.readPositiveDouble();
 
-                if(weight > 0){
-                    product.setWeight(weight);
-                }
-            }
+        		    product.setWeight(weight);
+        		}
         }
     }
     
@@ -754,33 +751,33 @@ public class ProductManager {
 
         if (current == null) {
 
-            if (validator.yesOrNo("Add volume?")) {
+        	if (validator.yesOrNo("Add volume?")) {
 
-                double volume =
-                        validator.readPositiveDouble();
+        	    System.out.print("Volume (L): ");
 
-                if(volume > 0){
-                    product.setVolume(volume);
-                }
-            }
+        	    double volume =
+        	            validator.readPositiveDouble();
+
+        	    product.setVolume(volume);
+        	}
 
         } else {
 
-            System.out.println(
-                "Current volume: "
-                + current
-                + " L"
-            );
+        	System.out.println(
+        		    "Current volume: "
+        		    + current
+        		    + " L"
+        		);
 
-            if (validator.yesOrNo("Edit volume?")) {
+        		if (validator.yesOrNo("Edit volume?")) {
 
-                double volume =
-                        validator.readPositiveDouble();
+        		    System.out.print("New volume (L): ");
 
-                if(volume > 0){
-                    product.setVolume(volume);
-                }
-            }
+        		    double volume =
+        		            validator.readPositiveDouble();
+
+        		    product.setVolume(volume);
+        		}
         }
     }
     
@@ -827,29 +824,40 @@ public class ProductManager {
         if (p == null) {
             System.out.println("❌ No product found.");
             navigation.pop();
+            validator.pause();
             return;
         }
 
-        System.out.println("Code     : " + p.getCode());
-        System.out.println("Name     : " + p.getName());
-        System.out.println("Price    : " + p.getPrice() + " Tomans");
-        System.out.println("Stock    : " + p.getStock());
-        System.out.println("Unit     : " + p.getUnitType());
-        System.out.println("Discounted: " + p.getDiscountedPrice() + "Tomans");
-        if (p.getManufacturer() != null) System.out.println("Made by  : " + p.getManufacturer());
-        if (p.getColor() != null)        System.out.println("Color    : " + p.getColor());
-        if (p.getWeight() != null)       System.out.println("Weight   : " + p.getWeight() + " kg");
-        if (p.getVolume() != null)       System.out.println("Volume   : " + p.getVolume() + " L");
-        if (p.getDescription() != null)  System.out.println("Desc     : " + p.getDescription());
-        if (p.getDiscountPercent() > 0)  System.out.println("Discount : " + p.getDiscountPercent() + "%");
-        if (p.getProductionDate() != null) System.out.println("Prod.Date: " + p.getProductionDate());
-        if (p.getExpirationDate() != null) System.out.println("Exp.Date : " + p.getExpirationDate());
-        System.out.println("─────────────────────────────");
+        System.out.println("Code        : " + p.getCode());
+        System.out.println("Name        : " + p.getName());
+        System.out.println("Price       : " + String.format("%,.0f Tomans", p.getPrice()));
+        System.out.println("Stock       : " + p.getStock());
+        System.out.println("Unit        : " + p.getUnitType());
+        System.out.println("Discounted  : " + String.format("%,.0f Tomans", p.getDiscountedPrice()));
+        if (p.getManufacturer() != null)
+            System.out.println("Made by     : " + p.getManufacturer());
+        if (p.getColor() != null)
+            System.out.println("Color       : " + p.getColor());
+        if (p.getWeight() != null)
+            System.out.println("Weight      : " + p.getWeight() + " kg");
+        if (p.getVolume() != null)
+            System.out.println("Volume      : " + p.getVolume() + " L");
+        if (p.getDescription() != null)
+            System.out.println("Description : " + p.getDescription());
+        if (p.getDiscountPercent() > 0)
+            System.out.println("Discount    : " + p.getDiscountPercent() + "%");
+        if (p.getProductionDate() != null)
+            System.out.println("Prod. Date  : " + p.getProductionDate());
+        if (p.getExpirationDate() != null)
+            System.out.println("Exp. Date   : " + p.getExpirationDate());
+        System.out.println("────────────────────────────────────");
         Logger.debug(
         	    "PRODUCT_VIEW | Code="
         	    + code
         	);
+        
         navigation.pop();
+        validator.pause();
     }
     
     
