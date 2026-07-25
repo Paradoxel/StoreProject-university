@@ -1,7 +1,5 @@
 package com.storeapp;
-
 import java.util.Scanner;
-
 import com.storeapp.service.Logger;
 import com.storeapp.ui.ConsoleUI;
 
