@@ -8,10 +8,13 @@ public class CartItem implements Serializable{
 	private Product product;
 	private double quantity;
 	public CartItem(Product product,double quantity) {
+		
 		if(product==null) {throw new IllegalArgumentException("محصول نمیتواند خالی باشد .");}
 		if(quantity<=0) {throw new IllegalArgumentException("مقدار باید مثبت باشد .");}
 		this.product=product;
 		this.quantity=quantity;
+		
+		
 	}
 	
 	// Gettersُ
