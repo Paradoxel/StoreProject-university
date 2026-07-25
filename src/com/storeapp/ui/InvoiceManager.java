@@ -36,7 +36,7 @@ public class InvoiceManager {
 	}
 	
 	
-	private void showMenu(){
+	public void showMenu(){
 
 	    navigation.push("Invoices");
 
@@ -133,29 +133,27 @@ public class InvoiceManager {
 	
 
 	
+	
 	private void printInvoiceTable(List<Invoice> invoices) {
 		if (invoices.isEmpty()) {
 			System.out.println("\n⚠️ No invoices to display.");
 			return;
 		}
-
-		int idW = 20, nameW = 15, phoneW = 13, dateW = 20, itemsW = 6, amountW = 16, payW = 10;
-
-		String top    = "┌" + "─".repeat(idW+2) + "┬" + "─".repeat(nameW+2) + "┬" + "─".repeat(phoneW+2) + "┬" + "─".repeat(dateW+2) + "┬" + "─".repeat(itemsW+2) + "┬" + "─".repeat(amountW+2) + "┬" + "─".repeat(payW+2) + "┐";
-		String mid    = "├" + "─".repeat(idW+2) + "┼" + "─".repeat(nameW+2) + "┼" + "─".repeat(phoneW+2) + "┼" + "─".repeat(dateW+2) + "┼" + "─".repeat(itemsW+2) + "┼" + "─".repeat(amountW+2) + "┼" + "─".repeat(payW+2) + "┤";
-		String bottom = "└" + "─".repeat(idW+2) + "┴" + "─".repeat(nameW+2) + "┴" + "─".repeat(phoneW+2) + "┴" + "─".repeat(dateW+2) + "┴" + "─".repeat(itemsW+2) + "┴" + "─".repeat(amountW+2) + "┴" + "─".repeat(payW+2) + "┘";
-
+		int numW = 4, idW = 20, nameW = 15, phoneW = 13, dateW = 20, itemsW = 6, amountW = 16, payW = 10;
+		String top    = "┌" + "─".repeat(numW+2) + "┬" + "─".repeat(idW+2) + "┬" + "─".repeat(nameW+2) + "┬" + "─".repeat(phoneW+2) + "┬" + "─".repeat(dateW+2) + "┬" + "─".repeat(itemsW+2) + "┬" + "─".repeat(amountW+2) + "┬" + "─".repeat(payW+2) + "┐";
+		String mid    = "├" + "─".repeat(numW+2) + "┼" + "─".repeat(idW+2) + "┼" + "─".repeat(nameW+2) + "┼" + "─".repeat(phoneW+2) + "┼" + "─".repeat(dateW+2) + "┼" + "─".repeat(itemsW+2) + "┼" + "─".repeat(amountW+2) + "┼" + "─".repeat(payW+2) + "┤";
+		String bottom = "└" + "─".repeat(numW+2) + "┴" + "─".repeat(idW+2) + "┴" + "─".repeat(nameW+2) + "┴" + "─".repeat(phoneW+2) + "┴" + "─".repeat(dateW+2) + "┴" + "─".repeat(itemsW+2) + "┴" + "─".repeat(amountW+2) + "┴" + "─".repeat(payW+2) + "┘";
 		System.out.println("\n--- Invoice History ---");
 		System.out.println(top);
-		System.out.printf("│ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "s │ %" + amountW + "s │ %-" + payW + "s │%n",
-				"Invoice #", "Customer", "Phone", "Date", "Items", "Amount (Tomans)", "Payment");
+		System.out.printf("│ %-" + numW + "s │ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "s │ %" + amountW + "s │ %-" + payW + "s │%n",
+				"#", "Invoice #", "Customer", "Phone", "Date", "Items", "Amount (Tomans)", "Payment");
 		System.out.println(mid);
-
 		double totalAmount = 0;
 		int cashCount = 0, creditCount = 0;
-
+		int i = 1;
 		for (Invoice inv : invoices) {
-			System.out.printf("│ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "d │ %," + amountW + "d │ %-" + payW + "s │%n",
+			System.out.printf("│ %-" + numW + "d │ %-" + idW + "s │ %-" + nameW + "s │ %-" + phoneW + "s │ %-" + dateW + "s │ %" + itemsW + "d │ %," + amountW + "d │ %-" + payW + "s │%n",
+					i++,
 					shortId(inv.getId()),
 					inv.getCustomer().getName(),
 					inv.getCustomer().getPhone(),
@@ -163,7 +161,6 @@ public class InvoiceManager {
 					inv.getItems().size(),
 					(long) inv.getFinalAmount(),
 					inv.getPaymentMethod());
-
 			totalAmount += inv.getFinalAmount();
 			if (inv.getPaymentMethod() == PaymentMethod.CASH) {
 			    cashCount++;
@@ -171,20 +168,18 @@ public class InvoiceManager {
 			    creditCount++;
 			}
 		}
-
 		System.out.println(bottom);
 		System.out.printf("%nShowing %d invoice(s)  |  Total: %,d Tomans  |  Cash: %d  |  Credit: %d%n",
 				invoices.size(), (long) totalAmount, cashCount, creditCount);
 	}
 	
+	
+	
 	private void showAllInvoices(){
 	    navigation.push("All Invoices");
 	    try{
 	        navigation.printBreadcrumb();
-	        printInvoiceTable(
-	            store.getInvoices()
-	        );
-	        validator.pause();
+	        showInvoicesWithDrilldown(store.getInvoices());
 	    }finally{
 	        navigation.pop();
 	    }
@@ -200,25 +195,21 @@ public class InvoiceManager {
 	
 	
 	private void findInvoiceById() {
-		navigation.push("Find By ID");
-		navigation.printBreadcrumb();
-		String id = validator.readNonEmptyString("Enter Invoice ID: ");
-		Invoice invoice = store.findInvoiceById(id);
-		if (invoice == null) {
-			Logger.warning(
-				    "Invoice not found: " + id
-				);
-			System.out.println("\n⚠️ No invoice found with that ID.");
-			validator.pause();
-			navigation.pop();
-			return;
-		}
-		Logger.info(
-			    "Invoice viewed: " + id
-			);
-		System.out.println(invoice);
-		validator.pause();	
-		navigation.pop();
+	    navigation.push("Find By ID");
+	    navigation.printBreadcrumb();
+	    String id = validator.readNonEmptyString("Enter Invoice ID: ");
+	    Invoice invoice = store.findInvoiceById(id);
+	    if (invoice == null) {
+	        Logger.warning("Invoice not found: " + id);
+	        System.out.println("\n⚠️ No invoice found with that ID.");
+	        validator.pause();
+	        navigation.pop();
+	        return;
+	    }
+	    Logger.info("Invoice viewed: " + id);
+	    System.out.println(invoice);
+	    validator.pause();
+	    navigation.pop();
 	}
 	
 	
@@ -316,6 +307,37 @@ public class InvoiceManager {
 		validator.pause();
 		navigation.pop();
 	}
+	
+	// new method for code clean(DRY)
+	private void showInvoicesWithDrilldown(List<Invoice> invoices) {
+	    printInvoiceTable(invoices);
+
+	    if (invoices.isEmpty()) {
+	        validator.pause();
+	        return;
+	    }
+
+	    if (validator.yesOrNo("View invoice details? ")) {
+	    	navigation.push("Invoice Detail");
+	    	try {
+	    		int choice = validator.readIntRange(1, invoices.size());
+	        Invoice selected = invoices.get(choice - 1);
+	        Logger.info("Invoice viewed via list drilldown: " + selected.getId());
+	        System.out.println(selected);
+	    	}
+	    	finally {
+	    		navigation.pop();
+	    	} 
+	    }
+	    validator.pause();
+	}
+	
+	
+	
+	
+	
+	
+
 	
 	
 }
