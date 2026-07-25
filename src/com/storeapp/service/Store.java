@@ -166,7 +166,6 @@ public class Store implements Serializable {
 	    ) {
 	        byte[] encryptedData = fileIn.readAllBytes();
 	        byte[] decryptedData = CryptoService.decrypt(encryptedData);
-
 	        try (
 	            ByteArrayInputStream byteIn = new ByteArrayInputStream(decryptedData);
 	            ObjectInputStream objectIn = new ObjectInputStream(byteIn)
@@ -177,13 +176,17 @@ public class Store implements Serializable {
 	                    loaded.getInvoices().size() + " invoices");
 	            return loaded;
 	        }
-
 	    } catch (FileNotFoundException e) {
-	    	Logger.info("No saved store found – new empty store created");
+	        Logger.info("No saved store found – new empty store created");
 	        return new Store();
 	    } catch (IOException | ClassNotFoundException e) {
-	    	Logger.error("ERROR: Failed to load store from file: " + e.getMessage());
+	        Logger.error("ERROR: Failed to load store from file: " + e.getMessage());
 	        System.err.println("❌ Could not load store data. Starting with an empty store.");
+	        return new Store();
+	    } catch (RuntimeException e) {
+	        Logger.error("ERROR: Store data file is corrupted or tampered with: " + e.getMessage());
+	        System.err.println("❌ Store data file appears to be corrupted or invalid.");
+	        System.err.println("Starting with an empty store.");
 	        return new Store();
 	    }
 	}
